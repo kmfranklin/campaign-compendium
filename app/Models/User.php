@@ -72,18 +72,24 @@ class User extends Authenticatable
         return $this->campaigns()->wherePivot('role_id', Role::PLAYER);
     }
 
-    public function campaignsAsCoDm(): BelongsToMany
-    {
-        return $this->campaigns()->wherePivot('role_id', Role::CO_DM);
-    }
-
-    public function campaignsAsSpectator(): BelongsToMany
-    {
-        return $this->campaigns()->wherePivot('role_id', Role::SPECTATOR);
-    }
-
     public function ownedCampaigns(): HasMany
     {
         return $this->hasMany(Campaign::class, 'dm_id');
+    }
+
+    // Notification system
+    public function sentInvites()
+    {
+        return $this->hasMany(CampaignInvite::class, 'inviter_id');
+    }
+
+    public function receivedInvites()
+    {
+        return $this->hasMany(CampaignInvite::class, 'invitee_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

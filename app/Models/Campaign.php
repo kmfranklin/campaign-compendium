@@ -45,4 +45,15 @@ class Campaign extends Model
     {
         return $this->hasMany(Npc::class);
     }
+
+    // Invite notifications
+    public function invites()
+    {
+        return $this->hasMany(CampaignInvite::class);
+    }
+
+    public function pendingInvites()
+    {
+        return $this->invites()->where('status', CampaignInvite::STATUS_PENDING);
+    }
 }
