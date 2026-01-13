@@ -20,7 +20,7 @@
     @endif
 
     @can('addMember', $campaign)
-        <form action="{{ route('campaigns.members.add', $campaign) }}" method="POST" class="mb-6 flex gap-2">
+        <form action="{{ route('campaigns.invites.store', $campaign) }}" method="POST" class="mb-6 flex gap-2">
             @csrf
             <input
                 type="email"
@@ -33,7 +33,7 @@
                 type="submit"
                 class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded"
             >
-                Add Member
+                Send Invite
             </button>
         </form>
     @endcan
@@ -76,5 +76,26 @@
             title="No members yet"
             message="Invite players to join your campaign."
         />
+    @endif
+
+    @if($campaign->pendingInvites->count())
+    <div class="mt-8">
+        <h3 class="text-md font-semibold text-gray-700 mb-3">Pending Invites</h3>
+
+        <ul class="space-y-2">
+            @foreach ($campaign->pendingInvites as $invite)
+                <li class="flex items-center justify-between bg-yellow-50 px-3 py-2 rounded border border-yellow-200">
+                    <div>
+                        <span class="text-gray-900 font-medium">{{ $invite->email }}</span>
+                        @if($invite->invitee)
+                            <span class="text-xs text-gray-500 ml-2">(User: {{ $invite->invitee->name }})</span>
+                        @endif
+                    </div>
+
+                    <span class="text-xs text-gray-600">Pending</span>
+                </li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 </div>

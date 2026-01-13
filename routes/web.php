@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     NpcController,
     CampaignController,
     QuestController,
-    ItemController
+    ItemController,
+    CampaignInviteController
 };
 
 // Public routes
@@ -58,6 +59,16 @@ Route::post('campaigns/{campaign}/members', [CampaignController::class, 'addMemb
     ->name('campaigns.members.add');
 Route::delete('campaigns/{campaign}/members', [CampaignController::class, 'removeMember'])
     ->name('campaigns.members.remove');
+
+// Campaign invites
+Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
+    ->name('campaigns.invites.store');
+
+Route::post('invites/{invite}/accept', [CampaignInviteController::class, 'accept'])
+    ->name('invites.accept');
+
+Route::post('invites/{invite}/decline', [CampaignInviteController::class, 'decline'])
+    ->name('invites.decline');
 
 // Auth scaffolding
 require __DIR__.'/auth.php';
