@@ -74,6 +74,9 @@
               <x-dropdown-link :href="route('profile.edit')">
                 {{ __('Profile') }}
               </x-dropdown-link>
+              <x-dropdown-link href="{{ route('notifications.index') }}" :active="request()->routeIs('notifications.index.*')">
+              {{ __('Notifications') }}
+              </x-dropdown-link>
               <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <x-dropdown-link :href="route('logout')"

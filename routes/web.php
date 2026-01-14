@@ -7,7 +7,8 @@ use App\Http\Controllers\{
     CampaignController,
     QuestController,
     ItemController,
-    CampaignInviteController
+    CampaignInviteController,
+    NotificationController
 };
 
 // Public routes
@@ -59,6 +60,11 @@ Route::post('campaigns/{campaign}/members', [CampaignController::class, 'addMemb
     ->name('campaigns.members.add');
 Route::delete('campaigns/{campaign}/members', [CampaignController::class, 'removeMember'])
     ->name('campaigns.members.remove');
+
+// Notifications system
+Route::get('/notifications', [NotificationController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('notifications.index');
 
 // Campaign invites
 Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
