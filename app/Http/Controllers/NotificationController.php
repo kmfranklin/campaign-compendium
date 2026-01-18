@@ -10,6 +10,7 @@ class NotificationController extends Controller
     {
         $notifications = auth()->user()
             ->notifications()
+            ->whereNull('read_at')
             ->latest()
             ->get();
 

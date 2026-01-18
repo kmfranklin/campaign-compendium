@@ -65,38 +65,66 @@ class CampaignInviteController extends Controller
 
     public function accept(CampaignInvite $invite)
     {
-        $this->authorize('respond', $invite);
+        $user = auth()->user();
 
-        if (! $invite->isPending()) {
+        // Ensure the logged-in user is the invitee
+        if (! $user || ($user->id !== $invite->invitee_id && $user->email !== $invite->email)) {
+            abort(403);
+        }
+
+        // Ensure the invite is still pending
+        if ($invite->status !== CampaignInvite::STATUS_PENDING) {
             return back()->withErrors(['invite' => 'This invite is no longer active.']);
         }
 
         // Add the user to the campaign
-        $invite->campaign->members()->attach(auth()->id(), [
+        $invite->campaign->members()->attach($user->id, [
             'role_id' => \App\Models\Role::PLAYER,
         ]);
 
+        // Update invite status
         $invite->update([
             'status'      => CampaignInvite::STATUS_ACCEPTED,
             'accepted_at' => now(),
         ]);
 
-        return back()->with('success', 'You have joined the campaign.');
+        // Mark related notification as read
+        Notification::where('notifiable_type', CampaignInvite::class)
+            ->where('notifiable_id', $invite->id)
+            ->where('user_id', $user->id)
+            ->update(['read_at' => now()]);
+
+        return redirect()->route('notifications.index')
+            ->with('success', 'You have joined the campaign.');
     }
 
     public function decline(CampaignInvite $invite)
     {
-        $this->authorize('respond', $invite);
+        $user = auth()->user();
 
-        if (! $invite->isPending()) {
+        // Ensure the logged-in user is the invitee
+        if (! $user || ($user->id !== $invite->invitee_id && $user->email !== $invite->email)) {
+            abort(403);
+        }
+
+        // Ensure the invite is still pending
+        if ($invite->status !== CampaignInvite::STATUS_PENDING) {
             return back()->withErrors(['invite' => 'This invite is no longer active.']);
         }
 
+        // Update invite status
         $invite->update([
             'status'      => CampaignInvite::STATUS_DECLINED,
             'declined_at' => now(),
         ]);
 
-        return back()->with('success', 'You declined the invitation.');
+        // Mark related notification as read
+        Notification::where('notifiable_type', CampaignInvite::class)
+            ->where('notifiable_id', $invite->id)
+            ->where('user_id', $user->id)
+            ->update(['read_at' => now()]);
+
+        return redirect()->route('notifications.index')
+            ->with('success', 'You declined the invitation.');
     }
 }
