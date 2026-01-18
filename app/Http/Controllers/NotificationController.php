@@ -6,14 +6,23 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $notifications = auth()->user()
-            ->notifications()
-            ->whereNull('read_at')
-            ->latest()
-            ->get();
+        $filter = $request->query('filter', 'unread');
 
-        return view('notifications.index', compact('notifications'));
+        $query = auth()->user()->notifications()->latest();
+
+        if ($filter === 'unread') {
+            $query->whereNull('read_at');
+        } elseif ($filter === 'read') {
+            $query->whereNotNull('read_at');
+        }
+
+        $notifications = $query->get();
+
+        return view('notifications.index', [
+            'notifications' => $notifications,
+            'active' => $filter,
+        ]);
     }
 }

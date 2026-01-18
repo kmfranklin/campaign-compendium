@@ -63,6 +63,20 @@
       <!-- right cluster -->
       @auth
         <div class="hidden sm:flex sm:items-stretch sm:ms-6">
+            @php
+                $unreadCount = auth()->user()->notifications()->whereNull('read_at')->count();
+            @endphp
+            <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center">
+                <svg class="w-6 h-6 text-white hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+
+                @if ($unreadCount > 0)
+                    <span class="absolute top-7 right-4 bg-purple-700 text-white text-xs font-semibold rounded-full px-1.5 py-0.5">
+                        {{ $unreadCount }}
+                    </span>
+                @endif
+            </a>
           <x-dropdown align="right" width="48">
             <x-slot name="trigger">
               <button class="inline-flex items-center h-full px-3 text-gray-700 dark:text-gray-200">

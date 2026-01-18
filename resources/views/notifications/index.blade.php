@@ -9,6 +9,21 @@
     {{-- Desktop List --}}
     <div class="hidden sm:block">
         <div class="w-full max-w-7xl mx-auto bg-white border border-gray-200 shadow-sm sm:rounded-lg">
+            <div class="border-b mb-6">
+                <nav class="flex gap-6 text-sm">
+                    <a href="?filter=unread" class="{{ $active === 'unread' ? 'text-purple-700 font-semibold' : 'text-gray-600' }}">
+                        Unread
+                    </a>
+
+                    <a href="?filter=read" class="{{ $active === 'read' ? 'text-purple-700 font-semibold' : 'text-gray-600' }}">
+                        Read
+                    </a>
+
+                    <a href="?filter=all" class="{{ $active === 'all' ? 'text-purple-700 font-semibold' : 'text-gray-600' }}">
+                        All
+                    </a>
+                </nav>
+            </div>
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
