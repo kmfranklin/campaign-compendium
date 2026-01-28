@@ -24,6 +24,7 @@
                     </a>
                 </nav>
             </div>
+
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
@@ -31,67 +32,26 @@
                         <th class="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    @forelse($notifications as $notification)
-                        <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
-                            <td class="px-6 py-4 text-sm text-gray-800">
-                                <span class="font-medium text-gray-900">{{ $notification->data['inviter_name'] }}</span>
-                                invited you to join
-                                <span class="font-medium text-purple-700">{{ $notification->data['campaign_name'] }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm whitespace-nowrap text-right">
-                                <div class="inline-flex gap-4">
-                                    <form action="{{ route('invites.accept', $notification->notifiable_id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="text-purple-700 hover:text-purple-900 font-medium focus:outline-none focus:ring-2 focus:ring-purple-300">
-                                            Accept
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('invites.decline', $notification->notifiable_id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="text-gray-600 hover:text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-gray-300">
-                                            Decline
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="2" class="px-6 py-4 text-sm text-center text-gray-700">
-                                No notifications found.
-                            </td>
-                        </tr>
-                    @endforelse
+                @forelse($notifications as $notification)
+                    <x-notification-item :notification="$notification" layout="desktop" />
+                @empty
+                    <tr>
+                        <td colspan="2" class="px-6 py-4 text-sm text-center text-gray-700">
+                            No notifications found.
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 
     {{-- Mobile Cards --}}
-    <div class="sm:hidden space-y-4">
+    <div class="sm:hidden space-y-4 mt-6">
         @forelse($notifications as $notification)
-            <div class="bg-white border border-gray-200 shadow p-4 rounded-lg">
-                <p class="text-gray-800">
-                    <span class="font-semibold">{{ $notification->data['inviter_name'] }}</span>
-                    invited you to join
-                    <span class="font-semibold text-purple-700">{{ $notification->data['campaign_name'] }}</span>
-                </p>
-                <div class="mt-4 flex gap-3 justify-end">
-                    <form method="POST" action="{{ route('invites.accept', $notification->notifiable_id) }}">
-                        @csrf
-                        <button class="px-4 py-2 bg-purple-800 text-white rounded hover:bg-purple-900 text-sm font-medium">
-                            Accept
-                        </button>
-                    </form>
-                    <form method="POST" action="{{ route('invites.decline', $notification->notifiable_id) }}">
-                        @csrf
-                        <button class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm font-medium">
-                            Decline
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <x-notification-item :notification="$notification" layout="mobile" />
         @empty
             <p class="text-center text-gray-700">No notifications found.</p>
         @endforelse

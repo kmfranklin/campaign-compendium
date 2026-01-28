@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Notification extends Model
 {
+    const TYPE_INVITE = 'campaign_invite';
+    const TYPE_SYSTEM = 'system';
+    const TYPE_CAMPAIGN_UPDATE = 'campaign_update';
+
     protected $fillable = [
         'user_id',
         'type',
