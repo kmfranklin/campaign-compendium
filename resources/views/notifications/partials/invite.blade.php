@@ -2,6 +2,7 @@
     /** @var \App\Models\Notification $notification */
     $invite = $notification->notifiable;
     $status = $invite->status;
+    $unread = $notification->isUnread();
 
     $timestamp = match ($status) {
         \App\Models\CampaignInvite::STATUS_ACCEPTED => $invite->accepted_at,
@@ -10,23 +11,29 @@
     };
 @endphp
 
+{{-- Desktop Layout --}}
 @if ($layout === 'desktop')
-    {{-- Desktop table row --}}
-    <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
-        <td class="px-6 py-4 text-sm text-gray-800">
-            <span class="font-medium text-gray-900">{{ $notification->data['inviter_name'] }}</span>
-            invited you to join
-            <span class="font-medium text-purple-700">{{ $notification->data['campaign_name'] }}</span>
-
-            <div class="text-sm text-gray-500">
-                Received {{ $notification->created_at->diffForHumans() }}
-            </div>
-
-            @if ($timestamp)
-                <div class="text-sm text-gray-500">
-                    You {{ strtolower($status) }} this invitation {{ $timestamp->diffForHumans() }}
-                </div>
+    <tr class="hover:bg-gray-100">
+        <td class="px-6 py-4 text-sm text-gray-800 flex items-start gap-3">
+            @if ($unread)
+                <span class="inline-block w-2 h-2 mt-1 bg-purple-600 rounded-full"></span>
             @endif
+
+            <div>
+                <span class="font-medium text-gray-900">{{ $notification->data['inviter_name'] }}</span>
+                invited you to join
+                <span class="font-medium text-purple-700">{{ $notification->data['campaign_name'] }}</span>
+
+                <div class="text-sm text-gray-500">
+                    Received {{ $notification->created_at->diffForHumans() }}
+                </div>
+
+                @if ($timestamp)
+                    <div class="text-sm text-gray-500">
+                        You {{ strtolower($status) }} this invitation {{ $timestamp->diffForHumans() }}
+                    </div>
+                @endif
+            </div>
         </td>
 
         <td class="px-6 py-4 text-sm whitespace-nowrap text-right">
@@ -55,9 +62,14 @@
         </td>
     </tr>
 @else
-    {{-- Mobile card --}}
-    <div class="bg-white border border-gray-200 shadow p-4 rounded-lg">
-        <p class="text-gray-800">
+{{-- Mobile cards --}}
+    <div class="bg-white border border-gray-200 shadow p-4 rounded-lg relative">
+
+        @if ($unread)
+            <span class="absolute top-3 left-3 w-2 h-2 bg-purple-600 rounded-full"></span>
+        @endif
+
+        <p class="text-gray-800 pl-4">
             <span class="font-semibold">{{ $notification->data['inviter_name'] }}</span>
             invited you to join
             <span class="font-semibold text-purple-700">{{ $notification->data['campaign_name'] }}</span>

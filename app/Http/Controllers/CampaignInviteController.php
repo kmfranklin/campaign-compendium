@@ -50,7 +50,7 @@ class CampaignInviteController extends Controller
         if ($invitee) {
             Notification::create([
                 'user_id'         => $invitee->id,
-                'type'            => 'campaign_invite',
+                'type'            => Notification::TYPE_INVITE,
                 'notifiable_type' => CampaignInvite::class,
                 'notifiable_id'   => $invite->id,
                 'data'            => [

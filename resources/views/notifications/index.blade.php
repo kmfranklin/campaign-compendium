@@ -4,6 +4,14 @@
 <div class="w-full">
     <div class="sm:flex sm:items-center sm:justify-between py-6">
         <h1 class="text-2xl font-semibold text-gray-900">Notifications</h1>
+        @if (in_array($active, ['unread', 'all']))
+            <form method="POST" action="{{ route('notifications.markAllRead') }}">
+                @csrf
+                <button class="text-sm text-gray-600 hover:text-gray-900">
+                    Mark all as read
+                </button>
+            </form>
+        @endif
     </div>
 
     {{-- Desktop List --}}

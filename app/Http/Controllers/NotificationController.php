@@ -25,4 +25,13 @@ class NotificationController extends Controller
             'active' => $filter,
         ]);
     }
+
+    public function markAllRead()
+    {
+        auth()->user()->notifications()
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        return back();
+    }
 }

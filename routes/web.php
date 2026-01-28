@@ -66,6 +66,9 @@ Route::get('/notifications', [NotificationController::class, 'index'])
     ->middleware(['auth'])
     ->name('notifications.index');
 
+Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
+    ->name('notifications.markAllRead');
+
 // Campaign invites
 Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
     ->name('campaigns.invites.store');
