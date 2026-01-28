@@ -92,4 +92,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+    // Super Admin tooling
+    public function isSuperAdmin(): bool
+    {
+        return (bool) $this->is_super_admin;
+    }
 }

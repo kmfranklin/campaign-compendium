@@ -8,7 +8,8 @@ use App\Http\Controllers\{
     QuestController,
     ItemController,
     CampaignInviteController,
-    NotificationController
+    NotificationController,
+    SuperAdminController,
 };
 
 // Public routes
@@ -78,6 +79,14 @@ Route::post('invites/{invite}/accept', [CampaignInviteController::class, 'accept
 
 Route::post('invites/{invite}/decline', [CampaignInviteController::class, 'decline'])
     ->name('invites.decline');
+
+// Super Admin routes
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [SuperAdminController::class, 'index'])->name('dashboard');
+    });
 
 // Auth scaffolding
 require __DIR__.'/auth.php';
