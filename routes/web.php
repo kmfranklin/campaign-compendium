@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     CampaignInviteController,
     NotificationController,
     SuperAdminController,
+    AdminUserController,
 };
 
 // Public routes
@@ -86,7 +87,16 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/', [SuperAdminController::class, 'index'])->name('dashboard');
+
+        // User management
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+
+        Route::post('/users/{user}/sign-in-as', [AdminUserController::class, 'signInAs'])
+            ->name('users.signInAs');
     });
+
+Route::post('/admin/return-to-admin', [AdminUserController::class, 'returnToAdmin'])
+            ->name('admin.returnToAdmin');
 
 // Auth scaffolding
 require __DIR__.'/auth.php';

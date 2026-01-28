@@ -37,7 +37,16 @@
 
     @include('layouts.navigation')
 
-    {{-- Success Message --}}
+    @if (session('admin_id'))
+        <div class="bg-yellow-500 text-black text-center py-2">
+            You are signed in as another user.
+            <form action="{{ route('admin.returnToAdmin') }}" method="POST" class="inline">
+                @csrf
+                <button class="underline font-semibold">Return to Admin Account</button>
+            </form>
+        </div>
+    @endif
+
     @if (session('success'))
         <div class="max-w-3xl mx-auto mt-4 mb-6 px-4">
             <div class="mb-4 p-3 bg-surface text-text border border-border rounded">

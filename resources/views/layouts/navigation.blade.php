@@ -115,6 +115,14 @@
                   onclick="event.preventDefault(); this.closest('form').submit();">
                   {{ __('Log Out') }}
                 </x-dropdown-link>
+                @if (session('admin_id'))
+                    <form method="POST" action="{{ route('admin.returnToAdmin') }}">
+                        @csrf
+                        <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Return to Admin Account
+                        </button>
+                    </form>
+                @endif
               </form>
             </x-slot>
           </x-dropdown>
