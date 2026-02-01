@@ -93,6 +93,12 @@ Route::middleware(['auth', 'admin'])
 
         Route::post('/users/{user}/sign-in-as', [AdminUserController::class, 'signInAs'])
             ->name('users.signInAs');
+
+        Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])
+            ->name('users.edit');
+
+        Route::put('/users/{user}', [AdminUserController::class, 'update'])
+            ->name('users.update');
     });
 
 Route::post('/admin/return-to-admin', [AdminUserController::class, 'returnToAdmin'])
