@@ -18,6 +18,18 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+
+            colors: {
+                bg: "var(--color-bg)",
+                accent: '#6d28d9',
+                'accent-hover': '#5b21b6',
+                'on-accent': '#fff',
+                danger: '#dc2626',
+                surface: "var(--color-surface)",
+                border: "var(--color-border)",
+                text: "var(--color-text)",
+                muted: "var(--color-text-muted)",
+            },
         },
     },
 

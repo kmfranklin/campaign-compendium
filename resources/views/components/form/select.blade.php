@@ -6,9 +6,9 @@
     'placeholder' => null,
 ])
 
-<div>
+<div class="mb-4">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700">
+        <label for="{{ $name }}" class="block text-sm font-medium text-text mb-1">
             {{ $label }}
         </label>
     @endif
@@ -16,7 +16,9 @@
     <select
         name="{{ $name }}"
         id="{{ $name }}"
-        {{ $attributes->merge(['class' => 'mt-1 block w-full border-gray-300 rounded-md shadow-sm']) }}
+        {{ $attributes->merge([
+            'class' => 'mt-1 block w-full rounded-md border-border bg-surface text-text shadow-sm focus:border-accent focus:ring-accent sm:text-sm'
+        ]) }}
     >
         @if($placeholder)
             <option value="" disabled {{ old($name, $selected) === null ? 'selected' : '' }}>

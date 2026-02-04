@@ -1,35 +1,60 @@
 <form class="mb-4 flex gap-4 flex-wrap flex-col sm:flex-row items-stretch sm:items-center">
+
+    {{-- Search Input --}}
     <input
         name="q"
         x-model="q"
         type="text"
         placeholder="Search by name…"
         @input.debounce.500ms="applyFilters"
-        class="border rounded px-3 py-2 flex-1"
+        class="flex-1 px-3 py-2 rounded-md border border-border bg-surface text-text
+               focus:border-accent focus:ring-accent shadow-sm sm:text-sm"
     />
 
-    <select name="category" x-model="categoryFilter" @change="applyFilters" class="custom-select">
+    {{-- Category Filter --}}
+    <select
+        name="category"
+        x-model="categoryFilter"
+        @change="applyFilters"
+        class="rounded-md border border-border bg-surface text-text px-3 py-2
+               focus:border-accent focus:ring-accent shadow-sm sm:text-sm"
+    >
         <option value="">All Categories</option>
         @foreach(\App\Models\ItemCategory::all() as $c)
             <option value="{{ $c->slug }}">{{ $c->name }}</option>
         @endforeach
     </select>
 
-    <select name="rarity" x-model="rarityFilter" @change="applyFilters" class="custom-select">
+    {{-- Rarity Filter --}}
+    <select
+        name="rarity"
+        x-model="rarityFilter"
+        @change="applyFilters"
+        class="rounded-md border border-border bg-surface text-text px-3 py-2
+               focus:border-accent focus:ring-accent shadow-sm sm:text-sm"
+    >
         <option value="">All Rarities</option>
         @foreach(\App\Models\ItemRarity::all() as $r)
             <option value="{{ $r->slug }}">{{ $r->name }}</option>
         @endforeach
     </select>
 
-    <button type="button"
-            @click="applyFilters"
-            class="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 font-medium">
+    {{-- Search Button --}}
+    <button
+        type="button"
+        @click="applyFilters"
+        class="px-4 py-2 bg-accent text-on-accent rounded-md font-medium
+               hover:bg-accent-hover focus:ring-accent"
+    >
         Search
     </button>
 
+    {{-- Reset Button --}}
     <a href="{{ url()->current() }}"
-       class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-center font-medium">
+       class="px-4 py-2 bg-bg text-text rounded-md font-medium text-center
+              hover:bg-hover border border-border"
+    >
         Reset
     </a>
+
 </form>

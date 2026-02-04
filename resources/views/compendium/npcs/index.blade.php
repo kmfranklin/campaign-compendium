@@ -2,10 +2,13 @@
 
 @section('content')
 <div class="px-4 sm:px-6 lg:px-8">
+
+    {{-- Header --}}
     <div class="sm:flex sm:items-center sm:justify-between py-6">
-        <h1 class="text-2xl font-semibold text-gray-900">Character Compendium</h1>
+        <h1 class="text-2xl font-semibold text-text">Character Compendium</h1>
+
         <a href="{{ route('compendium.npcs.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-purple-800 hover:bg-purple-900 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300">
+           class="inline-flex items-center px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-accent">
             + New NPC
         </a>
     </div>
@@ -31,8 +34,8 @@
                 const response = await fetch(url, {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
-                const html = await response.text();
 
+                const html = await response.text();
                 document.querySelector('#npc-results').innerHTML = html;
 
                 this.loading = false;
@@ -40,71 +43,81 @@
         }"
         class="space-y-4"
     >
-        <!-- Filters -->
+
+        {{-- Filters --}}
         <form class="mb-4 flex gap-4 flex-wrap flex-col sm:flex-row items-stretch sm:items-center">
+
+            {{-- Search --}}
             <input
                 name="q"
                 x-model="q"
                 type="text"
                 placeholder="Search by name…"
                 @input.debounce.500ms="applyFilters"
-                class="border rounded px-3 py-2 flex-1"
+                class="border border-border bg-surface text-text rounded px-3 py-2 flex-1 focus:border-accent focus:ring-accent"
             />
 
-            <select name="class" x-model="classFilter" @change="applyFilters" class="custom-select">
+            {{-- Class --}}
+            <select name="class" x-model="classFilter" @change="applyFilters"
+                    class="custom-select bg-surface border-border text-text">
                 <option value="">All Classes</option>
                 @foreach(\App\Models\Npc::CLASSES as $c)
                     <option value="{{ $c }}">{{ $c }}</option>
                 @endforeach
             </select>
 
-            <select name="alignment" x-model="alignmentFilter" @change="applyFilters" class="custom-select">
+            {{-- Alignment --}}
+            <select name="alignment" x-model="alignmentFilter" @change="applyFilters"
+                    class="custom-select bg-surface border-border text-text">
                 <option value="">All Alignments</option>
                 @foreach(\App\Models\Npc::ALIGNMENTS as $a)
                     <option value="{{ $a }}">{{ $a }}</option>
                 @endforeach
             </select>
 
-            <select name="role" x-model="roleFilter" @change="applyFilters" class="custom-select">
+            {{-- Role --}}
+            <select name="role" x-model="roleFilter" @change="applyFilters"
+                    class="custom-select bg-surface border-border text-text">
                 <option value="">All Roles</option>
                 @foreach(\App\Models\Npc::SOCIAL_ROLES as $r)
                     <option value="{{ $r }}">{{ $r }}</option>
                 @endforeach
             </select>
 
+            {{-- Search button --}}
             <button type="button"
                     @click="applyFilters"
-                    class="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 font-medium">
+                    class="bg-accent text-on-accent px-4 py-2 rounded hover:bg-accent-hover font-medium shadow">
                 Search
             </button>
 
+            {{-- Reset --}}
             <a href="{{ route('compendium.npcs.index') }}"
-               class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-center font-medium">
+               class="px-4 py-2 bg-bg text-text border border-border rounded hover:bg-hover text-center font-medium">
                 Reset
             </a>
         </form>
 
-        <!-- Results + Overlay -->
+        {{-- Results + Overlay --}}
         <div class="relative">
-            <!-- Overlay -->
+
+            {{-- Loading overlay --}}
             <div
                 x-show="loading"
                 x-cloak
                 x-transition.opacity
-                class="absolute inset-0 bg-white/70 flex items-center justify-center z-10"
+                class="absolute inset-0 bg-surface/70 flex items-center justify-center z-10"
             >
-                <svg class="animate-spin h-10 w-10 text-purple-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <!-- Background ring -->
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"                 stroke-width="4" />
-                    <!-- Foreground arc -->
-                    <circle class="opacity-75" cx="12" cy="12" r="10" stroke="currentColor"                 stroke-width="4"
+                <svg class="animate-spin h-10 w-10 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                    <circle class="opacity-75" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
                             stroke-linecap="round"
                             stroke-dasharray="80"
                             stroke-dashoffset="60" />
                 </svg>
             </div>
 
-            <!-- Results container -->
+            {{-- Results container --}}
             <div id="npc-results">
                 @include('compendium.npcs.partials.results', ['npcs' => $npcs])
             </div>

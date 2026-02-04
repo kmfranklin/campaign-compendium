@@ -1,50 +1,60 @@
 {{-- Desktop Table --}}
 <div class="hidden sm:block">
-    <div class="overflow-x-auto bg-white border border-gray-200 shadow-sm sm:rounded-lg">
+    <div class="overflow-x-auto bg-surface border border-border shadow-sm sm:rounded-lg">
         <table class="min-w-full table-auto">
-            <thead class="bg-gray-100">
+            <thead class="bg-bg border-b border-border">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Race/Species</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Class / Archetype</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Alignment</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Role</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Race/Species</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Class / Archetype</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Alignment</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Role</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
+
             <tbody>
                 @forelse($npcs as $npc)
-                    <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-normal break-words max-w-xs">
+                    <tr class="odd:bg-surface even:bg-bg hover:bg-hover transition-colors">
+                        <td class="px-6 py-4 text-sm font-medium text-text whitespace-normal break-words max-w-xs">
                             {{ $npc->name }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-normal break-words max-w-xs">
+
+                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-xs">
                             {{ $npc->race ?? '—' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-normal break-words max-w-xs">
+
+                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-xs">
                             {{ $npc['class'] ?? '—' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+
+                        <td class="px-6 py-4 text-sm text-muted whitespace-nowrap">
                             {{ $npc['alignment'] ?? '—' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-normal break-words max-w-sm">
+
+                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-sm">
                             {{ $npc['role'] ?? '—' }}
                         </td>
+
                         <td class="px-6 py-4 text-sm whitespace-nowrap">
                             <a href="{{ route('compendium.npcs.show', $npc) }}"
-                               class="text-purple-600 hover:text-purple-900 focus:outline-none focus:ring-2 focus:ring-indigo-300 font-medium">
+                               class="text-accent hover:text-accent-hover font-medium">
                                 View
                             </a>
+
                             <a href="{{ route('compendium.npcs.edit', $npc) }}"
-                               class="ml-4 text-yellow-600 hover:text-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-300 font-medium">
+                               class="ml-4 text-yellow-500 hover:text-yellow-600 font-medium">
                                 Edit
                             </a>
-                            <form action="{{ route('compendium.npcs.destroy', $npc) }}" method="POST" class="inline ml-4"
+
+                            <form action="{{ route('compendium.npcs.destroy', $npc) }}"
+                                  method="POST"
+                                  class="inline ml-4"
                                   onsubmit="return confirm('Delete this NPC?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="text-red-600 hover:text-red-900 focus:outline-none focus:ring-2 focus:ring-red-300 font-medium">
+                                        class="text-danger hover:text-red-600 font-medium">
                                     Delete
                                 </button>
                             </form>
@@ -52,7 +62,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-sm text-center text-gray-700">
+                        <td colspan="6" class="px-6 py-4 text-sm text-center text-muted">
                             No NPCs found.
                         </td>
                     </tr>
@@ -65,25 +75,28 @@
 {{-- Mobile Cards --}}
 <div class="sm:hidden space-y-4">
     @forelse($npcs as $npc)
-        <div class="bg-white border border-gray-200 shadow p-4 rounded-lg">
+        <div class="bg-surface border border-border shadow p-4 rounded-lg">
             <div class="flex justify-between items-start">
                 <div>
-                    <h2 class="text-lg font-medium text-gray-900 break-words">{{ $npc->name }}</h2>
-                    <p class="text-sm text-gray-700">
+                    <h2 class="text-lg font-medium text-text break-words">{{ $npc->name }}</h2>
+
+                    <p class="text-sm text-muted">
                         {{ $npc['class'] ?? '—' }} &middot; {{ $npc->race ?? '—' }}
                     </p>
+
                     @if($npc['role'])
-                        <p class="text-xs text-gray-500 break-words">{{ $npc['role'] }}</p>
+                        <p class="text-xs text-muted break-words">{{ $npc['role'] }}</p>
                     @endif
                 </div>
+
                 <a href="{{ route('compendium.npcs.show', $npc) }}"
-                   class="text-purple-600 hover:text-purple-900 focus:outline-none focus:ring-2 focus:ring-indigo-300 font-medium">
+                   class="text-accent hover:text-accent-hover font-medium">
                     View
                 </a>
             </div>
         </div>
     @empty
-        <p class="text-center text-gray-700">No NPCs found.</p>
+        <p class="text-center text-muted">No NPCs found.</p>
     @endforelse
 </div>
 
