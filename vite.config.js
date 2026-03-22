@@ -1,19 +1,23 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig, loadEnv } from "vite";
+import laravel from "laravel-vite-plugin";
 
-export default defineConfig({
-    plugins: [
-        laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
-        }),
-    ],
-    server: {
-        host: 'campaign-compendium.local',
-        port: 5173,
-        cors: true,
-        hmr: {
-            host: 'campaign-compendium.local',
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd(), "");
+
+    return {
+        plugins: [
+            laravel({
+                input: ["resources/css/app.css", "resources/js/app.js"],
+                refresh: true,
+            }),
+        ],
+        server: {
+            host: env.VITE_DEV_SERVER_HOST ?? "localhost",
+            port: env.VITE_DEV_SERVER_PORT ?? 5173,
+            cors: true,
+            hmr: {
+                host: env.VITE_DEV_SERVER_HOST ?? "localhost",
+            },
         },
-    },
+    };
 });
