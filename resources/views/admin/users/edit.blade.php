@@ -161,8 +161,22 @@
             <div>
                 <p class="text-sm font-medium text-text">Account Status</p>
                 @if ($user->isSuspended())
-                    <p class="mt-0.5 text-xs text-red-600 dark:text-red-400">
-                        Suspended on {{ $user->suspended_at->format('F j, Y \a\t g:i A') }}
+                    {{--
+                        Display the suspension time in the browser's local timezone.
+                        We store a data attribute with the UTC ISO string, then let
+                        Alpine's x-init reformat it via the browser's Intl API — so
+                        a user in EST sees "4:38 PM" rather than "8:38 PM UTC".
+                        The server-rendered fallback text is shown only if JS is off.
+                    --}}
+                    <p class="mt-0.5 text-xs text-red-600 dark:text-red-400"
+                       x-data
+                       x-init="
+                           $el.textContent = 'Suspended on ' + new Intl.DateTimeFormat(undefined, {
+                               year: 'numeric', month: 'long', day: 'numeric',
+                               hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+                           }).format(new Date('{{ $user->suspended_at->toIso8601String() }}'))
+                       ">
+                        Suspended {{ $user->suspended_at->diffForHumans() }}
                     </p>
                 @else
                     <p class="mt-0.5 text-xs text-muted">
