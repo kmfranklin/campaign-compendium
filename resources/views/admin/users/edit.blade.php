@@ -134,12 +134,86 @@
         </form>
     </div>
 
-    {{-- Danger Zone (placeholder for suspend / delete / restore) --}}
-    <div class="bg-surface border border-red-300 dark:border-red-800 rounded-lg shadow-sm p-6">
-        <h2 class="text-sm font-semibold text-red-700 dark:text-red-400">Danger Zone</h2>
-        <p class="mt-1 text-sm text-red-600 dark:text-red-400">
-            Suspend, delete, or restore actions will appear here in a future update.
-        </p>
+    {{--
+        Danger Zone — suspension management.
+
+        We separate this visually from the main edit form because the actions
+        here are high-impact and not part of a routine edit workflow. The red
+        border serves as an intentional visual warning ("be careful here").
+
+        We use two separate <form> elements (one for suspend, one for unsuspend)
+        rather than a single form with a hidden toggle field. Separate forms
+        with clearly labelled submit buttons make the available action
+        unambiguous — no hidden state the user has to reason about.
+    --}}
+    <div class="bg-surface border border-red-300 dark:border-red-800 rounded-lg shadow-sm p-6 space-y-4">
+
+        <div>
+            <h2 class="text-sm font-semibold text-red-700 dark:text-red-400">Danger Zone</h2>
+            <p class="mt-1 text-sm text-muted">
+                These actions directly affect the user's ability to access their account.
+            </p>
+        </div>
+
+        <div class="border-t border-border pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+            {{-- Current suspension status --}}
+            <div>
+                <p class="text-sm font-medium text-text">Account Status</p>
+                @if ($user->isSuspended())
+                    <p class="mt-0.5 text-xs text-red-600 dark:text-red-400">
+                        Suspended on {{ $user->suspended_at->format('F j, Y \a\t g:i A') }}
+                    </p>
+                @else
+                    <p class="mt-0.5 text-xs text-muted">
+                        This account is currently active.
+                    </p>
+                @endif
+            </div>
+
+            {{-- Action button(s) --}}
+            @if ($user->id === auth()->id())
+                {{-- Prevent self-suspension --}}
+                <p class="text-xs text-muted italic">
+                    You cannot modify your own account here.
+                </p>
+
+            @elseif ($user->isSuperAdmin() && !$user->isSuspended())
+                {{-- Prevent suspending other super admins --}}
+                <p class="text-xs text-muted italic">
+                    Super Admin accounts cannot be suspended.
+                </p>
+
+            @elseif ($user->isSuspended())
+                <form method="POST"
+                      action="{{ route('admin.users.unsuspend', $user) }}">
+                    @csrf
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium
+                                   bg-green-600 text-white shadow-sm
+                                   hover:bg-green-700 focus:outline-none focus:ring-2
+                                   focus:ring-green-500 focus:ring-offset-2
+                                   transition-colors duration-150">
+                        Restore Account
+                    </button>
+                </form>
+
+            @else
+                <form method="POST"
+                      action="{{ route('admin.users.suspend', $user) }}">
+                    @csrf
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium
+                                   bg-red-600 text-white shadow-sm
+                                   hover:bg-red-700 focus:outline-none focus:ring-2
+                                   focus:ring-red-500 focus:ring-offset-2
+                                   transition-colors duration-150">
+                        Suspend Account
+                    </button>
+                </form>
+            @endif
+
+        </div>
     </div>
 
 </div>

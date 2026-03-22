@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
         ]);
+
+        // Run on every web request. Boots suspended users out immediately
+        // rather than waiting until they try to log in again.
+        $middleware->appendToGroup('web', \App\Http\Middleware\CheckSuspended::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

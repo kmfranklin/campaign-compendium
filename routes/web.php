@@ -99,6 +99,14 @@ Route::middleware(['auth', 'admin'])
 
         Route::put('/users/{user}', [AdminUserController::class, 'update'])
             ->name('users.update');
+
+        // Suspension actions. We use POST (not PUT/PATCH) because these are
+        // one-click state transitions rather than full resource updates.
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])
+            ->name('users.suspend');
+
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])
+            ->name('users.unsuspend');
     });
 
 Route::post('/admin/return-to-admin', [AdminUserController::class, 'returnToAdmin'])
