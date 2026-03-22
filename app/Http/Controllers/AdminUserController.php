@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,11 +12,6 @@ class AdminUserController extends Controller
 {
     /**
      * List all users with optional search, role filter, and pagination.
-     *
-     * We use a query builder (User::query()) rather than calling User::all()
-     * so we can chain where() clauses conditionally before paginating.
-     * ->withQueryString() tells the paginator to preserve any ?search= and
-     * ?filter= parameters in the generated page-number links.
      */
     public function index(Request $request)
     {
@@ -24,9 +20,6 @@ class AdminUserController extends Controller
 
         $query = User::query()->orderBy('name');
 
-        // Full-text-style search across name and email.
-        // We wrap both conditions in a single where() closure so the OR only
-        // applies between name and email, not against the outer filter clauses.
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -34,18 +27,14 @@ class AdminUserController extends Controller
             });
         }
 
-        // Role / status filter
         match ($filter) {
             'super_admin' => $query->where('is_super_admin', true),
             'suspended'   => $query->whereNotNull('suspended_at'),
             'user'        => $query->where('is_super_admin', false)
                                    ->whereNull('suspended_at'),
-            default       => null,  // 'all' — no additional constraint
+            default       => null,
         };
 
-        // paginate(15) gives us 15 rows per page and a LengthAwarePaginator,
-        // which knows the total record count and can render numbered page links.
-        // withQueryString() appends ?search=&filter= to every page link.
         $users = $query->paginate(15)->withQueryString();
 
         return view('admin.users.index', [
@@ -63,6 +52,13 @@ class AdminUserController extends Controller
     {
         session(['admin_id' => auth()->id()]);
 
+        // Log before switching auth, so auth()->id() still returns the admin.
+        ActivityLog::record(
+            ActivityLog::EVENT_IMPERSONATION_STARTED,
+            auth()->user()->name . ' started impersonating ' . $user->name,
+            $user
+        );
+
         auth()->login($user);
 
         return redirect('/dashboard')
@@ -77,8 +73,18 @@ class AdminUserController extends Controller
             abort(403, 'Not impersonating another user.');
         }
 
+        // Capture the impersonated user's name before switching back.
+        $impersonatedUser = auth()->user();
+
         auth()->loginUsingId($adminId);
         session()->forget('admin_id');
+
+        // Log after switching back, so auth()->id() now reflects the admin.
+        ActivityLog::record(
+            ActivityLog::EVENT_IMPERSONATION_ENDED,
+            auth()->user()->name . ' ended impersonation of ' . $impersonatedUser->name,
+            $impersonatedUser
+        );
 
         return redirect('/admin')
             ->with('success', 'You have returned to your admin account.');
@@ -125,7 +131,24 @@ class AdminUserController extends Controller
             $user->email_verified_at = now();
         }
 
+        // Capture which fields actually changed BEFORE save() — Eloquent
+        // clears the "dirty" state once the model is saved, so calling
+        // getDirty() after save() would return an empty array.
+        // array_keys() strips the new values (we don't want to log those)
+        // and leaves us with just the field names: ['name', 'email', ...].
+        $changedFields = array_keys($user->getDirty());
+
         $user->save();
+
+        if (!empty($changedFields)) {
+            ActivityLog::record(
+                ActivityLog::EVENT_USER_UPDATED,
+                auth()->user()->name . ' updated ' . $user->name
+                    . ' (' . implode(', ', $changedFields) . ')',
+                $user,
+                ['changed_fields' => $changedFields]
+            );
+        }
 
         return redirect()
             ->route('admin.users.edit', $user)
@@ -136,14 +159,6 @@ class AdminUserController extends Controller
     // Suspension
     // -------------------------------------------------------------------------
 
-    /**
-     * Suspend a user by setting their suspended_at timestamp to now.
-     *
-     * We explicitly block admins from suspending their own account (that would
-     * be a confusing self-lockout), and from suspending other super admins
-     * (privilege separation — super admins shouldn't be able to knock each
-     * other out without going through a higher-level process).
-     */
     public function suspend(User $user)
     {
         if ($user->id === auth()->id()) {
@@ -157,16 +172,25 @@ class AdminUserController extends Controller
         $user->suspended_at = now();
         $user->save();
 
+        ActivityLog::record(
+            ActivityLog::EVENT_USER_SUSPENDED,
+            auth()->user()->name . ' suspended ' . $user->name,
+            $user
+        );
+
         return back()->with('success', "{$user->name}'s account has been suspended.");
     }
 
-    /**
-     * Restore a suspended user by clearing their suspended_at timestamp.
-     */
     public function unsuspend(User $user)
     {
         $user->suspended_at = null;
         $user->save();
+
+        ActivityLog::record(
+            ActivityLog::EVENT_USER_UNSUSPENDED,
+            auth()->user()->name . ' restored ' . $user->name . "'s account",
+            $user
+        );
 
         return back()->with('success', "{$user->name}'s account has been restored.");
     }

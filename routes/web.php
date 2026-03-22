@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     NotificationController,
     SuperAdminController,
     AdminUserController,
+    ActivityLogController,
 };
 
 // Public routes
@@ -107,6 +108,12 @@ Route::middleware(['auth', 'admin'])
 
         Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])
             ->name('users.unsuspend');
+
+        // Activity log — read-only, so a single GET route is all we need.
+        // Registering it as 'activity.index' matches the Route::has() guard
+        // already in sidebar-links.blade.php, which will auto-unlock the link.
+        Route::get('/activity-log', [ActivityLogController::class, 'index'])
+            ->name('activity.index');
     });
 
 Route::post('/admin/return-to-admin', [AdminUserController::class, 'returnToAdmin'])
