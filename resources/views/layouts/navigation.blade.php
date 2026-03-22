@@ -2,7 +2,7 @@
     x-data="{ open: false }"
     class="bg-white dark:bg-gray-900 border-b-2 border-gray-100 dark:border-gray-700"
 >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
         <!-- Top row -->
         <div class="flex justify-between items-center h-24">
             <!-- Left cluster -->

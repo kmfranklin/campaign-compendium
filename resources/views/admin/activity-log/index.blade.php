@@ -161,7 +161,7 @@
             <thead>
                 <tr class="text-muted text-xs uppercase tracking-wide">
                     <th class="px-3 py-2 w-40" scope="col">When</th>
-                    <th class="px-3 py-2 w-36" scope="col">Event</th>
+                    <th class="px-3 py-2 w-px whitespace-nowrap" scope="col">Event</th>
                     <th class="px-3 py-2 w-36" scope="col">Admin</th>
                     <th class="px-3 py-2" scope="col">Details</th>
                     <th class="px-3 py-2 w-28 hidden lg:table-cell" scope="col">IP Address</th>
@@ -219,7 +219,7 @@
                                 };
                             @endphp
                             <span class="inline-flex items-center rounded-full px-2.5 py-0.5
-                                         text-xs font-medium {{ $badgeClasses }}">
+                                         text-xs font-medium whitespace-nowrap {{ $badgeClasses }}">
                                 {{ $eventTypes[$log->event] ?? $log->event }}
                             </span>
                         </td>
