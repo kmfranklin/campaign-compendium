@@ -39,7 +39,7 @@
                     class="rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-150
                            focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
                            {{ $filter === 'all'
-                                ? 'bg-accent text-white border-accent dark:bg-purple-700 dark:border-purple-600'
+                                ? 'bg-accent text-white border-accent'
                                 : 'bg-surface text-muted border-border hover:text-text hover:border-accent' }}"
                     aria-pressed="{{ $filter === 'all' ? 'true' : 'false' }}">
                 All Events
@@ -50,7 +50,7 @@
                         class="rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-150
                                focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
                                {{ $filter === $value
-                                    ? 'bg-accent text-white border-accent dark:bg-purple-700 dark:border-purple-600'
+                                    ? 'bg-accent text-white border-accent'
                                     : 'bg-surface text-muted border-border hover:text-text hover:border-accent' }}"
                         aria-pressed="{{ $filter === $value ? 'true' : 'false' }}">
                     {{ $label }}
@@ -117,9 +117,8 @@
                 </div>
                 <button type="submit"
                         class="rounded-md bg-accent px-3 py-2 text-sm font-medium text-white shadow-sm
-                               hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent
-                               focus:ring-offset-2 transition-colors duration-150 dark:bg-purple-700
-                               dark:hover:bg-purple-600 whitespace-nowrap">
+                               hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent
+                               focus:ring-offset-2 transition-colors duration-150 whitespace-nowrap">
                     Apply
                 </button>
             </div>

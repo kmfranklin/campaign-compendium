@@ -15,15 +15,27 @@ use Illuminate\View\View;
  * group level in web.php). Only super admins can create, edit, activate,
  * deactivate, or delete notifications.
  *
- * The notification banners themselves are rendered for all authenticated users
- * via the banner partial — this controller is only for managing them.
+ * INBOX FAN-OUT BEHAVIOUR
+ * ────────────────────────
+ * When a notification's delivery_method includes 'inbox' (i.e. 'inbox' or
+ * 'both'), activating it triggers fanOutToUsers(), which bulk-inserts one
+ * Notification row per user into the notifications table. fanOutToUsers()
+ * is idempotent — it stamps sent_at after completion and exits early on
+ * subsequent calls, so activating an already-sent notification is safe.
+ *
+ * Fan-out is triggered in two places:
+ *   store()    — if the notification is created with is_active = true
+ *   activate() — when an admin flips an inactive notification to active
+ *
+ * Editing a notification after fan-out does NOT re-send to inboxes; the
+ * inbox copy is a point-in-time snapshot. Banner content, however, is
+ * read live from the database on every page load, so edits take effect
+ * immediately for banners.
  */
 class AdminSystemNotificationController extends Controller
 {
     /**
      * List all notifications, newest first.
-     * We eager-load createdBy to avoid an N+1 on the admin name column,
-     * and append dismissals_count so we can show how many users dismissed each.
      */
     public function index(): View
     {
@@ -41,36 +53,49 @@ class AdminSystemNotificationController extends Controller
     public function create(): View
     {
         $types        = SystemNotification::types();
+        $deliveries   = SystemNotification::deliveries();
         $templates    = SystemNotification::templates();
-        $notification = new SystemNotification();   // blank instance for form defaults
+        $notification = new SystemNotification();
 
-        return view('admin.system-notifications.create', compact('types', 'templates', 'notification'));
+        return view('admin.system-notifications.create', compact('types', 'deliveries', 'templates', 'notification'));
     }
 
     /**
      * Validate and persist a new notification.
+     * If is_active is true and delivery includes inbox, fans out immediately.
      */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title'      => ['required', 'string', 'max:255'],
-            'message'    => ['required', 'string', 'max:2000'],
-            'type'       => ['required', 'in:' . implode(',', array_keys(SystemNotification::types()))],
-            'is_active'  => ['boolean'],
-            'expires_at' => ['nullable', 'date', 'after:now'],
+            'title'           => ['required', 'string', 'max:255'],
+            'message'         => ['required', 'string', 'max:2000'],
+            'type'            => ['required', 'in:' . implode(',', array_keys(SystemNotification::types()))],
+            'delivery_method' => ['required', 'in:' . implode(',', array_keys(SystemNotification::deliveries()))],
+            'is_active'       => ['boolean'],
+            'expires_at'      => ['nullable', 'date', 'after:now'],
+            'show_at'         => ['nullable', 'date'],
         ]);
 
-        // Checkboxes send '1' when ticked; absent means false.
-        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['is_active']  = $request->boolean('is_active', true);
         $validated['created_by'] = auth()->id();
 
         $notification = SystemNotification::create($validated);
+
+        // Fan out to inboxes immediately if the notification is active and
+        // delivery includes the inbox channel.
+        if ($notification->is_active && in_array($notification->delivery_method, ['inbox', 'both'])) {
+            $notification->fanOutToUsers();
+        }
 
         ActivityLog::record(
             ActivityLog::EVENT_NOTIFICATION_CREATED,
             auth()->user()->name . ' created system notification "' . $notification->title . '"',
             null,
-            ['notification_id' => $notification->id, 'type' => $notification->type]
+            [
+                'notification_id' => $notification->id,
+                'type'            => $notification->type,
+                'delivery_method' => $notification->delivery_method,
+            ]
         );
 
         return redirect()
@@ -83,30 +108,46 @@ class AdminSystemNotificationController extends Controller
      */
     public function edit(SystemNotification $notification): View
     {
-        $types     = SystemNotification::types();
-        $templates = SystemNotification::templates();
+        $types      = SystemNotification::types();
+        $deliveries = SystemNotification::deliveries();
+        $templates  = SystemNotification::templates();
 
-        return view('admin.system-notifications.edit', compact('notification', 'types', 'templates'));
+        return view('admin.system-notifications.edit', compact('notification', 'types', 'deliveries', 'templates'));
     }
 
     /**
      * Validate and update an existing notification.
+     *
+     * Editing does NOT re-fan-out to inboxes (inbox copies are point-in-time
+     * snapshots). If the delivery_method changes to include inbox and the
+     * notification is active but was never sent, we fan out now.
      */
     public function update(Request $request, SystemNotification $notification): RedirectResponse
     {
         $validated = $request->validate([
-            'title'      => ['required', 'string', 'max:255'],
-            'message'    => ['required', 'string', 'max:2000'],
-            'type'       => ['required', 'in:' . implode(',', array_keys(SystemNotification::types()))],
-            'is_active'  => ['boolean'],
-            'expires_at' => ['nullable', 'date'],
+            'title'           => ['required', 'string', 'max:255'],
+            'message'         => ['required', 'string', 'max:2000'],
+            'type'            => ['required', 'in:' . implode(',', array_keys(SystemNotification::types()))],
+            'delivery_method' => ['required', 'in:' . implode(',', array_keys(SystemNotification::deliveries()))],
+            'is_active'       => ['boolean'],
+            'expires_at'      => ['nullable', 'date'],
+            'show_at'         => ['nullable', 'date'],
         ]);
 
         $validated['is_active'] = $request->boolean('is_active');
 
-        // Capture changed fields before save (Eloquent clears dirty state on save).
         $changedFields = array_keys($notification->fill($validated)->getDirty());
         $notification->save();
+
+        // If the notification is active, delivery now includes inbox, and
+        // the inbox fan-out hasn't happened yet, send it now.
+        if (
+            $notification->is_active
+            && in_array($notification->delivery_method, ['inbox', 'both'])
+            && $notification->sent_at === null
+        ) {
+            $notification->fanOutToUsers();
+        }
 
         if (!empty($changedFields)) {
             ActivityLog::record(
@@ -143,11 +184,18 @@ class AdminSystemNotificationController extends Controller
     }
 
     /**
-     * Set is_active = true. Used by the quick-toggle button on the index page.
+     * Set is_active = true and fan out to inboxes if applicable.
      */
     public function activate(SystemNotification $notification): RedirectResponse
     {
         $notification->update(['is_active' => true]);
+
+        // Fan out to inboxes on first activation. fanOutToUsers() is
+        // idempotent — it checks sent_at internally and exits early if
+        // the notification was already sent.
+        if (in_array($notification->delivery_method, ['inbox', 'both'])) {
+            $notification->fanOutToUsers();
+        }
 
         ActivityLog::record(
             ActivityLog::EVENT_NOTIFICATION_UPDATED,
@@ -160,7 +208,8 @@ class AdminSystemNotificationController extends Controller
     }
 
     /**
-     * Set is_active = false. Used by the quick-toggle button on the index page.
+     * Set is_active = false.
+     * Deactivating does not retract inbox notifications already sent.
      */
     public function deactivate(SystemNotification $notification): RedirectResponse
     {

@@ -127,7 +127,7 @@
 
                     <a
                         href="{{ route('register') }}"
-                        class="text-sm font-semibold text-white bg-purple-700 px-4 py-2 rounded hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700"
+                        class="text-sm font-semibold text-white bg-accent px-4 py-2 rounded hover:bg-accent-hover transition-colors duration-150"
                     >
                         Sign Up
                     </a>
@@ -156,7 +156,7 @@
 
                         @if ($unreadCount > 0)
                             <span
-                                class="absolute -top-1 -right-2 bg-purple-700 text-white text-xs font-semibold rounded-full px-1.5 py-0.5"
+                                class="absolute -top-1 -right-2 bg-accent text-white text-xs font-semibold rounded-full px-1.5 py-0.5"
                             >
                                 {{ $unreadCount }}
                             </span>

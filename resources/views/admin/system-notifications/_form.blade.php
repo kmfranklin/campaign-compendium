@@ -29,15 +29,17 @@
     (no existing content to protect) and closed on edit (less disruptive).
 --}}
 <div x-data="{
-         showTemplates: {{ isset($editing) ? 'false' : 'true' }},
-         title:         {{ json_encode(old('title', $notification->title ?? '')) }},
-         message:       {{ json_encode(old('message', $notification->message ?? '')) }},
-         selectedType:  {{ json_encode(old('type', $notification->type ?? 'info')) }},
+         showTemplates:    {{ isset($editing) ? 'false' : 'true' }},
+         title:            {{ json_encode(old('title', $notification->title ?? '')) }},
+         message:          {{ json_encode(old('message', $notification->message ?? '')) }},
+         selectedType:     {{ json_encode(old('type', $notification->type ?? 'info')) }},
+         selectedDelivery: {{ json_encode(old('delivery_method', $notification->delivery_method ?? 'inbox')) }},
          applyTemplate(t) {
-             this.title        = t.title;
-             this.message      = t.message;
-             this.selectedType = t.type;
-             this.showTemplates = false;
+             this.title            = t.title;
+             this.message          = t.message;
+             this.selectedType     = t.type;
+             this.selectedDelivery = t.delivery_method;
+             this.showTemplates    = false;
          }
      }"
      class="space-y-6">
@@ -158,7 +160,7 @@
                          focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent
                          dark:bg-gray-900 dark:border-gray-600 dark:text-gray-100
                          @error('message') border-red-500 dark:border-red-400 @enderror"
-                  placeholder="The message users will see in the banner…"></textarea>
+                  placeholder="The message users will see…"></textarea>
         @error('message')
             <p class="mt-1 text-xs text-red-600 dark:text-red-400" role="alert">{{ $message }}</p>
         @enderror
@@ -258,6 +260,99 @@
         @enderror
     </div>
 
+    {{--
+        Delivery method selector.
+
+        Controls how this notification reaches users:
+          inbox  → fanned out to every user's bell-icon inbox on activation
+          banner → dismissible page-wide alert (live, not a one-time send)
+          both   → appears in the inbox AND shows as a banner
+
+        Like the type selector, selectedDelivery lives in the outer x-data
+        scope so the template picker can set it via applyTemplate(t).
+
+        When banner or both is selected, the show_at field slides into view
+        so the admin can schedule when the banner first appears.
+    --}}
+    <div>
+        <input type="hidden" name="delivery_method" :value="selectedDelivery">
+
+        <fieldset>
+            <legend class="block text-sm font-medium text-text mb-2">
+                Delivery method
+                <span class="text-red-500 dark:text-red-400 ml-0.5" aria-hidden="true">*</span>
+            </legend>
+
+            <div class="flex flex-wrap gap-2" role="group">
+
+                {{-- Inbox --}}
+                <button type="button"
+                        @click="selectedDelivery = 'inbox'"
+                        :aria-pressed="(selectedDelivery === 'inbox').toString()"
+                        :class="selectedDelivery === 'inbox'
+                            ? 'border-accent bg-accent text-white'
+                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
+                               transition-colors duration-150 focus:outline-none focus:ring-2
+                               focus:ring-accent focus:ring-offset-1">
+                    {{-- Bell icon --}}
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    Inbox
+                </button>
+
+                {{-- Banner --}}
+                <button type="button"
+                        @click="selectedDelivery = 'banner'"
+                        :aria-pressed="(selectedDelivery === 'banner').toString()"
+                        :class="selectedDelivery === 'banner'
+                            ? 'border-accent bg-accent text-white'
+                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
+                               transition-colors duration-150 focus:outline-none focus:ring-2
+                               focus:ring-accent focus:ring-offset-1">
+                    {{-- Megaphone icon --}}
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                    Banner
+                </button>
+
+                {{-- Both --}}
+                <button type="button"
+                        @click="selectedDelivery = 'both'"
+                        :aria-pressed="(selectedDelivery === 'both').toString()"
+                        :class="selectedDelivery === 'both'
+                            ? 'border-accent bg-accent text-white'
+                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
+                               transition-colors duration-150 focus:outline-none focus:ring-2
+                               focus:ring-accent focus:ring-offset-1">
+                    {{-- Bell + megaphone combined indicator --}}
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    Both
+                </button>
+
+            </div>
+
+            <p class="mt-2 text-xs text-muted">
+                <span x-show="selectedDelivery === 'inbox'">Sent once to each user's notification inbox when activated. New users won't receive it.</span>
+                <span x-show="selectedDelivery === 'banner'">Shows as a dismissible alert at the top of every page until dismissed or expired.</span>
+                <span x-show="selectedDelivery === 'both'">Sent to inboxes AND shown as a page-wide banner.</span>
+            </p>
+        </fieldset>
+
+        @error('delivery_method')
+            <p class="mt-1 text-xs text-red-600 dark:text-red-400" role="alert">{{ $message }}</p>
+        @enderror
+    </div>
+
     {{-- Two-column row: Active toggle + Expiry --}}
     <div class="flex flex-col sm:flex-row gap-6">
 
@@ -314,13 +409,44 @@
         </div>
     </div>
 
+    {{--
+        Banner display time (show_at) — only relevant when delivery includes a banner.
+        Hidden entirely for inbox-only notifications since it has no effect there.
+    --}}
+    <div x-show="selectedDelivery === 'banner' || selectedDelivery === 'both'"
+         x-transition:enter="transition-all duration-150 ease-out"
+         x-transition:enter-start="opacity-0 max-h-0 overflow-hidden"
+         x-transition:enter-end="opacity-100 max-h-40"
+         x-transition:leave="transition-all duration-100 ease-in"
+         x-transition:leave-start="opacity-100 max-h-40"
+         x-transition:leave-end="opacity-0 max-h-0 overflow-hidden">
+
+        <label for="show_at" class="block text-sm font-medium text-text mb-1">
+            Show banner from
+            <span class="text-muted font-normal">(optional)</span>
+        </label>
+        <input type="datetime-local"
+               id="show_at"
+               name="show_at"
+               value="{{ old('show_at', $notification->show_at?->format('Y-m-d\TH:i')) }}"
+               class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-text
+                      shadow-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent
+                      dark:bg-gray-900 dark:border-gray-600 dark:text-gray-100
+                      @error('show_at') border-red-500 dark:border-red-400 @enderror">
+        @error('show_at')
+            <p class="mt-1 text-xs text-red-600 dark:text-red-400" role="alert">{{ $message }}</p>
+        @enderror
+        <p class="mt-1 text-xs text-muted">
+            Schedule when this banner first appears. Leave blank to show immediately once active. Useful for displaying a "site going down in 5 minutes" alert automatically before a maintenance window.
+        </p>
+    </div>
+
     {{-- Action buttons --}}
     <div class="flex items-center gap-3 pt-2 border-t border-border">
         <button type="submit"
                 class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm
-                       hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent
-                       focus:ring-offset-2 transition-colors duration-150
-                       dark:bg-purple-700 dark:hover:bg-purple-600">
+                       hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent
+                       focus:ring-offset-2 transition-colors duration-150">
             {{ isset($editing) ? 'Save Changes' : 'Create Notification' }}
         </button>
         <a href="{{ route('admin.notifications.index') }}"
