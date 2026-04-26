@@ -1,5 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Campaign Compendium</title>
     <style>
         /* Light mode */
@@ -37,7 +42,18 @@
 
     @include('layouts.navigation')
 
-    {{-- Success Message --}}
+    @include('partials.system-notification-banners')
+
+    @if (session('admin_id'))
+        <div class="bg-yellow-500 text-black text-center py-2">
+            You are signed in as another user.
+            <form action="{{ route('admin.returnToAdmin') }}" method="POST" class="inline">
+                @csrf
+                <button class="underline font-semibold">Return to Admin Account</button>
+            </form>
+        </div>
+    @endif
+
     @if (session('success'))
         <div class="max-w-3xl mx-auto mt-4 mb-6 px-4">
             <div class="mb-4 p-3 bg-surface text-text border border-border rounded">

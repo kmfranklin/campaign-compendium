@@ -46,7 +46,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'suspended_at'      => 'datetime',
+            'password'          => 'hashed',
         ];
     }
 
@@ -91,5 +92,23 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    // Super Admin tooling
+    public function isSuperAdmin(): bool
+    {
+        return (bool) $this->is_super_admin;
+    }
+
+    /**
+     * Returns true if the user's account is currently suspended.
+     *
+     * We store suspension as a nullable timestamp (suspended_at) rather than a
+     * boolean so that we always have a record of *when* the suspension happened.
+     * NULL means active; any non-null value means suspended.
+     */
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
     }
 }

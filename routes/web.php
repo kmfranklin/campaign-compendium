@@ -8,7 +8,12 @@ use App\Http\Controllers\{
     QuestController,
     ItemController,
     CampaignInviteController,
-    NotificationController
+    NotificationController,
+    SuperAdminController,
+    AdminUserController,
+    ActivityLogController,
+    AdminSystemNotificationController,
+    SystemNotificationDismissalController,
 };
 
 // Public routes
@@ -61,13 +66,19 @@ Route::post('campaigns/{campaign}/members', [CampaignController::class, 'addMemb
 Route::delete('campaigns/{campaign}/members', [CampaignController::class, 'removeMember'])
     ->name('campaigns.members.remove');
 
-// Notifications system
+// Notifications system (campaign invites / user notifications)
 Route::get('/notifications', [NotificationController::class, 'index'])
     ->middleware(['auth'])
     ->name('notifications.index');
 
 Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
     ->name('notifications.markAllRead');
+
+// System notification dismissal — any authenticated user can dismiss a banner.
+// Supports both AJAX (fetch from Alpine) and plain form POST fallback.
+Route::post('/system-notifications/{notification}/dismiss', [SystemNotificationDismissalController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('system-notifications.dismiss');
 
 // Campaign invites
 Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
@@ -78,6 +89,73 @@ Route::post('invites/{invite}/accept', [CampaignInviteController::class, 'accept
 
 Route::post('invites/{invite}/decline', [CampaignInviteController::class, 'decline'])
     ->name('invites.decline');
+
+// Super Admin routes
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [SuperAdminController::class, 'index'])->name('dashboard');
+
+        // User management
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+
+        Route::post('/users/{user}/sign-in-as', [AdminUserController::class, 'signInAs'])
+            ->name('users.signInAs');
+
+        Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])
+            ->name('users.edit');
+
+        Route::put('/users/{user}', [AdminUserController::class, 'update'])
+            ->name('users.update');
+
+        // Suspension actions. We use POST (not PUT/PATCH) because these are
+        // one-click state transitions rather than full resource updates.
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])
+            ->name('users.suspend');
+
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])
+            ->name('users.unsuspend');
+
+        // Activity log — read-only, so a single GET route is all we need.
+        // Registering it as 'activity.index' matches the Route::has() guard
+        // already in sidebar-links.blade.php, which will auto-unlock the link.
+        Route::get('/activity-log', [ActivityLogController::class, 'index'])
+            ->name('activity.index');
+
+        // ── System Notifications ──────────────────────────────────────────────
+        // Full CRUD for broadcast messages. Route names are prefixed 'admin.'
+        // automatically by the group, so these become admin.notifications.*,
+        // which matches the Route::has('admin.notifications.index') guard
+        // already in sidebar-links.blade.php — the "Soon" badge disappears
+        // as soon as this route group is registered.
+        Route::get('/system-notifications', [AdminSystemNotificationController::class, 'index'])
+            ->name('notifications.index');
+
+        Route::get('/system-notifications/create', [AdminSystemNotificationController::class, 'create'])
+            ->name('notifications.create');
+
+        Route::post('/system-notifications', [AdminSystemNotificationController::class, 'store'])
+            ->name('notifications.store');
+
+        Route::get('/system-notifications/{notification}/edit', [AdminSystemNotificationController::class, 'edit'])
+            ->name('notifications.edit');
+
+        Route::patch('/system-notifications/{notification}', [AdminSystemNotificationController::class, 'update'])
+            ->name('notifications.update');
+
+        Route::delete('/system-notifications/{notification}', [AdminSystemNotificationController::class, 'destroy'])
+            ->name('notifications.destroy');
+
+        Route::post('/system-notifications/{notification}/activate', [AdminSystemNotificationController::class, 'activate'])
+            ->name('notifications.activate');
+
+        Route::post('/system-notifications/{notification}/deactivate', [AdminSystemNotificationController::class, 'deactivate'])
+            ->name('notifications.deactivate');
+    });
+
+Route::post('/admin/return-to-admin', [AdminUserController::class, 'returnToAdmin'])
+            ->name('admin.returnToAdmin');
 
 // Auth scaffolding
 require __DIR__.'/auth.php';
