@@ -21,9 +21,10 @@ export default {
 
             colors: {
                 bg: "var(--color-bg)",
-                accent: '#6d28d9',
-                'accent-hover': '#5b21b6',
-                'on-accent': '#fff',
+                accent: "var(--color-accent)",
+                'accent-hover': "var(--color-accent-hover)",
+                'on-accent': "var(--color-on-accent)",
+                hover: "var(--color-hover)",
                 danger: '#dc2626',
                 surface: "var(--color-surface)",
                 border: "var(--color-border)",

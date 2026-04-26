@@ -7,6 +7,8 @@ use App\Http\Controllers\{
     CampaignController,
     QuestController,
     ItemController,
+    SpellController,
+    CreatureController,
     CampaignInviteController,
     NotificationController,
     SuperAdminController,
@@ -53,6 +55,14 @@ Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show')
 
 // SRD and Custom Item Index Views (filtered) — public SRD view, authenticated custom view handled above
 Route::get('/srd-items', [ItemController::class, 'srdIndex'])->name('srdItems.index');
+
+// Spells — public SRD lookup (custom spell CRUD added in a later phase)
+Route::get('/spells', [SpellController::class, 'index'])->name('spells.index');
+Route::get('/spells/{spell}', [SpellController::class, 'show'])->name('spells.show');
+
+// Monsters — public SRD bestiary (/monsters is the user-facing URL; model is Creature)
+Route::get('/monsters', [CreatureController::class, 'index'])->name('creatures.index');
+Route::get('/monsters/{creature}', [CreatureController::class, 'show'])->name('creatures.show');
 
 // NPC–Quest relationships
 Route::post('campaigns/{campaign}/quests/{quest}/npcs', [QuestController::class, 'attachNpc'])

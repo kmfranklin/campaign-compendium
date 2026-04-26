@@ -14,6 +14,10 @@
             --color-border: #e5e7eb;
             --color-text: #111827;
             --color-text-muted: #6b7280;
+            --color-accent: #6d28d9;       /* violet-700 — 7:1 on white ✓ */
+            --color-accent-hover: #5b21b6; /* violet-800 — 9:1 on white ✓ */
+            --color-on-accent: #fff;
+            --color-hover: #f5f3ff;        /* violet-50 — subtle row highlight */
         }
 
         /* Dark mode */
@@ -23,6 +27,10 @@
             --color-border: #374151;
             --color-text: #f3f4f6;
             --color-text-muted: #9ca3af;
+            --color-accent: #a78bfa;       /* violet-400 — 5.4:1 on surface ✓ */
+            --color-accent-hover: #c4b5fd; /* violet-300 — 8:1 on surface ✓  */
+            --color-on-accent: #1e1b4b;    /* deep indigo for text on light accent bg */
+            --color-hover: #374151;        /* gray-700 — subtle row highlight */
         }
     </style>
 
