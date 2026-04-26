@@ -25,11 +25,14 @@ class ActivityLog extends Model
      * wrong value, and (b) you can search for usages of a specific event type
      * with "find all references" in your IDE.
      */
-    public const EVENT_USER_UPDATED          = 'user.updated';
-    public const EVENT_USER_SUSPENDED        = 'user.suspended';
-    public const EVENT_USER_UNSUSPENDED      = 'user.unsuspended';
-    public const EVENT_IMPERSONATION_STARTED = 'impersonation.started';
-    public const EVENT_IMPERSONATION_ENDED   = 'impersonation.ended';
+    public const EVENT_USER_UPDATED             = 'user.updated';
+    public const EVENT_USER_SUSPENDED           = 'user.suspended';
+    public const EVENT_USER_UNSUSPENDED         = 'user.unsuspended';
+    public const EVENT_IMPERSONATION_STARTED    = 'impersonation.started';
+    public const EVENT_IMPERSONATION_ENDED      = 'impersonation.ended';
+    public const EVENT_NOTIFICATION_CREATED     = 'notification.created';
+    public const EVENT_NOTIFICATION_UPDATED     = 'notification.updated';
+    public const EVENT_NOTIFICATION_DELETED     = 'notification.deleted';
 
     protected $fillable = [
         'admin_id',

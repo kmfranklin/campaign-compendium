@@ -91,7 +91,9 @@
     </form>
 
     {{-- Table --}}
-    <div class="overflow-x-auto">
+    {{-- No overflow-x-auto: would clip the action dropdowns. Responsive column
+         hiding handles small-screen layout instead. --}}
+    <div>
 
         {{-- Result count feedback for screen readers and sighted users alike --}}
         <p class="mb-3 text-xs text-muted" aria-live="polite">

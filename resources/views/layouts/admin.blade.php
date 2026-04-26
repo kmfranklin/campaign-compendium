@@ -46,6 +46,8 @@
 
     @include('layouts.navigation')
 
+    @include('partials.system-notification-banners')
+
     @if (session('admin_id'))
         <div class="bg-yellow-500 text-black text-center py-2 text-sm"
              role="status"

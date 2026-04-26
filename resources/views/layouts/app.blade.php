@@ -1,5 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Campaign Compendium</title>
     <style>
         /* Light mode */
@@ -36,6 +41,8 @@
 <body class="bg-bg text-text font-sans flex flex-col min-h-screen">
 
     @include('layouts.navigation')
+
+    @include('partials.system-notification-banners')
 
     @if (session('admin_id'))
         <div class="bg-yellow-500 text-black text-center py-2">
