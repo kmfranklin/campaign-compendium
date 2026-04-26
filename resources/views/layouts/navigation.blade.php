@@ -9,7 +9,7 @@
             <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('home') }}" aria-label="Campaign Compendium home">
                         <img
                             src="/images/campaign-compendium-nav-logo.png"
                             alt="Campaign Compendium logo"
@@ -127,7 +127,7 @@
 
                     <a
                         href="{{ route('register') }}"
-                        class="text-sm font-semibold text-white bg-accent px-4 py-2 rounded hover:bg-accent-hover transition-colors duration-150"
+                        class="text-sm font-semibold text-on-accent bg-accent px-4 py-2 rounded hover:bg-accent-hover transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                     >
                         Sign Up
                     </a>
@@ -156,7 +156,7 @@
 
                         @if ($unreadCount > 0)
                             <span
-                                class="absolute -top-1 -right-2 bg-accent text-white text-xs font-semibold rounded-full px-1.5 py-0.5"
+                                class="absolute -top-1 -right-2 bg-accent text-on-accent text-xs font-semibold rounded-full px-1.5 py-0.5"
                             >
                                 {{ $unreadCount }}
                             </span>

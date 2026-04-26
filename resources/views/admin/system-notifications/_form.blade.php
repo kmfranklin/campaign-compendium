@@ -290,7 +290,7 @@
                         @click="selectedDelivery = 'inbox'"
                         :aria-pressed="(selectedDelivery === 'inbox').toString()"
                         :class="selectedDelivery === 'inbox'
-                            ? 'border-accent bg-accent text-white'
+                            ? 'border-accent bg-accent text-on-accent'
                             : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
                         class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
                                transition-colors duration-150 focus:outline-none focus:ring-2
@@ -308,7 +308,7 @@
                         @click="selectedDelivery = 'banner'"
                         :aria-pressed="(selectedDelivery === 'banner').toString()"
                         :class="selectedDelivery === 'banner'
-                            ? 'border-accent bg-accent text-white'
+                            ? 'border-accent bg-accent text-on-accent'
                             : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
                         class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
                                transition-colors duration-150 focus:outline-none focus:ring-2
@@ -326,7 +326,7 @@
                         @click="selectedDelivery = 'both'"
                         :aria-pressed="(selectedDelivery === 'both').toString()"
                         :class="selectedDelivery === 'both'
-                            ? 'border-accent bg-accent text-white'
+                            ? 'border-accent bg-accent text-on-accent'
                             : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
                         class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
                                transition-colors duration-150 focus:outline-none focus:ring-2
@@ -444,7 +444,7 @@
     {{-- Action buttons --}}
     <div class="flex items-center gap-3 pt-2 border-t border-border">
         <button type="submit"
-                class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm
+                class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-on-accent shadow-sm
                        hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent
                        focus:ring-offset-2 transition-colors duration-150">
             {{ isset($editing) ? 'Save Changes' : 'Create Notification' }}

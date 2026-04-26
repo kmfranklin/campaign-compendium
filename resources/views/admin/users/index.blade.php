@@ -71,7 +71,7 @@
                         class="rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-150
                                focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
                                {{ $filter === $value
-                                    ? 'bg-accent text-white border-accent'
+                                    ? 'bg-accent text-on-accent border-accent'
                                     : 'bg-surface text-muted border-border hover:text-text hover:border-accent' }}"
                         aria-pressed="{{ $filter === $value ? 'true' : 'false' }}">
                     {{ $label }}
