@@ -15,12 +15,19 @@ class DatabaseSeeder extends Seeder
     {
         // --- Core reference data from Open5e ---
         $this->call([
+            // Items
             ItemCategoriesTableSeeder::class,
             ItemRaritiesTableSeeder::class,
             DamageTypesTableSeeder::class,
             ItemsTableSeeder::class,
             WeaponsTableSeeder::class,
             ArmorsTableSeeder::class,
+            // Spells (school reference table must come before spells)
+            SpellSchoolsTableSeeder::class,
+            SpellsTableSeeder::class,
+            // Creatures (type reference table must come before creatures)
+            CreatureTypesTableSeeder::class,
+            CreaturesTableSeeder::class,
         ]);
 
         // --- Dev/test accounts ---
