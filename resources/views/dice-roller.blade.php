@@ -12,7 +12,7 @@
         <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">Dice Roller</h1>
             <p class="mt-4 text-base sm:text-lg text-violet-200 max-w-xl mx-auto">
-                Roll any combination of polyhedral dice. No account needed.
+                Pick a die, set your quantity and modifier, and roll.
             </p>
         </div>
     </div>
