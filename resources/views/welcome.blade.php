@@ -93,9 +93,20 @@
                    class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
-                            {{-- Shield icon --}}
+                            {{-- Custom beholder icon --}}
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm0 8.625a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM8.25 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm5.25 0a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" />
+                                <circle cx="12" cy="13.5" r="5.5"/>
+                                <path d="M9 13.5 C10 11.5 14 11.5 15 13.5 C14 15.5 10 15.5 9 13.5Z" fill="currentColor" stroke="none"/>
+                                <line x1="12" y1="8" x2="12" y2="5" stroke-linecap="round"/>
+                                <circle cx="12" cy="4" r="1.2" fill="currentColor" stroke="none"/>
+                                <line x1="15.2" y1="9" x2="17.5" y2="6.8" stroke-linecap="round"/>
+                                <circle cx="18.3" cy="5.9" r="1.2" fill="currentColor" stroke="none"/>
+                                <line x1="8.8" y1="9" x2="6.5" y2="6.8" stroke-linecap="round"/>
+                                <circle cx="5.7" cy="5.9" r="1.2" fill="currentColor" stroke="none"/>
+                                <line x1="17.2" y1="12.5" x2="20" y2="11.5" stroke-linecap="round"/>
+                                <circle cx="21" cy="11.1" r="1.2" fill="currentColor" stroke="none"/>
+                                <line x1="6.8" y1="12.5" x2="4" y2="11.5" stroke-linecap="round"/>
+                                <circle cx="3" cy="11.1" r="1.2" fill="currentColor" stroke="none"/>
                             </svg>
                         </div>
                         <h3 class="text-base font-semibold text-text group-hover:text-accent transition-colors">Monsters</h3>

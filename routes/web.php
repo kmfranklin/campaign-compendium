@@ -20,6 +20,7 @@ use App\Http\Controllers\{
 
 // Public routes
 Route::view('/', 'welcome')->name('home');
+Route::view('/about', 'about')->name('about');
 Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
 // Authenticated user routes

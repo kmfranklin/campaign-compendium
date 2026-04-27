@@ -24,6 +24,9 @@
                         <x-nav-link href="{{ route('srdItems.index') }}" :active="request()->routeIs('srdItems.*')">
                             {{ __('SRD Items') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
+                            {{ __('About') }}
+                        </x-nav-link>
                     @endguest
 
                     @auth
@@ -40,6 +43,10 @@
                             :active="request()->routeIs('compendium.npcs.*')"
                         >
                             {{ __('Characters') }}
+                        </x-nav-link>
+
+                        <x-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
+                            {{ __('About') }}
                         </x-nav-link>
 
                         @php
@@ -277,6 +284,10 @@
                         {{ __('SRD Items') }}
                     </x-responsive-nav-link>
 
+                    <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                        {{ __('About') }}
+                    </x-responsive-nav-link>
+
                     <x-responsive-nav-link :href="route('login')">
                         {{ __('Sign In') }}
                     </x-responsive-nav-link>
@@ -300,6 +311,10 @@
                         :active="request()->routeIs('compendium.npcs.*')"
                     >
                         {{ __('Characters') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                        {{ __('About') }}
                     </x-responsive-nav-link>
 
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
