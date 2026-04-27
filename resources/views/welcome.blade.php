@@ -135,6 +135,24 @@
                     <p class="mt-4 text-xs font-semibold text-accent uppercase tracking-wide">Browse Items →</p>
                 </a>
 
+                {{-- Dice Roller --}}
+                <a href="{{ route('dice-roller') }}"
+                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
+                            {{-- Cube/dice icon --}}
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-semibold text-text group-hover:text-accent transition-colors">Dice Roller</h3>
+                    </div>
+                    <p class="text-sm text-muted leading-relaxed">
+                        Roll any combination of polyhedral dice — d4 through d100 — with optional modifiers and a full roll history. No account needed.
+                    </p>
+                    <p class="mt-4 text-xs font-semibold text-accent uppercase tracking-wide">Roll Dice →</p>
+                </a>
+
             </div>
         </section>
 
@@ -302,6 +320,13 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z" />
                     </svg>
                     Items &amp; Equipment <span class="ml-auto text-xs text-muted">SRD items</span>
+                </a>
+                <a href="{{ route('dice-roller') }}"
+                   class="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                    <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                    </svg>
+                    Dice Roller <span class="ml-auto text-xs text-muted">d4–d100</span>
                 </a>
             </div>
 

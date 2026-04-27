@@ -102,6 +102,12 @@
             <nav aria-label="Footer navigation">
                 <ul class="flex items-center gap-6 list-none m-0 p-0">
                     <li>
+                        <a href="{{ route('dice-roller') }}"
+                           class="text-sm text-muted hover:text-text transition-colors duration-150 focus:outline-none focus:underline">
+                            Dice Roller
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('about') }}"
                            class="text-sm text-muted hover:text-text transition-colors duration-150 focus:outline-none focus:underline">
                             About
