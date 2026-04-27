@@ -96,8 +96,28 @@
         @yield('content')
     </main>
 
-    <footer class="bg-surface border-t border-border mt-12 py-6 text-center text-muted">
-        © {{ date('Y') }} Campaign Compendium. All rights reserved.
+    <footer class="bg-surface border-t border-border mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-muted">© {{ date('Y') }} Campaign Compendium. All rights reserved.</p>
+            <nav aria-label="Footer navigation">
+                <ul class="flex items-center gap-6 list-none m-0 p-0">
+                    <li>
+                        <a href="{{ route('about') }}"
+                           class="text-sm text-muted hover:text-text transition-colors duration-150 focus:outline-none focus:underline">
+                            About
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/kmfranklin/campaign-compendium"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="text-sm text-muted hover:text-text transition-colors duration-150 focus:outline-none focus:underline">
+                            GitHub
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </footer>
 
 </body>

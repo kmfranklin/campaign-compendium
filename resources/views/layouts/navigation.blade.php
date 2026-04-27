@@ -22,18 +22,17 @@
                 <div class="hidden sm:flex sm:ms-10 items-center space-x-8">
                     @guest
                         <x-nav-link href="{{ route('srdItems.index') }}" :active="request()->routeIs('srdItems.*')">
-                            {{ __('SRD Items') }}
+                            {{ __('Items') }}
                         </x-nav-link>
-                        <x-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
-                            {{ __('About') }}
+                        <x-nav-link href="{{ route('spells.index') }}" :active="request()->routeIs('spells.*')">
+                            {{ __('Spells') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('creatures.index') }}" :active="request()->routeIs('creatures.*')">
+                            {{ __('Monsters') }}
                         </x-nav-link>
                     @endguest
 
                     @auth
-                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-
                         <x-nav-link href="{{ route('campaigns.index') }}" :active="request()->routeIs('campaigns.*')">
                             {{ __('Campaigns') }}
                         </x-nav-link>
@@ -45,8 +44,12 @@
                             {{ __('Characters') }}
                         </x-nav-link>
 
-                        <x-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
-                            {{ __('About') }}
+                        <x-nav-link href="{{ route('spells.index') }}" :active="request()->routeIs('spells.*')">
+                            {{ __('Spells') }}
+                        </x-nav-link>
+
+                        <x-nav-link href="{{ route('creatures.index') }}" :active="request()->routeIs('creatures.*')">
+                            {{ __('Monsters') }}
                         </x-nav-link>
 
                         @php
@@ -144,6 +147,17 @@
                     @php
                         $unreadCount = auth()->user()->notifications()->whereNull('read_at')->count();
                     @endphp
+
+                    <!-- Dashboard shortcut — desktop only; mobile uses the hamburger menu -->
+                    <a
+                        href="{{ route('dashboard') }}"
+                        class="hidden sm:inline-flex items-center text-sm font-semibold px-3 py-1.5 rounded border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2
+                               {{ request()->routeIs('dashboard')
+                                   ? 'border-purple-800 text-purple-900 dark:border-violet-400 dark:text-violet-300'
+                                   : 'border-gray-300 text-gray-600 hover:border-purple-700 hover:text-purple-700 dark:border-gray-600 dark:text-gray-300 dark:hover:border-violet-400 dark:hover:text-violet-300' }}"
+                    >
+                        Dashboard
+                    </a>
 
                     <!-- Notifications -->
                     <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center">
@@ -281,11 +295,15 @@
             <div class="py-3 space-y-1">
                 @guest
                     <x-responsive-nav-link :href="route('srdItems.index')" :active="request()->routeIs('srdItems.*')">
-                        {{ __('SRD Items') }}
+                        {{ __('Items') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
-                        {{ __('About') }}
+                    <x-responsive-nav-link :href="route('spells.index')" :active="request()->routeIs('spells.*')">
+                        {{ __('Spells') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('creatures.index')" :active="request()->routeIs('creatures.*')">
+                        {{ __('Monsters') }}
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link :href="route('login')">
@@ -313,8 +331,12 @@
                         {{ __('Characters') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
-                        {{ __('About') }}
+                    <x-responsive-nav-link :href="route('spells.index')" :active="request()->routeIs('spells.*')">
+                        {{ __('Spells') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('creatures.index')" :active="request()->routeIs('creatures.*')">
+                        {{ __('Monsters') }}
                     </x-responsive-nav-link>
 
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
