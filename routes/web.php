@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     ItemController,
     SpellController,
     CreatureController,
+    RuleController,
     CampaignInviteController,
     NotificationController,
     SuperAdminController,
@@ -57,6 +58,14 @@ Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show')
 
 // SRD and Custom Item Index Views (filtered) — public SRD view, authenticated custom view handled above
 Route::get('/srd-items', [ItemController::class, 'srdIndex'])->name('srdItems.index');
+
+// Rules — public SRD rules reference
+// IMPORTANT: the literal /rules/conditions route must be registered BEFORE the
+// wildcard /rules/{ruleSet:slug}, otherwise Laravel would try to find a RuleSet
+// with slug "conditions" and return a 404.
+Route::get('/rules', [RuleController::class, 'index'])->name('rules.index');
+Route::get('/rules/conditions', [RuleController::class, 'conditions'])->name('rules.conditions');
+Route::get('/rules/{ruleSet:slug}', [RuleController::class, 'show'])->name('rules.show');
 
 // Spells — public SRD lookup (custom spell CRUD added in a later phase)
 Route::get('/spells', [SpellController::class, 'index'])->name('spells.index');

@@ -28,6 +28,10 @@ class DatabaseSeeder extends Seeder
             // Creatures (type reference table must come before creatures)
             CreatureTypesTableSeeder::class,
             CreaturesTableSeeder::class,
+            // Rules & Conditions (rule sets must come before rules — FK dependency)
+            RuleSetsTableSeeder::class,
+            RulesTableSeeder::class,
+            ConditionsTableSeeder::class,
         ]);
 
         // --- Dev/test accounts ---

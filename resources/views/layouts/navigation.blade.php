@@ -33,6 +33,9 @@
                         <x-nav-link href="{{ route('dice-roller') }}" :active="request()->routeIs('dice-roller')">
                             {{ __('Dice Roller') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('rules.index') }}" :active="request()->routeIs('rules.*')">
+                            {{ __('Rules') }}
+                        </x-nav-link>
                     @endguest
 
                     @auth
@@ -53,6 +56,10 @@
 
                         <x-nav-link href="{{ route('creatures.index') }}" :active="request()->routeIs('creatures.*')">
                             {{ __('Monsters') }}
+                        </x-nav-link>
+
+                        <x-nav-link href="{{ route('rules.index') }}" :active="request()->routeIs('rules.*')">
+                            {{ __('Rules') }}
                         </x-nav-link>
 
                         @php
@@ -313,6 +320,10 @@
                         {{ __('Dice Roller') }}
                     </x-responsive-nav-link>
 
+                    <x-responsive-nav-link :href="route('rules.index')" :active="request()->routeIs('rules.*')">
+                        {{ __('Rules') }}
+                    </x-responsive-nav-link>
+
                     <x-responsive-nav-link :href="route('login')">
                         {{ __('Sign In') }}
                     </x-responsive-nav-link>
@@ -344,6 +355,10 @@
 
                     <x-responsive-nav-link :href="route('creatures.index')" :active="request()->routeIs('creatures.*')">
                         {{ __('Monsters') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('rules.index')" :active="request()->routeIs('rules.*')">
+                        {{ __('Rules') }}
                     </x-responsive-nav-link>
 
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
