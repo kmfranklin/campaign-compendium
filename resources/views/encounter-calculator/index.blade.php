@@ -86,7 +86,6 @@
                     </template>
                 </div>
 
-                {{-- Summary --}}
                 <p
                     class="mt-3 text-sm text-muted"
                     x-show="party.length > 0"
@@ -231,17 +230,45 @@
                             </div>
                             <p class="text-xs text-muted mb-3" x-text="combo.description"></p>
 
-                            {{-- Monster list --}}
-                            <ul class="space-y-1 mb-4" aria-label="Monsters in this suggestion">
+                            {{-- Monster list inside suggestion card --}}
+                            <ul class="space-y-1 mb-4">
                                 <template x-for="(m, mi) in combo.monsters" :key="mi">
-                                    <li class="flex justify-between text-sm text-text">
-                                        <span>
-                                            <span x-text="m.quantity"></span>×
-                                            <span x-text="m.name"></span>
-                                        </span>
-                                        <span class="text-muted text-xs self-center">
-                                            CR <span x-text="m.cr"></span>
-                                        </span>
+                                    <li class="text-sm">
+                                        <div class="flex justify-between items-start">
+                                            <span class="text-text">
+                                                <span x-text="m.quantity"></span>×
+                                                <span x-text="m.name"></span>
+                                            </span>
+                                            <div class="flex items-center gap-2 shrink-0 ml-2">
+                                                <span class="text-muted text-xs">CR <span x-text="m.cr"></span></span>
+                                                <button
+                                                    type="button"
+                                                    x-show="m.creature_id"
+                                                    @click="toggleStats(m.creature_id)"
+                                                    class="text-xs text-accent hover:text-accent-hover focus:outline-none focus:ring-1 focus:ring-accent rounded px-1"
+                                                    :aria-label="'Toggle stats for ' + m.name"
+                                                    :aria-expanded="!!expandedStats[m.creature_id]"
+                                                >
+                                                    <span x-show="!expandedStats[m.creature_id]">Stats ▾</span>
+                                                    <span x-show="expandedStats[m.creature_id]">Stats ▴</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {{-- Inline stat drawer --}}
+                                        <div
+                                            x-show="m.creature_id && expandedStats[m.creature_id]"
+                                            x-transition:enter="transition ease-out duration-150"
+                                            x-transition:enter-start="opacity-0 -translate-y-1"
+                                            x-transition:enter-end="opacity-100 translate-y-0"
+                                            class="mt-2"
+                                        >
+                                            <template x-if="statCache[m.creature_id]">
+                                                <div x-html="renderStatBlock(statCache[m.creature_id])"></div>
+                                            </template>
+                                            <template x-if="!statCache[m.creature_id] && expandedStats[m.creature_id]">
+                                                <p class="text-xs text-muted italic py-1">Loading…</p>
+                                            </template>
+                                        </div>
                                     </li>
                                 </template>
                             </ul>
@@ -308,47 +335,73 @@
 
                 <ul class="divide-y divide-border" aria-label="Monsters in encounter">
                     <template x-for="(m, idx) in encounter" :key="idx">
-                        <li class="py-3 flex items-center justify-between gap-4">
-                            <div class="min-w-0 flex-1">
-                                <p class="text-sm font-medium text-text truncate" x-text="m.name"></p>
-                                <p class="text-xs text-muted">
-                                    CR <span x-text="m.cr"></span>
-                                    · <span x-text="m.xp.toLocaleString()"></span> XP each
-                                    · <span
-                                        class="uppercase tracking-wide font-medium"
-                                        :class="sourceClass(m.source)"
-                                        x-text="m.source === 'srd' ? 'SRD' : m.source === 'custom_creature' ? 'Custom' : 'Manual'"
-                                    ></span>
-                                </p>
-                            </div>
+                        <li class="py-3">
+                            <div class="flex items-center justify-between gap-4">
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium text-text truncate" x-text="m.name"></p>
+                                    <div class="flex items-center gap-3 mt-0.5">
+                                        <span class="text-xs text-muted">
+                                            CR <span x-text="m.cr"></span>
+                                            · <span x-text="m.xp.toLocaleString()"></span> XP each
+                                        </span>
+                                        <button
+                                            type="button"
+                                            x-show="m.creature_id"
+                                            @click="toggleStats(m.creature_id)"
+                                            class="text-xs text-accent hover:text-accent-hover focus:outline-none focus:ring-1 focus:ring-accent rounded"
+                                            :aria-label="'Toggle stats for ' + m.name"
+                                            :aria-expanded="!!expandedStats[m.creature_id]"
+                                        >
+                                            <span x-show="!expandedStats[m.creature_id]">Stats ▾</span>
+                                            <span x-show="expandedStats[m.creature_id]">Stats ▴</span>
+                                        </button>
+                                    </div>
+                                </div>
 
-                            {{-- Quantity stepper --}}
-                            <div class="flex items-center gap-1" role="group" :aria-label="'Quantity of ' + m.name">
+                                {{-- Quantity stepper --}}
+                                <div class="flex items-center gap-1" role="group" :aria-label="'Quantity of ' + m.name">
+                                    <button
+                                        type="button"
+                                        @click="decrement(idx)"
+                                        class="w-7 h-7 flex items-center justify-center rounded-md border border-border text-muted hover:bg-hover focus:outline-none focus:ring-1 focus:ring-accent"
+                                        :aria-label="'Decrease quantity of ' + m.name"
+                                    >−</button>
+                                    <span class="w-8 text-center text-sm font-medium text-text" x-text="m.quantity"></span>
+                                    <button
+                                        type="button"
+                                        @click="increment(idx)"
+                                        class="w-7 h-7 flex items-center justify-center rounded-md border border-border text-muted hover:bg-hover focus:outline-none focus:ring-1 focus:ring-accent"
+                                        :aria-label="'Increase quantity of ' + m.name"
+                                    >+</button>
+                                </div>
+
                                 <button
                                     type="button"
-                                    @click="decrement(idx)"
-                                    class="w-7 h-7 flex items-center justify-center rounded-md border border-border text-muted hover:bg-hover focus:outline-none focus:ring-1 focus:ring-accent"
-                                    :aria-label="'Decrease quantity of ' + m.name"
-                                >−</button>
-                                <span class="w-8 text-center text-sm font-medium text-text" x-text="m.quantity"></span>
-                                <button
-                                    type="button"
-                                    @click="increment(idx)"
-                                    class="w-7 h-7 flex items-center justify-center rounded-md border border-border text-muted hover:bg-hover focus:outline-none focus:ring-1 focus:ring-accent"
-                                    :aria-label="'Increase quantity of ' + m.name"
-                                >+</button>
+                                    @click="removeMonster(idx)"
+                                    class="text-red-400 hover:text-red-600 focus:outline-none focus:ring-1 focus:ring-red-400 rounded"
+                                    :aria-label="'Remove ' + m.name + ' from encounter'"
+                                >
+                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C9.327 4.025 10.16 4 11 4h-1Zm-5.5 5.25a.75.75 0 0 1 .75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
                             </div>
 
-                            <button
-                                type="button"
-                                @click="removeMonster(idx)"
-                                class="text-red-400 hover:text-red-600 focus:outline-none focus:ring-1 focus:ring-red-400 rounded"
-                                :aria-label="'Remove ' + m.name + ' from encounter'"
+                            {{-- Inline stat drawer for builder --}}
+                            <div
+                                x-show="m.creature_id && expandedStats[m.creature_id]"
+                                x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 -translate-y-1"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                class="mt-3"
                             >
-                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C9.327 4.025 10.16 4 11 4h-1Zm-5.5 5.25a.75.75 0 0 1 .75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
+                                <template x-if="statCache[m.creature_id]">
+                                    <div x-html="renderStatBlock(statCache[m.creature_id])"></div>
+                                </template>
+                                <template x-if="!statCache[m.creature_id] && expandedStats[m.creature_id]">
+                                    <p class="text-xs text-muted italic">Loading…</p>
+                                </template>
+                            </div>
                         </li>
                     </template>
                 </ul>
@@ -380,7 +433,6 @@
                     Difficulty
                 </h2>
 
-                {{-- Current difficulty label --}}
                 <div class="flex items-center justify-between mb-4">
                     <span
                         class="text-2xl font-bold capitalize"
@@ -394,7 +446,6 @@
                     ></span>
                 </div>
 
-                {{-- XP breakdown --}}
                 <dl class="space-y-2 text-sm mb-4">
                     <div class="flex justify-between">
                         <dt class="text-muted">Monsters (raw)</dt>
@@ -410,7 +461,6 @@
                     </div>
                 </dl>
 
-                {{-- Threshold progress bars --}}
                 <div class="space-y-2" aria-label="XP thresholds">
                     <template x-for="tier in ['easy','medium','hard','deadly']" :key="tier">
                         <div>
@@ -434,14 +484,12 @@
                     </template>
                 </div>
 
-                {{-- Monster count note --}}
                 <p class="text-xs text-muted mt-3">
                     <span x-text="monsterCount"></span> monster<span x-show="monsterCount !== 1">s</span>
                     · Party of <span x-text="party.length"></span>
                     · Raw XP: <span x-text="totalXp.toLocaleString()"></span>
                 </p>
 
-                {{-- Save (auth only) --}}
                 @auth
                 <div class="mt-5 pt-4 border-t border-border">
                     <label for="encounter-name" class="block text-sm font-medium text-text mb-1">
@@ -466,26 +514,12 @@
                         <span x-show="!saving">Save Encounter</span>
                         <span x-show="saving">Saving…</span>
                     </button>
-                    <p
-                        x-show="saveSuccess"
-                        x-transition
-                        class="mt-2 text-sm text-green-600 text-center"
-                        role="status"
-                    >Encounter saved!</p>
-                    <p
-                        x-show="saveError"
-                        x-transition
-                        class="mt-2 text-sm text-red-600 text-center"
-                        role="alert"
-                        x-text="saveError"
-                    ></p>
+                    <p x-show="saveSuccess" x-transition class="mt-2 text-sm text-green-600 text-center" role="status">Encounter saved!</p>
+                    <p x-show="saveError" x-transition class="mt-2 text-sm text-red-600 text-center" role="alert" x-text="saveError"></p>
                 </div>
                 @else
                 <p class="mt-4 text-xs text-muted text-center">
-                    <a
-                        href="{{ route('login') }}"
-                        class="text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded"
-                    >Log in</a>
+                    <a href="{{ route('login') }}" class="text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded">Log in</a>
                     to save encounters.
                 </p>
                 @endauth
@@ -494,12 +528,32 @@
 
         {{-- ── Candidate List ──────────────────────────────────────────────────── --}}
         <div x-show="candidates.length > 0" x-transition>
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-text">
-                    Candidates
-                    <span class="text-sm font-normal text-muted ml-1">— creatures in the CR range for this encounter</span>
-                </h2>
-                <span class="text-sm text-muted" x-text="filteredCandidates.length + ' shown'"></span>
+            {{-- Header + sort controls --}}
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                <div>
+                    <h2 class="text-lg font-semibold text-text inline">Candidates</h2>
+                    <span class="text-sm text-muted ml-2">— creatures in the CR range for this encounter</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-muted">Sort:</span>
+                    {{-- Sort chips --}}
+                    @foreach ([
+                        'cr_asc'   => 'CR ↑',
+                        'cr_desc'  => 'CR ↓',
+                        'name_asc' => 'Name ↑',
+                        'name_desc'=> 'Name ↓',
+                    ] as $val => $label)
+                        <button
+                            type="button"
+                            @click="candidateSort = '{{ $val }}'"
+                            class="px-2.5 py-1 rounded-full border text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1"
+                            :class="candidateSort === '{{ $val }}'
+                                ? 'bg-accent text-on-accent border-accent'
+                                : 'border-border text-muted hover:bg-hover'"
+                        >{{ $label }}</button>
+                    @endforeach
+                    <span class="text-xs text-muted ml-1" x-text="'(' + filteredCandidates.length + ')'"></span>
+                </div>
             </div>
 
             <div
@@ -509,25 +563,54 @@
                 aria-label="Candidate creatures"
             >
                 <template x-for="(c, ci) in filteredCandidates" :key="ci">
-                    <div
-                        role="listitem"
-                        class="flex items-center justify-between px-5 py-3 border-b border-border last:border-0 hover:bg-hover"
-                    >
-                        <div>
-                            <span class="text-sm font-medium text-text" x-text="c.name"></span>
-                            <span class="ml-2 text-xs text-muted">
-                                CR <span x-text="c.cr"></span>
-                                · <span x-text="c.xp.toLocaleString()"></span> XP
-                            </span>
+                    <div role="listitem" class="border-b border-border last:border-0">
+                        {{-- Main row --}}
+                        <div class="flex items-center justify-between px-5 py-3 hover:bg-hover">
+                            <div class="min-w-0 flex-1">
+                                <span class="text-sm font-medium text-text" x-text="c.name"></span>
+                                <span class="ml-2 text-xs text-muted">
+                                    CR <span x-text="c.cr"></span>
+                                    · <span x-text="c.xp.toLocaleString()"></span> XP
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0 ml-3">
+                                <button
+                                    type="button"
+                                    x-show="c.creature_id"
+                                    @click="toggleStats(c.creature_id)"
+                                    class="text-xs text-muted hover:text-text focus:outline-none focus:ring-1 focus:ring-accent rounded px-1.5 py-0.5 border border-border hover:border-accent transition-colors"
+                                    :aria-label="'Toggle stat block for ' + c.name"
+                                    :aria-expanded="!!expandedStats[c.creature_id]"
+                                >
+                                    <span x-show="!expandedStats[c.creature_id]">Stats ▾</span>
+                                    <span x-show="expandedStats[c.creature_id]">Stats ▴</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="addFromCandidate(c)"
+                                    class="text-sm text-accent hover:text-accent-hover font-medium focus:outline-none focus:ring-1 focus:ring-accent rounded px-2 py-0.5"
+                                    :aria-label="'Add ' + c.name + ' to encounter'"
+                                >
+                                    + Add
+                                </button>
+                            </div>
                         </div>
-                        <button
-                            type="button"
-                            @click="addFromCandidate(c)"
-                            class="text-sm text-accent hover:text-accent-hover font-medium focus:outline-none focus:ring-1 focus:ring-accent rounded px-2 py-0.5"
-                            :aria-label="'Add ' + c.name + ' to encounter'"
+
+                        {{-- Stat drawer --}}
+                        <div
+                            x-show="c.creature_id && expandedStats[c.creature_id]"
+                            x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 -translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            class="px-5 pb-4 bg-bg border-t border-border"
                         >
-                            + Add
-                        </button>
+                            <template x-if="statCache[c.creature_id]">
+                                <div x-html="renderStatBlock(statCache[c.creature_id])"></div>
+                            </template>
+                            <template x-if="!statCache[c.creature_id] && expandedStats[c.creature_id]">
+                                <p class="text-xs text-muted italic py-3">Loading…</p>
+                            </template>
+                        </div>
                     </div>
                 </template>
                 <p
@@ -565,6 +648,13 @@ function encounterCalculator() {
         target:             null,
         candidates:         [],
         candidateSearch:    '',
+        candidateSort:      'cr_asc',
+
+        // ── Stat drawers ───────────────────────────────────────────────────────
+        // expandedStats: { [creature_id]: true/false }
+        // statCache:     { [creature_id]: statData object }
+        expandedStats: {},
+        statCache:     {},
 
         // ── Current encounter ──────────────────────────────────────────────────
         encounter:     [],
@@ -575,7 +665,6 @@ function encounterCalculator() {
         saveSuccess: false,
         saveError:   null,
 
-        // ── Lifecycle ──────────────────────────────────────────────────────────
         init() {},
 
         // ── Computed ───────────────────────────────────────────────────────────
@@ -611,10 +700,37 @@ function encounterCalculator() {
             return 'deadly';
         },
 
+        // filteredCandidates: name-filtered then client-side sorted
         get filteredCandidates() {
             const q = this.candidateSearch.trim().toLowerCase();
-            if (!q) return this.candidates;
-            return this.candidates.filter(c => c.name.toLowerCase().includes(q));
+            let list = q
+                ? this.candidates.filter(c => c.name.toLowerCase().includes(q))
+                : [...this.candidates];
+
+            // CR values like '1/8', '1/4', '1/2' need numeric conversion for sorting
+            const crToNum = cr => {
+                if (cr === '1/8') return 0.125;
+                if (cr === '1/4') return 0.25;
+                if (cr === '1/2') return 0.5;
+                return parseFloat(cr) || 0;
+            };
+
+            switch (this.candidateSort) {
+                case 'cr_asc':
+                    list.sort((a, b) => crToNum(a.cr) - crToNum(b.cr) || a.name.localeCompare(b.name));
+                    break;
+                case 'cr_desc':
+                    list.sort((a, b) => crToNum(b.cr) - crToNum(a.cr) || a.name.localeCompare(b.name));
+                    break;
+                case 'name_asc':
+                    list.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name_desc':
+                    list.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+            }
+
+            return list;
         },
 
         // ── Party management ───────────────────────────────────────────────────
@@ -634,11 +750,113 @@ function encounterCalculator() {
             else            this.selectedTypes.splice(idx, 1);
         },
 
-        // ── Multiplier (mirrors PHP controller exactly) ────────────────────────
+        // ── Stat drawer ────────────────────────────────────────────────────────
         //
-        // The brackets and step-adjustment logic are identical to the server.
-        // Keeping them in sync means the live difficulty panel in the builder
-        // always agrees with what the server computed for the suggestion cards.
+        // Toggling a creature open for the first time fires a fetch to
+        // /encounter-calculator/creatures/{id}. The response is cached in
+        // statCache so subsequent opens are instant with no network round-trip.
+        async toggleStats(creatureId) {
+            if (!creatureId) return;
+
+            const isOpen = !!this.expandedStats[creatureId];
+
+            // Close: just flip the flag
+            if (isOpen) {
+                this.expandedStats = { ...this.expandedStats, [creatureId]: false };
+                return;
+            }
+
+            // Open and already cached: just flip the flag
+            if (this.statCache[creatureId]) {
+                this.expandedStats = { ...this.expandedStats, [creatureId]: true };
+                return;
+            }
+
+            // Open and not yet cached: show loading state, then fetch
+            this.expandedStats = { ...this.expandedStats, [creatureId]: true };
+
+            try {
+                const res = await fetch(`/encounter-calculator/creatures/${creatureId}`, {
+                    headers: { 'Accept': 'application/json' },
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    this.statCache = { ...this.statCache, [creatureId]: data };
+                }
+            } catch (e) {
+                // Fail silently — loading indicator stays until cache is populated
+            }
+        },
+
+        // Builds the HTML for the compact stat block shown inside the drawer.
+        // Uses Tailwind classes that are already in the stylesheet from other views.
+        renderStatBlock(s) {
+            if (!s) return '';
+
+            // Ability score table
+            const abs = ['str','dex','con','int','wis','cha'];
+            const abLabels = { str:'STR', dex:'DEX', con:'CON', int:'INT', wis:'WIS', cha:'CHA' };
+            const abCells = abs.map(ab => `
+                <div class="text-center">
+                    <div class="text-xs font-semibold text-muted uppercase">${abLabels[ab]}</div>
+                    <div class="text-sm font-medium text-text">${s.abilities[ab].score}</div>
+                    <div class="text-xs text-muted">(${s.abilities[ab].mod})</div>
+                </div>
+            `).join('');
+
+            // Optional rows (only show if there's data)
+            const optRow = (label, arr) => {
+                if (!arr || arr.length === 0) return '';
+                return `<div class="text-xs text-text"><span class="font-semibold text-muted">${label}:</span> ${Array.isArray(arr) ? arr.join(', ') : arr}</div>`;
+            };
+
+            const saves = s.saving_throws && Object.keys(s.saving_throws).length > 0
+                ? Object.entries(s.saving_throws).map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)} ${v >= 0 ? '+' : ''}${v}`).join(', ')
+                : null;
+
+            const skills = s.skill_bonuses && Object.keys(s.skill_bonuses).length > 0
+                ? Object.entries(s.skill_bonuses).map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)} ${v >= 0 ? '+' : ''}${v}`).join(', ')
+                : null;
+
+            return `
+                <div class="mt-3 text-sm space-y-2">
+                    {{-- Identity line --}}
+                    <p class="text-xs text-muted italic">${s.size} ${s.type}${s.alignment && s.alignment !== '—' ? ', ' + s.alignment : ''}</p>
+
+                    {{-- Core stats --}}
+                    <div class="flex flex-wrap gap-x-5 gap-y-1 text-xs">
+                        <span><span class="font-semibold text-muted">AC</span> <span class="text-text">${s.ac}${s.ac_detail ? ' (' + s.ac_detail + ')' : ''}</span></span>
+                        <span><span class="font-semibold text-muted">HP</span> <span class="text-text">${s.hp}${s.hit_dice ? ' (' + s.hit_dice + ')' : ''}</span></span>
+                        <span><span class="font-semibold text-muted">Speed</span> <span class="text-text">${s.speed}</span></span>
+                        <span><span class="font-semibold text-muted">CR</span> <span class="text-text">${s.cr} (${s.xp.toLocaleString()} XP)</span></span>
+                    </div>
+
+                    {{-- Ability scores --}}
+                    <div class="grid grid-cols-6 gap-1 py-2 border-y border-border">
+                        ${abCells}
+                    </div>
+
+                    {{-- Optional rows --}}
+                    <div class="space-y-0.5">
+                        ${saves   ? `<div class="text-xs text-text"><span class="font-semibold text-muted">Saves:</span> ${saves}</div>` : ''}
+                        ${skills  ? `<div class="text-xs text-text"><span class="font-semibold text-muted">Skills:</span> ${skills}</div>` : ''}
+                        ${optRow('Immunities', s.damage_immunities)}
+                        ${optRow('Resistances', s.damage_resistances)}
+                        ${optRow('Vulnerabilities', s.damage_vulnerabilities)}
+                        ${optRow('Condition immunities', s.condition_immunities)}
+                        ${s.passive_perception ? `<div class="text-xs text-text"><span class="font-semibold text-muted">Passive Perception:</span> ${s.passive_perception}</div>` : ''}
+                        ${s.languages ? `<div class="text-xs text-text"><span class="font-semibold text-muted">Languages:</span> ${s.languages}</div>` : ''}
+                    </div>
+
+                    {{-- Full stat block link --}}
+                    <a href="${s.url}" class="inline-block text-xs text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded" target="_blank" rel="noopener">
+                        Full stat block →
+                    </a>
+                </div>
+            `;
+        },
+
+        // ── Multiplier (mirrors PHP controller exactly) ────────────────────────
         calcMultiplier(count, partySize) {
             const brackets = [
                 [1,  1,         1.0],
@@ -669,6 +887,7 @@ function encounterCalculator() {
             this.noResults          = false;
             this.suggestions        = [];
             this.selectedSuggestion = null;
+            this.expandedStats      = {};   // close all drawers on new suggest
 
             try {
                 const res = await fetch('{{ route('encounter-calculator.suggest') }}', {
@@ -709,7 +928,6 @@ function encounterCalculator() {
         // ── Select a suggestion ────────────────────────────────────────────────
         selectSuggestion(idx) {
             this.selectedSuggestion = idx;
-            // Deep-clone so editing the builder doesn't mutate the suggestion card
             this.encounter     = this.suggestions[idx].monsters.map(m => ({ ...m }));
             this.encounterName = '';
             this.saveSuccess   = false;
@@ -786,7 +1004,7 @@ function encounterCalculator() {
             }
         },
 
-        // ── Threshold progress ─────────────────────────────────────────────────
+        // ── Threshold helpers ──────────────────────────────────────────────────
         thresholdProgress(tier) {
             if (!this.target || !this.target.thresholds) return 0;
             const max = this.target.thresholds[tier];

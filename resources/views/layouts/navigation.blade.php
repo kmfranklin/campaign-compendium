@@ -37,7 +37,7 @@
                             {{ __('Rules') }}
                         </x-nav-link>
                         <x-nav-link href="{{ route('encounter-calculator.index') }}" :active="request()->routeIs('encounter-calculator.*')">
-                            {{ __('Encounter Calc') }}
+                            {{ __('Encounter Generator') }}
                         </x-nav-link>
                     @endguest
 
@@ -66,7 +66,7 @@
                         </x-nav-link>
 
                         <x-nav-link href="{{ route('encounter-calculator.index') }}" :active="request()->routeIs('encounter-calculator.*')">
-                            {{ __('Encounter Calc') }}
+                            {{ __('Encounter Generator') }}
                         </x-nav-link>
 
                         @php
@@ -332,7 +332,7 @@
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link :href="route('encounter-calculator.index')" :active="request()->routeIs('encounter-calculator.*')">
-                        {{ __('Encounter Calculator') }}
+                        {{ __('Encounter Generator') }}
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link :href="route('login')">
@@ -373,7 +373,7 @@
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link :href="route('encounter-calculator.index')" :active="request()->routeIs('encounter-calculator.*')">
-                        {{ __('Encounter Calculator') }}
+                        {{ __('Encounter Generator') }}
                     </x-responsive-nav-link>
 
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">

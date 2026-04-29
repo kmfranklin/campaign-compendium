@@ -74,6 +74,9 @@ Route::get('/rules/{ruleSet:slug}', [RuleController::class, 'show'])->name('rule
 // The save endpoint requires auth — guests can use the calculator but not persist.
 Route::get('/encounter-calculator', [EncounterCalculatorController::class, 'index'])->name('encounter-calculator.index');
 Route::post('/encounter-calculator/suggest', [EncounterCalculatorController::class, 'suggest'])->name('encounter-calculator.suggest');
+// IMPORTANT: literal /suggest must be registered before the wildcard /{creature}
+// so Laravel doesn't try to model-bind "suggest" as a Creature slug.
+Route::get('/encounter-calculator/creatures/{creature}', [EncounterCalculatorController::class, 'creatureStats'])->name('encounter-calculator.creature-stats');
 Route::post('/encounter-calculator/encounters', [EncounterCalculatorController::class, 'save'])
     ->middleware('auth')
     ->name('encounter-calculator.save');

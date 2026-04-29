@@ -210,6 +210,71 @@ class EncounterCalculatorController extends Controller
         ], 201);
     }
 
+    /**
+     * Return a compact stat block for a single creature, used by the
+     * encounter calculator's inline stat drawer.
+     *
+     * Public endpoint — anyone can view SRD creature stats. Authenticated
+     * users can also view their own custom creatures (same scoping as the
+     * suggest endpoint). Returns 404 if the creature isn't visible.
+     */
+    public function creatureStats(Creature $creature): JsonResponse
+    {
+        // Enforce the same visibility rule used everywhere else: SRD is public,
+        // custom creatures are visible only to their owner.
+        if (! $creature->is_srd) {
+            if (! Auth::check() || Auth::id() !== $creature->user_id) {
+                abort(404);
+            }
+        }
+
+        // Build a speed string, e.g. "30 ft., fly 60 ft."
+        $speedParts = [];
+        if ($creature->speed_walk)   $speedParts[] = $creature->speed_walk . ' ft.';
+        if ($creature->speed_fly)    $speedParts[] = 'fly ' . $creature->speed_fly . ' ft.' . ($creature->speed_hover ? ' (hover)' : '');
+        if ($creature->speed_swim)   $speedParts[] = 'swim ' . $creature->speed_swim . ' ft.';
+        if ($creature->speed_climb)  $speedParts[] = 'climb ' . $creature->speed_climb . ' ft.';
+        if ($creature->speed_burrow) $speedParts[] = 'burrow ' . $creature->speed_burrow . ' ft.';
+        $speed = implode(', ', $speedParts) ?: '—';
+
+        // Ability score modifier helper
+        $mod = fn (int $score): string =>
+            ($score >= 10 ? '+' : '') . (int) floor(($score - 10) / 2);
+
+        return response()->json([
+            'id'           => $creature->id,
+            'name'         => $creature->name,
+            'cr'           => $creature->cr_display,
+            'xp'           => $creature->xp,
+            'type'         => $creature->type?->name ?? '—',
+            'size'         => $creature->size  ?? '—',
+            'alignment'    => $creature->alignment ?? '—',
+            'ac'           => $creature->armor_class,
+            'ac_detail'    => $creature->armor_detail,
+            'hp'           => $creature->hit_points,
+            'hit_dice'     => $creature->hit_dice,
+            'speed'        => $speed,
+            'abilities'    => [
+                'str' => ['score' => $creature->ability_score_strength,     'mod' => $mod($creature->ability_score_strength)],
+                'dex' => ['score' => $creature->ability_score_dexterity,    'mod' => $mod($creature->ability_score_dexterity)],
+                'con' => ['score' => $creature->ability_score_constitution, 'mod' => $mod($creature->ability_score_constitution)],
+                'int' => ['score' => $creature->ability_score_intelligence, 'mod' => $mod($creature->ability_score_intelligence)],
+                'wis' => ['score' => $creature->ability_score_wisdom,       'mod' => $mod($creature->ability_score_wisdom)],
+                'cha' => ['score' => $creature->ability_score_charisma,     'mod' => $mod($creature->ability_score_charisma)],
+            ],
+            'saving_throws'            => $creature->saving_throws ?? [],
+            'skill_bonuses'            => $creature->skill_bonuses ?? [],
+            'damage_immunities'        => $creature->damage_immunities ?? [],
+            'damage_resistances'       => $creature->damage_resistances ?? [],
+            'damage_vulnerabilities'   => $creature->damage_vulnerabilities ?? [],
+            'condition_immunities'     => $creature->condition_immunities ?? [],
+            'passive_perception'       => $creature->passive_perception,
+            'languages'                => $creature->languages_desc,
+            'source'                   => $creature->is_srd ? 'srd' : 'custom_creature',
+            'url'                      => route('creatures.show', $creature),
+        ]);
+    }
+
     // ─── Private Helpers ─────────────────────────────────────────────────────
 
     /**
@@ -577,7 +642,16 @@ class EncounterCalculatorController extends Controller
      *
      * Returns creatures whose CR falls in a generous ±1 difficulty band around
      * the target — not just the exact target range — so the DM has options to
-     * tune up or down. Capped at 50 results, random-ordered for variety.
+     * tune up or down.
+     *
+     * Results are sorted by CR ascending then name ascending. The CR filter
+     * already constrains the set to a narrow band so the total is naturally
+     * manageable (typically 20–80 creatures); we cap at 200 as a safety net.
+     * The frontend handles all further sorting and filtering client-side since
+     * the full dataset lands in Alpine state after the suggest() response.
+     *
+     * The $partySize parameter is kept for potential future use (e.g. per-size
+     * CR weighting) but is not used in the current implementation.
      */
     private function candidates(
         array $thresholds,
@@ -606,9 +680,12 @@ class EncounterCalculatorController extends Controller
             return [];
         }
 
+        // Sort by CR numerically (CAST to REAL for correct fractional ordering),
+        // then alphabetically within each CR tier.
         return $this->creatureQuery($crStrings, $typeIds)
-            ->inRandomOrder()
-            ->limit(50)
+            ->orderByRaw('CAST(challenge_rating AS REAL) ASC')
+            ->orderBy('name')
+            ->limit(200)
             ->get()
             ->map(fn (Creature $c) => $this->monsterShape($c))
             ->values()
