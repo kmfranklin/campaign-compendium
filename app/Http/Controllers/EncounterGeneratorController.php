@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class EncounterCalculatorController extends Controller
+class EncounterGeneratorController extends Controller
 {
     // ─── XP Thresholds by Character Level ────────────────────────────────────
     //
@@ -88,16 +88,16 @@ class EncounterCalculatorController extends Controller
     // ─── Public Routes ────────────────────────────────────────────────────────
 
     /**
-     * Serve the encounter calculator page.
+     * Serve the encounter generator page.
      *
      * Passes creature types so the view can render the type-filter chip list
-     * without a round-trip. The calculator itself is public — no login required.
+     * without a round-trip. The generator itself is public — no login required.
      */
     public function index(): View
     {
         $creatureTypes = CreatureType::orderBy('name')->get(['id', 'name']);
 
-        return view('encounter-calculator.index', compact('creatureTypes'));
+        return view('encounter-generator.index', compact('creatureTypes'));
     }
 
     /**
@@ -212,7 +212,7 @@ class EncounterCalculatorController extends Controller
 
     /**
      * Return a compact stat block for a single creature, used by the
-     * encounter calculator's inline stat drawer.
+     * encounter generator's inline stat drawer.
      *
      * Public endpoint — anyone can view SRD creature stats. Authenticated
      * users can also view their own custom creatures (same scoping as the

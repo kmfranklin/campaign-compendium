@@ -10,7 +10,7 @@ use App\Http\Controllers\{
     SpellController,
     CreatureController,
     RuleController,
-    EncounterCalculatorController,
+    EncounterGeneratorController,
     CampaignInviteController,
     NotificationController,
     SuperAdminController,
@@ -68,18 +68,18 @@ Route::get('/rules', [RuleController::class, 'index'])->name('rules.index');
 Route::get('/rules/conditions', [RuleController::class, 'conditions'])->name('rules.conditions');
 Route::get('/rules/{ruleSet:slug}', [RuleController::class, 'show'])->name('rules.show');
 
-// Encounter Calculator — public tool, authenticated save
+// Encounter Generator — public tool, authenticated save
 // The suggest endpoint is public so anyone can generate encounter suggestions;
 // auth users also see their own custom creatures (scoped in controller).
-// The save endpoint requires auth — guests can use the calculator but not persist.
-Route::get('/encounter-calculator', [EncounterCalculatorController::class, 'index'])->name('encounter-calculator.index');
-Route::post('/encounter-calculator/suggest', [EncounterCalculatorController::class, 'suggest'])->name('encounter-calculator.suggest');
+// The save endpoint requires auth — guests can use the generator but not persist.
+Route::get('/encounter-generator', [EncounterGeneratorController::class, 'index'])->name('encounter-generator.index');
+Route::post('/encounter-generator/suggest', [EncounterGeneratorController::class, 'suggest'])->name('encounter-generator.suggest');
 // IMPORTANT: literal /suggest must be registered before the wildcard /{creature}
 // so Laravel doesn't try to model-bind "suggest" as a Creature slug.
-Route::get('/encounter-calculator/creatures/{creature}', [EncounterCalculatorController::class, 'creatureStats'])->name('encounter-calculator.creature-stats');
-Route::post('/encounter-calculator/encounters', [EncounterCalculatorController::class, 'save'])
+Route::get('/encounter-generator/creatures/{creature}', [EncounterGeneratorController::class, 'creatureStats'])->name('encounter-generator.creature-stats');
+Route::post('/encounter-generator/encounters', [EncounterGeneratorController::class, 'save'])
     ->middleware('auth')
-    ->name('encounter-calculator.save');
+    ->name('encounter-generator.save');
 
 // Spells — public SRD lookup (custom spell CRUD added in a later phase)
 Route::get('/spells', [SpellController::class, 'index'])->name('spells.index');

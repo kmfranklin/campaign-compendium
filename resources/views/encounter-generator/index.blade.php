@@ -5,7 +5,7 @@
 
     {{-- Page header --}}
     <div class="py-6">
-        <h1 class="text-2xl font-semibold text-text">Encounter Calculator</h1>
+        <h1 class="text-2xl font-semibold text-text">Encounter Generator</h1>
         <p class="mt-1 text-sm text-muted">
             Build your party, choose a target difficulty, and let the generator suggest balanced encounter compositions.
         </p>
@@ -15,7 +15,7 @@
     {{-- Alpine root component — all state lives here.                          --}}
     {{-- ─────────────────────────────────────────────────────────────────────── --}}
     <div
-        x-data="encounterCalculator()"
+        x-data="encounterGenerator()"
         x-init="init()"
         class="space-y-6"
     >
@@ -528,15 +528,15 @@
 
         {{-- ── Candidate List ──────────────────────────────────────────────────── --}}
         <div x-show="candidates.length > 0" x-transition>
-            {{-- Header + sort controls --}}
+
+            {{-- Header: title + sort chips --}}
             <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
                 <div>
                     <h2 class="text-lg font-semibold text-text inline">Candidates</h2>
                     <span class="text-sm text-muted ml-2">— creatures in the CR range for this encounter</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <span class="text-xs text-muted">Sort:</span>
-                    {{-- Sort chips --}}
                     @foreach ([
                         'cr_asc'   => 'CR ↑',
                         'cr_desc'  => 'CR ↓',
@@ -545,24 +545,39 @@
                     ] as $val => $label)
                         <button
                             type="button"
-                            @click="candidateSort = '{{ $val }}'"
+                            @click="candidateSort = '{{ $val }}'; candidatePage = 1"
                             class="px-2.5 py-1 rounded-full border text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1"
                             :class="candidateSort === '{{ $val }}'
                                 ? 'bg-accent text-on-accent border-accent'
                                 : 'border-border text-muted hover:bg-hover'"
                         >{{ $label }}</button>
                     @endforeach
-                    <span class="text-xs text-muted ml-1" x-text="'(' + filteredCandidates.length + ')'"></span>
+                    <span class="text-xs text-muted" x-text="filteredCandidates.length + ' total'"></span>
                 </div>
             </div>
 
+            {{-- Name filter --}}
+            <div class="mb-3">
+                <label for="candidate-filter" class="sr-only">Filter candidates by name</label>
+                <input
+                    id="candidate-filter"
+                    type="search"
+                    x-model="candidateSearch"
+                    @input="candidatePage = 1"
+                    placeholder="Filter by name…"
+                    class="block w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                    aria-controls="candidate-list"
+                >
+            </div>
+
+            {{-- Creature rows --}}
             <div
                 id="candidate-list"
                 class="bg-surface border border-border rounded-lg overflow-hidden"
                 role="list"
                 aria-label="Candidate creatures"
             >
-                <template x-for="(c, ci) in filteredCandidates" :key="ci">
+                <template x-for="(c, ci) in pagedCandidates" :key="c.creature_id ?? ci">
                     <div role="listitem" class="border-b border-border last:border-0">
                         {{-- Main row --}}
                         <div class="flex items-center justify-between px-5 py-3 hover:bg-hover">
@@ -596,7 +611,7 @@
                             </div>
                         </div>
 
-                        {{-- Stat drawer --}}
+                        {{-- Inline stat drawer --}}
                         <div
                             x-show="c.creature_id && expandedStats[c.creature_id]"
                             x-transition:enter="transition ease-out duration-150"
@@ -613,10 +628,45 @@
                         </div>
                     </div>
                 </template>
+
                 <p
                     x-show="filteredCandidates.length === 0"
                     class="px-5 py-4 text-sm text-muted italic"
                 >No candidates match your filter.</p>
+            </div>
+
+            {{-- Pagination controls --}}
+            <div
+                x-show="totalCandidatePages > 1"
+                class="flex items-center justify-between mt-3 px-1"
+                role="navigation"
+                aria-label="Candidate list pagination"
+            >
+                <button
+                    type="button"
+                    @click="candidatePage--"
+                    :disabled="candidatePage === 1"
+                    class="px-3 py-1.5 rounded-md border border-border text-sm text-muted hover:bg-hover
+                        focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
+                        disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    aria-label="Previous page"
+                >← Prev</button>
+
+                <span class="text-sm text-muted">
+                    Page <span x-text="candidatePage" class="font-medium text-text"></span>
+                    of <span x-text="totalCandidatePages" class="font-medium text-text"></span>
+                    <span class="text-xs ml-1">(<span x-text="filteredCandidates.length"></span> creatures)</span>
+                </span>
+
+                <button
+                    type="button"
+                    @click="candidatePage++"
+                    :disabled="candidatePage === totalCandidatePages"
+                    class="px-3 py-1.5 rounded-md border border-border text-sm text-muted hover:bg-hover
+                        focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
+                        disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    aria-label="Next page"
+                >Next →</button>
             </div>
         </div>
 
@@ -626,7 +676,7 @@
 
 @push('scripts')
 <script>
-function encounterCalculator() {
+function encounterGenerator() {
     return {
         // ── Party ──────────────────────────────────────────────────────────────
         party:    [],
@@ -649,6 +699,8 @@ function encounterCalculator() {
         candidates:         [],
         candidateSearch:    '',
         candidateSort:      'cr_asc',
+        candidatePage:      1,
+        candidatesPerPage:  20,
 
         // ── Stat drawers ───────────────────────────────────────────────────────
         // expandedStats: { [creature_id]: true/false }
@@ -733,6 +785,16 @@ function encounterCalculator() {
             return list;
         },
 
+        // The slice of filteredCandidates visible on the current page
+        get pagedCandidates() {
+            const start = (this.candidatePage - 1) * this.candidatesPerPage;
+            return this.filteredCandidates.slice(start, start + this.candidatesPerPage);
+        },
+
+        get totalCandidatePages() {
+            return Math.max(1, Math.ceil(this.filteredCandidates.length / this.candidatesPerPage));
+        },
+
         // ── Party management ───────────────────────────────────────────────────
         addPartyMember() {
             if (this.party.length >= 20) return;
@@ -753,7 +815,7 @@ function encounterCalculator() {
         // ── Stat drawer ────────────────────────────────────────────────────────
         //
         // Toggling a creature open for the first time fires a fetch to
-        // /encounter-calculator/creatures/{id}. The response is cached in
+        // /encounter-generator/creatures/{id}. The response is cached in
         // statCache so subsequent opens are instant with no network round-trip.
         async toggleStats(creatureId) {
             if (!creatureId) return;
@@ -776,7 +838,7 @@ function encounterCalculator() {
             this.expandedStats = { ...this.expandedStats, [creatureId]: true };
 
             try {
-                const res = await fetch(`/encounter-calculator/creatures/${creatureId}`, {
+                const res = await fetch(`/encounter-generator/creatures/${creatureId}`, {
                     headers: { 'Accept': 'application/json' },
                 });
                 if (res.ok) {
@@ -888,9 +950,10 @@ function encounterCalculator() {
             this.suggestions        = [];
             this.selectedSuggestion = null;
             this.expandedStats      = {};   // close all drawers on new suggest
+            this.candidatePage      = 1;    // reset to page 1 for the new result set
 
             try {
-                const res = await fetch('{{ route('encounter-calculator.suggest') }}', {
+                const res = await fetch('{{ route('encounter-generator.suggest') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -971,7 +1034,7 @@ function encounterCalculator() {
             this.saveError   = null;
 
             try {
-                const res = await fetch('{{ route('encounter-calculator.save') }}', {
+                const res = await fetch('{{ route('encounter-generator.save') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -36,7 +36,7 @@
                         <x-nav-link href="{{ route('rules.index') }}" :active="request()->routeIs('rules.*')">
                             {{ __('Rules') }}
                         </x-nav-link>
-                        <x-nav-link href="{{ route('encounter-calculator.index') }}" :active="request()->routeIs('encounter-calculator.*')">
+                        <x-nav-link href="{{ route('encounter-generator.index') }}" :active="request()->routeIs('encounter-generator.*')">
                             {{ __('Encounter Generator') }}
                         </x-nav-link>
                     @endguest
@@ -65,7 +65,7 @@
                             {{ __('Rules') }}
                         </x-nav-link>
 
-                        <x-nav-link href="{{ route('encounter-calculator.index') }}" :active="request()->routeIs('encounter-calculator.*')">
+                        <x-nav-link href="{{ route('encounter-generator.index') }}" :active="request()->routeIs('encounter-generator.*')">
                             {{ __('Encounter Generator') }}
                         </x-nav-link>
 
@@ -331,7 +331,7 @@
                         {{ __('Rules') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('encounter-calculator.index')" :active="request()->routeIs('encounter-calculator.*')">
+                    <x-responsive-nav-link :href="route('encounter-generator.index')" :active="request()->routeIs('encounter-generator.*')">
                         {{ __('Encounter Generator') }}
                     </x-responsive-nav-link>
 
@@ -372,7 +372,7 @@
                         {{ __('Rules') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('encounter-calculator.index')" :active="request()->routeIs('encounter-calculator.*')">
+                    <x-responsive-nav-link :href="route('encounter-generator.index')" :active="request()->routeIs('encounter-generator.*')">
                         {{ __('Encounter Generator') }}
                     </x-responsive-nav-link>
 

@@ -127,7 +127,7 @@ class Creature extends Model
      * as strings ('1/8', '1/4', '1/2') are normalised to their decimal keys
      * before lookup. Returns 0 for CR 0 or any unrecognised value.
      *
-     * This accessor is used by the encounter calculator search endpoint so that
+     * This accessor is used by the encounter generator so that
      * the JSON response always includes a ready-to-use xp value.
      */
     public function getXpAttribute(): int
