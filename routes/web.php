@@ -69,11 +69,11 @@ Route::get('/rules/conditions', [RuleController::class, 'conditions'])->name('ru
 Route::get('/rules/{ruleSet:slug}', [RuleController::class, 'show'])->name('rules.show');
 
 // Encounter Calculator — public tool, authenticated save
-// The search endpoint is public so anyone can look up SRD creatures; auth
-// users also see their own custom creatures automatically (scoped in controller).
+// The suggest endpoint is public so anyone can generate encounter suggestions;
+// auth users also see their own custom creatures (scoped in controller).
 // The save endpoint requires auth — guests can use the calculator but not persist.
 Route::get('/encounter-calculator', [EncounterCalculatorController::class, 'index'])->name('encounter-calculator.index');
-Route::get('/encounter-calculator/creatures', [EncounterCalculatorController::class, 'search'])->name('encounter-calculator.creatures');
+Route::post('/encounter-calculator/suggest', [EncounterCalculatorController::class, 'suggest'])->name('encounter-calculator.suggest');
 Route::post('/encounter-calculator/encounters', [EncounterCalculatorController::class, 'save'])
     ->middleware('auth')
     ->name('encounter-calculator.save');
