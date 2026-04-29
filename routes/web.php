@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     CreatureController,
     RuleController,
     EncounterGeneratorController,
+    EncounterController,
     CampaignInviteController,
     NotificationController,
     SuperAdminController,
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function () {
 
     // NPC Compendium
     Route::resource('compendium/npcs', NpcController::class)->names('compendium.npcs');
+
+    // Saved Encounters — view, rename, delete encounters created by the generator
+    Route::resource('encounters', EncounterController::class)
+        ->only(['index', 'show', 'update', 'destroy']);
 
     // Custom Items (individual CRUD routes handled by ItemController)
     Route::get('/custom-items', [ItemController::class, 'customIndex'])->name('customItems.index');

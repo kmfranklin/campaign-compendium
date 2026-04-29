@@ -65,21 +65,50 @@
                             {{ __('Rules') }}
                         </x-nav-link>
 
-                        <x-nav-link href="{{ route('encounter-generator.index') }}" :active="request()->routeIs('encounter-generator.*')">
-                            {{ __('Encounter Generator') }}
-                        </x-nav-link>
-
                         @php
                             $itemsDropdownActive =
                                 request()->routeIs('items.*') ||
                                 request()->routeIs('customItems.*') ||
                                 request()->routeIs('srdItems.*');
 
+                            $encountersDropdownActive =
+                                request()->routeIs('encounter-generator.*') ||
+                                request()->routeIs('encounters.*');
+
                             $userDropdownActive =
                                 request()->routeIs('profile.*') ||
                                 request()->routeIs('notifications.*') ||
                                 request()->routeIs('admin.*');
                         @endphp
+
+                        <!-- Encounters dropdown -->
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <button
+                                    type="button"
+                                    class="inline-flex items-center px-1 border-b-2 h-24 text-sm font-medium leading-5
+                                           {{ $encountersDropdownActive
+                                               ? 'border-purple-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-purple-900'
+                                               : 'border-transparent text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-amber-400 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-700 dark:focus:text-gray-200 focus:border-gray-300 dark:focus:border-gray-600' }}
+                                           transition duration-150 ease-in-out"
+                                >
+                                    <span>Encounters</span>
+                                    <svg class="ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('encounter-generator.index')">
+                                    {{ __('Encounter Generator') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('encounters.index')">
+                                    {{ __('Saved Encounters') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
 
                         <!-- Items dropdown -->
                         <x-dropdown align="left" width="48">
@@ -372,8 +401,16 @@
                         {{ __('Rules') }}
                     </x-responsive-nav-link>
 
+                    <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        Encounters
+                    </div>
+
                     <x-responsive-nav-link :href="route('encounter-generator.index')" :active="request()->routeIs('encounter-generator.*')">
                         {{ __('Encounter Generator') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('encounters.index')" :active="request()->routeIs('encounters.*')">
+                        {{ __('Saved Encounters') }}
                     </x-responsive-nav-link>
 
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
