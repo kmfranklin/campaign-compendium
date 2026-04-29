@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     SpellController,
     CreatureController,
     RuleController,
+    EncounterCalculatorController,
     CampaignInviteController,
     NotificationController,
     SuperAdminController,
@@ -66,6 +67,16 @@ Route::get('/srd-items', [ItemController::class, 'srdIndex'])->name('srdItems.in
 Route::get('/rules', [RuleController::class, 'index'])->name('rules.index');
 Route::get('/rules/conditions', [RuleController::class, 'conditions'])->name('rules.conditions');
 Route::get('/rules/{ruleSet:slug}', [RuleController::class, 'show'])->name('rules.show');
+
+// Encounter Calculator — public tool, authenticated save
+// The search endpoint is public so anyone can look up SRD creatures; auth
+// users also see their own custom creatures automatically (scoped in controller).
+// The save endpoint requires auth — guests can use the calculator but not persist.
+Route::get('/encounter-calculator', [EncounterCalculatorController::class, 'index'])->name('encounter-calculator.index');
+Route::get('/encounter-calculator/creatures', [EncounterCalculatorController::class, 'search'])->name('encounter-calculator.creatures');
+Route::post('/encounter-calculator/encounters', [EncounterCalculatorController::class, 'save'])
+    ->middleware('auth')
+    ->name('encounter-calculator.save');
 
 // Spells — public SRD lookup (custom spell CRUD added in a later phase)
 Route::get('/spells', [SpellController::class, 'index'])->name('spells.index');

@@ -36,6 +36,9 @@
                         <x-nav-link href="{{ route('rules.index') }}" :active="request()->routeIs('rules.*')">
                             {{ __('Rules') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('encounter-calculator.index') }}" :active="request()->routeIs('encounter-calculator.*')">
+                            {{ __('Encounter Calc') }}
+                        </x-nav-link>
                     @endguest
 
                     @auth
@@ -60,6 +63,10 @@
 
                         <x-nav-link href="{{ route('rules.index') }}" :active="request()->routeIs('rules.*')">
                             {{ __('Rules') }}
+                        </x-nav-link>
+
+                        <x-nav-link href="{{ route('encounter-calculator.index') }}" :active="request()->routeIs('encounter-calculator.*')">
+                            {{ __('Encounter Calc') }}
                         </x-nav-link>
 
                         @php
@@ -324,6 +331,10 @@
                         {{ __('Rules') }}
                     </x-responsive-nav-link>
 
+                    <x-responsive-nav-link :href="route('encounter-calculator.index')" :active="request()->routeIs('encounter-calculator.*')">
+                        {{ __('Encounter Calculator') }}
+                    </x-responsive-nav-link>
+
                     <x-responsive-nav-link :href="route('login')">
                         {{ __('Sign In') }}
                     </x-responsive-nav-link>
@@ -359,6 +370,10 @@
 
                     <x-responsive-nav-link :href="route('rules.index')" :active="request()->routeIs('rules.*')">
                         {{ __('Rules') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('encounter-calculator.index')" :active="request()->routeIs('encounter-calculator.*')">
+                        {{ __('Encounter Calculator') }}
                     </x-responsive-nav-link>
 
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
