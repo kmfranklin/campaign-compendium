@@ -37,41 +37,50 @@
 </nav>
 
 {{-- ============================================================ --}}
-{{-- Alpine component                                             --}}
-{{-- @js() is Laravel's helper to safely JSON-encode PHP data    --}}
-{{-- for use in JavaScript — it handles escaping automatically.  --}}
-{{-- We embed just the searchable text (id, name, body) here;    --}}
-{{-- the rendered HTML is kept in the DOM separately.            --}}
+{{-- Alpine component: global cross-section search                --}}
+{{--                                                              --}}
+{{-- Behaves identically to the index page search — a dropdown   --}}
+{{-- that finds entries across ALL sections, not just this one.  --}}
+{{-- Searching "languages" from the Abilities page will find the --}}
+{{-- Languages entry and navigate you there directly.            --}}
+{{--                                                              --}}
+{{-- currentSection is the title of the page we're on. The       --}}
+{{-- grouped getter uses it to sort this section's results to    --}}
+{{-- the top, so same-section matches feel more relevant.        --}}
 {{-- ============================================================ --}}
 <div
     x-data="{
         search: '',
-        entries: @js($entries->map(fn($e) => ['id' => $e->id, 'name' => $e->name, 'body' => $e->body])),
+        entries: @js($searchEntries),
+        currentSection: @js($title),
 
-        get query() {
-            return this.search.toLowerCase().trim();
+        get query() { return this.search.toLowerCase().trim(); },
+
+        get results() {
+            if (this.query.length < 2) return [];
+            return this.entries
+                .filter(e => e.name.toLowerCase().includes(this.query)
+                          || e.section.toLowerCase().includes(this.query))
+                .slice(0, 16);
         },
 
-        /*
-         * matchingIds is either null (no search — show everything)
-         * or a Set of IDs that match the query.
-         * Using a Set makes the isVisible() lookup O(1).
-         */
-        get matchingIds() {
-            if (!this.query) return null;
-            return new Set(
-                this.entries
-                    .filter(e => (e.name + ' ' + e.body).toLowerCase().includes(this.query))
-                    .map(e => e.id)
-            );
-        },
-
-        isVisible(id) {
-            return this.matchingIds === null || this.matchingIds.has(id);
-        },
-
-        get hasResults() {
-            return this.matchingIds === null || this.matchingIds.size > 0;
+        get grouped() {
+            const groups = {};
+            for (const r of this.results) {
+                if (!groups[r.section]) groups[r.section] = [];
+                groups[r.section].push(r);
+            }
+            /*
+             * Sort grouped results so the current section always appears first.
+             * This is the relevance boost — if you're on Abilities and type
+             * 'wisdom', the Abilities matches surface before results from other
+             * sections that also happen to mention wisdom.
+             */
+            return Object.entries(groups).sort(([a], [b]) => {
+                if (a === this.currentSection) return -1;
+                if (b === this.currentSection) return 1;
+                return 0;
+            });
         },
     }"
     class="flex gap-8 py-8 items-start"
@@ -84,9 +93,12 @@
         class="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 sticky top-8 gap-4"
         aria-label="Rules sections"
     >
-        {{-- Search --}}
-        <div>
-            <label for="rules-search" class="sr-only">Search within {{ $title }}</label>
+        {{-- Global search                                              --}}
+        {{-- Searches across all sections — same behavior as the index --}}
+        {{-- page. Results appear in a dropdown grouped by section,    --}}
+        {{-- with the current section sorted to the top.               --}}
+        <div class="relative">
+            <label for="rules-search" class="sr-only">Search all rules</label>
             <div class="relative">
                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none"
                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -98,11 +110,68 @@
                     id="rules-search"
                     type="search"
                     x-model="search"
-                    placeholder="Search…"
+                    placeholder="Search all rules…"
                     class="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-surface text-text text-sm
                            focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-                    :aria-label="'Search within ' + {{ json_encode($title) }}"
+                    autocomplete="off"
+                    aria-controls="sidebar-search-results"
+                    aria-autocomplete="list"
+                    :aria-expanded="results.length > 0 || (query.length >= 2 && results.length === 0)"
                 >
+            </div>
+
+            {{-- Results dropdown --}}
+            <div
+                id="sidebar-search-results"
+                x-show="results.length > 0"
+                x-cloak
+                @click.outside="search = ''"
+                class="absolute left-0 right-0 top-full mt-1 bg-surface border border-border rounded-xl
+                       shadow-xl overflow-hidden z-50 max-h-80 overflow-y-auto"
+                role="listbox"
+                aria-label="Search results"
+            >
+                <template x-for="[section, items] in grouped" :key="section">
+                    <div>
+                        <div class="px-3 pt-2.5 pb-1 text-xs font-semibold uppercase tracking-wider text-muted border-b border-border"
+                             x-text="section"></div>
+                        <template x-for="entry in items" :key="entry.url">
+                            <a
+                                :href="entry.url"
+                                @click="search = ''"
+                                class="flex items-center justify-between px-3 py-2 hover:bg-hover
+                                       text-text text-sm transition-colors duration-100
+                                       focus:outline-none focus:bg-hover"
+                                role="option"
+                            >
+                                <span x-text="entry.name" class="font-medium truncate"></span>
+                                <svg class="w-3 h-3 text-muted shrink-0 ml-2" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </a>
+                        </template>
+                    </div>
+                </template>
+
+                <div
+                    x-show="results.length === 16"
+                    class="px-3 py-2 text-xs text-muted border-t border-border"
+                >
+                    Showing top 16 matches — keep typing to narrow down.
+                </div>
+            </div>
+
+            {{-- No results --}}
+            <div
+                x-show="query.length >= 2 && results.length === 0"
+                x-cloak
+                class="absolute left-0 right-0 top-full mt-1 bg-surface border border-border rounded-xl
+                       shadow-xl px-3 py-3 text-sm text-muted text-center z-50"
+                role="status"
+                aria-live="polite"
+            >
+                No results for "<span x-text="search" class="font-medium text-text"></span>".
             </div>
         </div>
 
@@ -136,7 +205,6 @@
                                 <li>
                                     <a
                                         href="#entry-{{ $entry->id }}"
-                                        @click.prevent="search = ''; $nextTick(() => document.getElementById('entry-{{ $entry->id }}').scrollIntoView({ behavior: 'smooth', block: 'start' }))"
                                         class="block py-1 text-xs text-muted hover:text-accent transition-colors duration-100 focus:outline-none focus:text-accent truncate"
                                     >{{ $entry->name }}</a>
                                 </li>
@@ -162,7 +230,6 @@
                                     <li>
                                         <a
                                             href="#entry-{{ $entry->id }}"
-                                            @click.prevent="search = ''; $nextTick(() => document.getElementById('entry-{{ $entry->id }}').scrollIntoView({ behavior: 'smooth', block: 'start' }))"
                                             class="block py-1 text-xs text-muted hover:text-accent transition-colors duration-100 focus:outline-none focus:text-accent truncate"
                                         >{{ $entry->name }}</a>
                                     </li>
@@ -180,9 +247,9 @@
     {{-- ================================================ --}}
     <div class="flex-1 min-w-0">
 
-        {{-- Mobile search --}}
-        <div class="lg:hidden mb-6">
-            <label for="rules-search-mobile" class="sr-only">Search within {{ $title }}</label>
+        {{-- Mobile search — same global behavior as the sidebar search --}}
+        <div class="lg:hidden mb-6 relative">
+            <label for="rules-search-mobile" class="sr-only">Search all rules</label>
             <div class="relative">
                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none"
                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -194,41 +261,69 @@
                     id="rules-search-mobile"
                     type="search"
                     x-model="search"
-                    placeholder="Search {{ $title }}…"
+                    placeholder="Search all rules…"
                     class="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-surface text-text text-sm
                            focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                    autocomplete="off"
+                    aria-controls="mobile-search-results"
+                    aria-autocomplete="list"
                 >
+            </div>
+
+            <div
+                id="mobile-search-results"
+                x-show="results.length > 0"
+                x-cloak
+                @click.outside="search = ''"
+                class="absolute left-0 right-0 top-full mt-1 bg-surface border border-border rounded-xl
+                       shadow-xl overflow-hidden z-50 max-h-72 overflow-y-auto"
+                role="listbox"
+                aria-label="Search results"
+            >
+                <template x-for="[section, items] in grouped" :key="section">
+                    <div>
+                        <div class="px-3 pt-2.5 pb-1 text-xs font-semibold uppercase tracking-wider text-muted border-b border-border"
+                             x-text="section"></div>
+                        <template x-for="entry in items" :key="entry.url">
+                            <a
+                                :href="entry.url"
+                                @click="search = ''"
+                                class="flex items-center justify-between px-3 py-2 hover:bg-hover
+                                       text-text text-sm transition-colors duration-100
+                                       focus:outline-none focus:bg-hover"
+                                role="option"
+                            >
+                                <span x-text="entry.name" class="font-medium truncate"></span>
+                                <svg class="w-3 h-3 text-muted shrink-0 ml-2" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </a>
+                        </template>
+                    </div>
+                </template>
+                <div x-show="results.length === 16" class="px-3 py-2 text-xs text-muted border-t border-border">
+                    Showing top 16 matches — keep typing to narrow down.
+                </div>
+            </div>
+
+            <div
+                x-show="query.length >= 2 && results.length === 0"
+                x-cloak
+                class="absolute left-0 right-0 top-full mt-1 bg-surface border border-border rounded-xl
+                       shadow-xl px-3 py-3 text-sm text-muted text-center z-50"
+                role="status"
+                aria-live="polite"
+            >
+                No results for "<span x-text="search" class="font-medium text-text"></span>".
             </div>
         </div>
 
-        {{-- No results --}}
-        <div
-            x-show="!hasResults"
-            x-cloak
-            class="py-16 text-center text-muted"
-            role="status"
-            aria-live="polite"
-        >
-            <p class="text-lg font-semibold">No results for "<span x-text="search"></span>"</p>
-            <p class="text-sm mt-1">
-                Try a different term, or
-                <button
-                    @click="search = ''"
-                    class="underline hover:text-text focus:outline-none focus:text-text"
-                >clear the search</button>.
-            </p>
-        </div>
-
         {{-- -------------------------------------------- --}}
-        {{-- Section intro — shown whenever a desc exists,--}}
+        {{-- Section intro — shown whenever a desc exists, --}}
         {{-- whether or not there are also sub-entries.   --}}
         {{-- -------------------------------------------- --}}
         @if ($descHtml && $entries->isNotEmpty())
-            {{--
-                When sub-entries exist, the desc is an intro paragraph.
-                We render it in a subtly styled block so it's clearly
-                introductory, not just another rule card.
-            --}}
             <div class="mb-6 px-5 py-4 rounded-xl border border-border bg-surface/50
                         prose prose-sm max-w-none dark:prose-invert
                         prose-headings:text-text prose-headings:font-semibold
@@ -240,13 +335,15 @@
 
         {{-- -------------------------------------------- --}}
         {{-- Sub-rule entry cards                          --}}
+        {{-- All entries are always visible. The search    --}}
+        {{-- navigates via the dropdown rather than hiding --}}
+        {{-- and showing cards on this page.               --}}
         {{-- -------------------------------------------- --}}
         @if ($entries->isNotEmpty())
-            <div class="space-y-4" aria-live="polite" aria-atomic="false">
+            <div class="space-y-4">
                 @foreach ($entries as $entry)
                     <article
                         id="entry-{{ $entry->id }}"
-                        x-show="isVisible({{ $entry->id }})"
                         class="bg-surface border border-border rounded-xl p-5"
                         aria-labelledby="entry-heading-{{ $entry->id }}"
                     >
