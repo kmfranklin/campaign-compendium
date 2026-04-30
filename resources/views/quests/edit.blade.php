@@ -43,9 +43,19 @@
         {{-- Description --}}
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-text">Description</label>
+            <p class="text-xs text-muted mt-0.5 mb-1">The public-facing quest summary — what the players know.</p>
             <textarea name="description" id="description" rows="4"
                       class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
                              focus:border-accent focus:ring-accent sm:text-sm">{{ old('description', $quest->description) }}</textarea>
+        </div>
+
+        {{-- DM Notes --}}
+        <div class="mb-4">
+            <label for="notes" class="block text-sm font-medium text-text">DM Notes</label>
+            <p class="text-xs text-muted mt-0.5 mb-1">Private notes for the DM only — hidden twists, clues, session prep. Not visible to players.</p>
+            <textarea name="notes" id="notes" rows="3"
+                      class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
+                             focus:border-accent focus:ring-accent sm:text-sm">{{ old('notes', $quest->notes) }}</textarea>
         </div>
 
         {{-- Status --}}
@@ -55,9 +65,11 @@
                     class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
                            focus:border-accent focus:ring-accent sm:text-sm"
                     required>
-                <option value="planned" @selected(old('status', $quest->status) === 'planned')>Planned</option>
-                <option value="active" @selected(old('status', $quest->status) === 'active')>Active</option>
-                <option value="completed" @selected(old('status', $quest->status) === 'completed')>Completed</option>
+                @foreach($statuses as $status)
+                    <option value="{{ $status->value }}" @selected(old('status', $quest->status->value) === $status->value)>
+                        {{ $status->label() }}
+                    </option>
+                @endforeach
             </select>
         </div>
 

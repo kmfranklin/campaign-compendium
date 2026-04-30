@@ -31,8 +31,11 @@
                             </td>
 
                             {{-- Status --}}
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted">
-                                {{ ucfirst($quest->status) }}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full
+                                             {{ $quest->status->badgeClasses() }}">
+                                    {{ $quest->status->label() }}
+                                </span>
                             </td>
 
                             {{-- Actions --}}
@@ -75,9 +78,12 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <h2 class="text-lg font-medium text-text">{{ $quest->title }}</h2>
-                        <p class="text-sm text-muted">
-                            Status: {{ ucfirst($quest->status) }}
-                        </p>
+                        <div class="mt-1">
+                            <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full
+                                         {{ $quest->status->badgeClasses() }}">
+                                {{ $quest->status->label() }}
+                            </span>
+                        </div>
                     </div>
 
                     <a href="{{ route('campaigns.quests.show', [$campaign, $quest]) }}"

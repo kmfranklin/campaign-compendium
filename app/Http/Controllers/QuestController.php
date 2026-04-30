@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Enums\QuestStatus;
 use App\Models\Campaign;
-use App\Models\Quest;
 use App\Models\Npc;
+use App\Models\Quest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 
 class QuestController extends Controller
 {
@@ -24,7 +26,9 @@ class QuestController extends Controller
      */
     public function create(Campaign $campaign)
     {
-        return view('quests.create', compact('campaign'));
+        $statuses = QuestStatus::cases();
+
+        return view('quests.create', compact('campaign', 'statuses'));
     }
 
     /**
@@ -33,9 +37,10 @@ class QuestController extends Controller
     public function store(Request $request, Campaign $campaign)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:planned,active,completed',
+            'title'       => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'notes'       => ['nullable', 'string'],
+            'status'      => ['required', new Enum(QuestStatus::class)],
         ]);
 
         $campaign->quests()->create($validated);
@@ -64,7 +69,9 @@ class QuestController extends Controller
      */
     public function edit(Campaign $campaign, Quest $quest)
     {
-        return view('quests.edit', compact('campaign', 'quest'));
+        $statuses = QuestStatus::cases();
+
+        return view('quests.edit', compact('campaign', 'quest', 'statuses'));
     }
 
     /**
@@ -73,9 +80,10 @@ class QuestController extends Controller
     public function update(Request $request, Campaign $campaign, Quest $quest)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:planned,active,completed',
+            'title'       => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'notes'       => ['nullable', 'string'],
+            'status'      => ['required', new Enum(QuestStatus::class)],
         ]);
 
         $quest->update($validated);
