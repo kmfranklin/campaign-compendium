@@ -527,23 +527,25 @@
                     <div class="flex justify-between border-t border-border pt-2">
                         <dt class="font-medium text-text flex items-center gap-1">
                             Adjusted XP
-                            <span x-data="{ tip: false }" class="relative inline-flex items-center">
-                                <button @mouseenter="tip=true" @mouseleave="tip=false"
+                            <span x-data="{ tip: false }" class="relative inline-flex items-center" @click.outside="tip = false">
+                                <button @click="tip = !tip"
+                                        @mouseenter="tip=true" @mouseleave="tip=false"
                                         @focus="tip=true" @blur="tip=false"
                                         type="button"
+                                        :aria-expanded="tip"
                                         aria-label="What is Adjusted XP?"
                                         class="text-muted hover:text-accent focus:outline-none focus:ring-1 focus:ring-accent rounded-full leading-none">
                                     <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                                     </svg>
                                 </button>
-                                <div x-show="tip"
-                                     x-cloak
-                                     role="tooltip"
-                                     class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg z-20 leading-relaxed pointer-events-none">
+                                <span x-show="tip"
+                                      x-cloak
+                                      role="tooltip"
+                                      class="block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 bg-gray-700 text-gray-100 text-xs rounded-lg border border-gray-500/60 shadow-xl z-20 leading-relaxed">
                                     Raw XP × a count multiplier (×1–×4) based on monster count. Used only to rate difficulty — players always earn the raw XP.
-                                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                                </div>
+                                    <span class="block absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-700"></span>
+                                </span>
                             </span>
                         </dt>
                         <dd class="font-bold text-text" x-text="adjustedXp.toLocaleString() + ' XP'"></dd>
