@@ -11,6 +11,75 @@
         </p>
     </div>
 
+    {{-- ── How it Works ─────────────────────────────────────────────────────── --}}
+    <div x-data="{ open: false }" class="bg-surface border border-border rounded-lg overflow-hidden mb-6">
+        <button @click="open = !open"
+                :aria-expanded="open"
+                aria-controls="how-it-works"
+                type="button"
+                class="w-full flex items-center justify-between px-5 py-3 text-sm font-medium text-text hover:bg-hover transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset">
+            <span class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                How does encounter XP work?
+            </span>
+            <svg class="w-4 h-4 text-muted transition-transform duration-200" :class="open ? 'rotate-180' : ''"
+                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+        </button>
+
+        <div id="how-it-works"
+             x-show="open"
+             x-cloak
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             class="border-t border-border px-5 py-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-text">
+
+                <div class="space-y-3">
+                    <h3 class="font-semibold text-text">Raw XP vs. Adjusted XP</h3>
+                    <p class="text-muted leading-relaxed">
+                        <strong class="text-text">Raw XP</strong> is the sum of each monster's XP value — it's what your players actually <em>earn</em> at the end of the encounter.
+                    </p>
+                    <p class="text-muted leading-relaxed">
+                        <strong class="text-text">Adjusted XP</strong> is raw XP multiplied by a count multiplier. It's used <em>only</em> to determine difficulty — it never gets awarded to anyone.
+                    </p>
+                    <p class="text-muted leading-relaxed">
+                        The multiplier exists because fighting four enemies is tactically harder than fighting one enemy worth the same total XP. Multiple monsters can surround the party, act every round, and overwhelm the action economy — a single player turn against four monsters is a much worse trade than against one.
+                    </p>
+                    <p class="text-muted leading-relaxed">
+                        If your party has <strong class="text-text">2 or fewer characters</strong>, the multiplier steps up one tier (harder to sustain without numbers). With <strong class="text-text">6 or more</strong>, it steps down one tier.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="font-semibold text-text">Count Multipliers</h3>
+                    <table class="w-full text-sm" aria-label="XP count multipliers by number of monsters">
+                        <thead>
+                            <tr class="border-b border-border">
+                                <th scope="col" class="py-1.5 text-left text-xs font-semibold text-muted uppercase tracking-wide">Monsters</th>
+                                <th scope="col" class="py-1.5 text-right text-xs font-semibold text-muted uppercase tracking-wide">Multiplier</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border">
+                            <tr><td class="py-1.5 text-muted">1</td><td class="py-1.5 text-right font-medium">×1</td></tr>
+                            <tr><td class="py-1.5 text-muted">2</td><td class="py-1.5 text-right font-medium">×1.5</td></tr>
+                            <tr><td class="py-1.5 text-muted">3–6</td><td class="py-1.5 text-right font-medium">×2</td></tr>
+                            <tr><td class="py-1.5 text-muted">7–10</td><td class="py-1.5 text-right font-medium">×2.5</td></tr>
+                            <tr><td class="py-1.5 text-muted">11–14</td><td class="py-1.5 text-right font-medium">×3</td></tr>
+                            <tr><td class="py-1.5 text-muted">15+</td><td class="py-1.5 text-right font-medium">×4</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-muted">Source: D&amp;D 5e SRD / Dungeon Master's Guide.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     {{-- ─────────────────────────────────────────────────────────────────────── --}}
     {{-- Alpine root component — all state lives here.                          --}}
     {{-- ─────────────────────────────────────────────────────────────────────── --}}
@@ -456,7 +525,27 @@
                         <dd class="font-medium text-text" x-text="'×' + currentMultiplier"></dd>
                     </div>
                     <div class="flex justify-between border-t border-border pt-2">
-                        <dt class="font-medium text-text">Adjusted XP</dt>
+                        <dt class="font-medium text-text flex items-center gap-1">
+                            Adjusted XP
+                            <span x-data="{ tip: false }" class="relative inline-flex items-center">
+                                <button @mouseenter="tip=true" @mouseleave="tip=false"
+                                        @focus="tip=true" @blur="tip=false"
+                                        type="button"
+                                        aria-label="What is Adjusted XP?"
+                                        class="text-muted hover:text-accent focus:outline-none focus:ring-1 focus:ring-accent rounded-full leading-none">
+                                    <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                                    </svg>
+                                </button>
+                                <div x-show="tip"
+                                     x-cloak
+                                     role="tooltip"
+                                     class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg z-20 leading-relaxed pointer-events-none">
+                                    Raw XP × a count multiplier (×1–×4) based on monster count. Used only to rate difficulty — players always earn the raw XP.
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                                </div>
+                            </span>
+                        </dt>
                         <dd class="font-bold text-text" x-text="adjustedXp.toLocaleString() + ' XP'"></dd>
                     </div>
                 </dl>
