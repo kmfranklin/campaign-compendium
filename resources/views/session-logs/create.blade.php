@@ -24,9 +24,12 @@
         </div>
     @endif
 
-    {{-- multipart/form-data is required whenever a form includes a file input --}}
+    {{-- x-data tracks file selection state and upload-in-progress to give feedback
+         on large file uploads where the page appears frozen without indication. --}}
     <form action="{{ route('campaigns.sessions.store', $campaign) }}" method="POST"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          x-data="{ uploading: false, fileName: '', fileSize: '' }"
+          @submit="uploading = true">
         @csrf
 
         {{-- Title --}}
@@ -71,10 +74,36 @@
                    class="block w-full text-sm text-text
                           file:mr-4 file:py-2 file:px-4 file:rounded file:border-0
                           file:text-sm file:font-medium file:bg-accent file:text-on-accent
-                          hover:file:bg-accent-hover">
+                          hover:file:bg-accent-hover"
+                   @change="
+                       const f = $event.target.files[0];
+                       if (f) {
+                           fileName = f.name;
+                           fileSize = (f.size / (1024 * 1024)).toFixed(1) + ' MB';
+                       } else {
+                           fileName = ''; fileSize = '';
+                       }
+                   ">
+
+            {{-- Show selected file name + size once chosen --}}
+            <p x-show="fileName" x-cloak class="mt-2 text-xs text-muted">
+                Selected: <span class="text-text font-medium" x-text="fileName"></span>
+                (<span x-text="fileSize"></span>) — this may take a moment to upload.
+            </p>
+
             @error('media')
                 <p class="mt-1 text-xs text-danger">{{ $message }}</p>
             @enderror
+        </div>
+
+        {{-- Upload progress notice --}}
+        <div x-show="uploading" x-cloak
+             class="mb-4 flex items-center gap-3 p-3 bg-accent/10 border border-accent/30 rounded-lg text-sm text-accent">
+            <svg class="animate-spin h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            Uploading recording — please don't close this tab…
         </div>
 
         <div class="pt-4 border-t border-border flex justify-between">
@@ -83,9 +112,12 @@
                 Cancel
             </a>
             <button type="submit"
+                    :disabled="uploading"
                     class="px-6 py-2 bg-accent text-on-accent font-semibold rounded
-                           hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent">
-                Save Session
+                           hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent
+                           disabled:opacity-50 disabled:cursor-not-allowed">
+                <span x-show="!uploading">Save Session</span>
+                <span x-show="uploading" x-cloak>Saving…</span>
             </button>
         </div>
     </form>

@@ -27,6 +27,7 @@ export default {
                 'on-accent': "var(--color-on-accent)",
                 hover: "var(--color-hover)",
                 danger: '#dc2626',
+                warning: '#eab308',
                 surface: "var(--color-surface)",
                 border: "var(--color-border)",
                 text: "var(--color-text)",

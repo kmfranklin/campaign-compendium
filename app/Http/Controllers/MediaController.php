@@ -36,13 +36,17 @@ class MediaController extends Controller
             abort(403);
         }
 
-        // Stream the file inline so audio plays in the browser rather than
-        // forcing a download. The browser uses the MIME type to decide how
-        // to handle it.
-        return Storage::disk('private')->response(
-            $media->path,
-            $media->filename,
-            ['Content-Type' => $media->mime_type]
-        );
+        // Use response()->file() rather than Storage::response().
+        // Storage::response() returns a StreamedResponse, which does NOT support
+        // HTTP Range requests — so browsers can't seek in the audio player.
+        // response()->file() returns a BinaryFileResponse (Symfony), which
+        // automatically handles Range requests and sends Accept-Ranges headers,
+        // enabling full seek/scrub support in the browser's native audio element.
+        $absolutePath = Storage::disk('private')->path($media->path);
+
+        return response()->file($absolutePath, [
+            'Content-Type'        => $media->mime_type,
+            'Content-Disposition' => 'inline; filename="' . addslashes($media->filename) . '"',
+        ]);
     }
 }
