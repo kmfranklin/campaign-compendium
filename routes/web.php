@@ -6,6 +6,8 @@ use App\Http\Controllers\{
     NpcController,
     CampaignController,
     QuestController,
+    SessionLogController,
+    MediaController,
     ItemController,
     SpellController,
     CreatureController,
@@ -54,9 +56,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/custom-items/{item}', [ItemController::class, 'show'])->name('items.custom.show');
 });
 
-// Campaigns and Quests
+// Campaigns, Quests, and Session Logs
 Route::resource('campaigns', CampaignController::class);
 Route::resource('campaigns.quests', QuestController::class);
+
+// Session logs nested under campaigns.
+// We use ->parameters() to map the {sessionLog} wildcard to SessionLog,
+// avoiding a collision with Laravel's own Session facade.
+Route::resource('campaigns.sessions', SessionLogController::class)
+    ->except(['index'])
+    ->parameters(['sessions' => 'sessionLog']);
+
+// NPC and Quest attachments on session logs
+Route::post('campaigns/{campaign}/sessions/{sessionLog}/npcs/{npc}', [SessionLogController::class, 'attachNpc'])
+    ->name('campaigns.sessions.npcs.attach')
+    ->middleware('auth');
+Route::delete('campaigns/{campaign}/sessions/{sessionLog}/npcs/{npc}', [SessionLogController::class, 'detachNpc'])
+    ->name('campaigns.sessions.npcs.detach')
+    ->middleware('auth');
+Route::post('campaigns/{campaign}/sessions/{sessionLog}/quests/{quest}', [SessionLogController::class, 'attachQuest'])
+    ->name('campaigns.sessions.quests.attach')
+    ->middleware('auth');
+Route::delete('campaigns/{campaign}/sessions/{sessionLog}/quests/{quest}', [SessionLogController::class, 'detachQuest'])
+    ->name('campaigns.sessions.quests.detach')
+    ->middleware('auth');
+
+// Private media file serving
+Route::get('/media/{media}', [MediaController::class, 'show'])
+    ->name('media.show')
+    ->middleware('auth');
 
 // Item Index (read-only public list + show)
 Route::get('/items', [ItemController::class, 'index'])->name('items.index');

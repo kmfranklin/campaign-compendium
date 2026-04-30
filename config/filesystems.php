@@ -38,6 +38,17 @@ return [
             'report' => false,
         ],
 
+        // Explicit private disk for media files that should never be publicly
+        // accessible via URL. Files are served through MediaController, which
+        // checks campaign membership before streaming.
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'serve' => false,
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -46,6 +46,12 @@ class Campaign extends Model
         return $this->hasMany(Npc::class);
     }
 
+    // Session logs, newest first
+    public function sessionLogs()
+    {
+        return $this->hasMany(SessionLog::class)->orderByDesc('session_date');
+    }
+
     // Invite notifications
     public function invites()
     {

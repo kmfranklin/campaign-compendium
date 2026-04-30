@@ -69,6 +69,12 @@
                 Overview
             </button>
 
+            <button @click="tab = 'sessions'"
+                    :class="{ 'border-accent text-accent': tab === 'sessions' }"
+                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none">
+                Sessions
+            </button>
+
             <button @click="tab = 'quests'"
                     :class="{ 'border-accent text-accent': tab === 'quests' }"
                     class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none">
@@ -95,6 +101,19 @@
                 @endif
 
                 @include('campaigns.partials.members')
+            </div>
+
+            {{-- Sessions tab --}}
+            <div x-show="tab === 'sessions'" x-cloak>
+                <div class="flex justify-end mb-4">
+                    @can('update', $campaign)
+                        <a href="{{ route('campaigns.sessions.create', $campaign) }}"
+                           class="inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
+                            + Log Session
+                        </a>
+                    @endcan
+                </div>
+                @include('campaigns.partials.sessions')
             </div>
 
             {{-- Quests tab --}}
