@@ -27,7 +27,16 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = Campaign::latest()->paginate(10);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Only show campaigns the authenticated user is a member of (DM or player).
+        // This scopes the list to their own campaigns rather than every campaign
+        // in the database, which would be a privacy/data leak.
+        $campaigns = Campaign::whereHas('members', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->latest()->paginate(10);
+
         return view('campaigns.index', compact('campaigns'));
     }
 
