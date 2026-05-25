@@ -28,7 +28,7 @@
             <div class="mt-4 sm:mt-0 flex-1 {{ $npc->portrait_path ? 'sm:ml-6' : '' }}">
                 <div class="flex items-start">
                     <div>
-                        <h1 class="text-3xl font-bold text-text">{{ $npc->name }}</h1>
+                        <h1 class="page-title text-4xl text-text">{{ $npc->name }}</h1>
 
                         @if($npc->alias)
                             <p class="text-muted italic">“{{ $npc->alias }}”</p>
@@ -111,7 +111,7 @@
 
         @if(count($core))
             <div class="p-6 bg-bg border-b border-border">
-                <h2 class="text-lg font-semibold text-text mb-4">Core Identity</h2>
+                <h2 class="section-title text-2xl text-text mb-4">Core Identity</h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     @foreach($core as $label => $value)
@@ -127,7 +127,7 @@
         {{-- Description --}}
         @if($npc->description || $npc->personality || $npc->quirks)
             <div class="p-6 bg-surface border-b border-border">
-                <h2 class="text-lg font-semibold text-text mb-4">Description</h2>
+                <h2 class="section-title text-2xl text-text mb-4">Description</h2>
 
                 @if($npc->description)
                     <p class="mb-4 text-text">{{ $npc->description }}</p>
@@ -151,7 +151,7 @@
 
         @if($hasStat)
             <div class="p-6 bg-bg border-b border-border">
-                <h2 class="text-lg font-semibold text-text mb-4">Abilities + Stats</h2>
+                <h2 class="section-title text-2xl text-text mb-4">Abilities + Stats</h2>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                     @foreach($stats as $stat)
@@ -169,7 +169,7 @@
         {{-- Quest Appearances --}}
         @if($quests->isNotEmpty())
             <div class="p-6 bg-surface border-t border-border">
-                <h2 class="text-lg font-semibold text-text mb-4">Quest Appearances</h2>
+                <h2 class="section-title text-2xl text-text mb-4">Quest Appearances</h2>
 
                 <ul class="divide-y divide-border">
                     @foreach($quests as $quest)

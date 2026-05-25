@@ -22,7 +22,7 @@
             <div class="flex-1">
                 <div class="flex items-start">
                     <div>
-                        <h1 class="text-3xl font-bold text-text">{{ $campaign->name }}</h1>
+                        <h1 class="page-title text-4xl text-text">{{ $campaign->name }}</h1>
                         <p class="text-muted mt-1">
                             Dungeon Master: {{ $campaign->dm->name ?? 'Unknown' }}
                         </p>
@@ -95,7 +95,7 @@
             <div x-show="tab === 'overview'" x-cloak>
                 @if($campaign->description)
                     <div class="mb-6">
-                        <h2 class="text-lg font-semibold text-text mb-2">Description</h2>
+                        <h2 class="section-title text-2xl text-text mb-2">Description</h2>
                         <p class="text-text">{{ $campaign->description }}</p>
                     </div>
                 @endif

@@ -10,7 +10,7 @@
                  style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
         </div>
         <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">Rules Reference</h1>
+            <h1 class="hero-title text-4xl sm:text-5xl text-white leading-none">Rules Reference</h1>
             <p class="mt-4 text-base sm:text-lg text-violet-200 max-w-xl mx-auto">
                 Searchable SRD rules, conditions, and combat reference.
             </p>
@@ -181,7 +181,7 @@
     {{-- Ruleset category grid                            --}}
     {{-- ================================================ --}}
     <section aria-labelledby="categories-heading">
-        <h2 id="categories-heading" class="text-sm font-semibold uppercase tracking-wide text-muted mb-4">
+        <h2 id="categories-heading" class="eyebrow-label mb-4">
             All Sections
         </h2>
 

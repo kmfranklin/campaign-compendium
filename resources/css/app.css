@@ -1,3 +1,5 @@
+@import url('https://fonts.bunny.net/css?family=fraunces:500,600,700&family=manrope:400,500,600,700,800');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,6 +7,8 @@
 @layer base {
     :root {
         color-scheme: light;
+        --font-sans: 'Manrope';
+        --font-display: 'Fraunces';
 
         --color-bg: #f7f3eb;
         --color-bg-elevated: #efe8da;
@@ -71,7 +75,35 @@
         background:
             radial-gradient(circle at top, rgba(106, 69, 184, 0.09), transparent 30%),
             linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg) 18rem);
-        @apply min-h-screen text-text antialiased;
+        font-family: var(--font-sans), system-ui, sans-serif;
+        @apply min-h-screen text-text antialiased leading-relaxed;
+    }
+
+    h1,
+    h2,
+    .font-display {
+        font-family: var(--font-display), Georgia, serif;
+        letter-spacing: 0.015em;
+    }
+
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-semibold tracking-tight;
+    }
+
+    h1 {
+        @apply font-semibold leading-tight;
+    }
+
+    h2 {
+        @apply font-semibold leading-tight;
+    }
+
+    small,
+    .eyebrow {
+        @apply uppercase tracking-[0.22em];
     }
 
     ::selection {
@@ -81,6 +113,23 @@
 }
 
 @layer components {
+    .hero-title {
+        @apply font-display font-semibold tracking-[0.08em] text-balance;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .page-title {
+        @apply font-display font-semibold tracking-[0.03em] text-balance;
+    }
+
+    .section-title {
+        @apply font-display font-semibold tracking-[0.025em];
+    }
+
+    .eyebrow-label {
+        @apply text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-muted;
+    }
+
     .custom-select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a59bb8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
         background-position: right 0.5rem center;

@@ -10,7 +10,7 @@
         <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
             <div class="max-w-2xl mx-auto">
 
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight">
+                <h1 class="font-sans text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[0.92]">
                     Campaign Compendium
                 </h1>
 
@@ -62,7 +62,7 @@
         <section id="srd-tools" aria-labelledby="srd-tools-heading" class="py-12">
 
             <div class="text-center mb-10">
-                <h2 id="srd-tools-heading" class="text-2xl font-bold text-text">Free SRD Reference Tools</h2>
+                <h2 id="srd-tools-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text">Free SRD Reference Tools</h2>
                 <p class="mt-2 text-muted max-w-xl mx-auto text-sm">
                     The entire D&amp;D 5e Systems Reference Document — freely available, no account needed.
                 </p>
@@ -183,7 +183,7 @@
         <section aria-labelledby="account-features-heading" class="py-12">
 
             <div class="text-center mb-10">
-                <h2 id="account-features-heading" class="text-2xl font-bold text-text">More with a Free Account</h2>
+                <h2 id="account-features-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text">More with a Free Account</h2>
                 <p class="mt-2 text-muted max-w-xl mx-auto text-sm">
                     Create an account to unlock campaign management, custom content, and more — all free to get started.
                 </p>
@@ -257,7 +257,7 @@
         {{-- ================================================ --}}
         <section aria-labelledby="dashboard-heading" class="py-12">
 
-            <h2 id="dashboard-heading" class="text-xl font-bold text-text mb-6">Jump Back In</h2>
+            <h2 id="dashboard-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text mb-6">Jump Back In</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -315,7 +315,7 @@
         {{-- SRD Quick Links for authenticated users --}}
         <section aria-labelledby="srd-quick-heading" class="py-10">
 
-            <h2 id="srd-quick-heading" class="text-xl font-bold text-text mb-6">SRD Reference</h2>
+            <h2 id="srd-quick-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text mb-6">SRD Reference</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <a href="{{ route('spells.index') }}"

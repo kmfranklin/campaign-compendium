@@ -1,6 +1,6 @@
 <nav
     x-data="{ open: false }"
-    class="bg-white dark:bg-gray-900 border-b-2 border-gray-100 dark:border-gray-700"
+    class="relative z-40 bg-bg-elevated/95 border-b border-border backdrop-blur"
 >
     <div class="w-full px-4 sm:px-6 lg:px-8">
         <!-- Top row -->
@@ -81,16 +81,19 @@
                                 request()->routeIs('admin.*');
                         @endphp
 
+                        @php
+                            $desktopDropdownTriggerBase = 'inline-flex items-center px-1 border-b-2 h-24 text-sm leading-5 transition duration-150 ease-in-out focus:outline-none';
+                            $desktopDropdownTriggerClasses = fn (bool $active) => $active
+                                ? $desktopDropdownTriggerBase . ' border-accent text-text font-semibold focus:border-accent'
+                                : $desktopDropdownTriggerBase . ' border-transparent text-muted font-medium hover:text-accent hover:border-accent/40 focus:text-accent focus:border-accent/40';
+                        @endphp
+
                         <!-- Encounters dropdown -->
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button
                                     type="button"
-                                    class="inline-flex items-center px-1 border-b-2 h-24 text-sm font-medium leading-5
-                                           {{ $encountersDropdownActive
-                                               ? 'border-purple-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-purple-900'
-                                               : 'border-transparent text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-amber-400 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-700 dark:focus:text-gray-200 focus:border-gray-300 dark:focus:border-gray-600' }}
-                                           transition duration-150 ease-in-out"
+                                    class="{{ $desktopDropdownTriggerClasses($encountersDropdownActive) }}"
                                 >
                                     <span>Encounters</span>
                                     <svg class="ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -115,11 +118,7 @@
                             <x-slot name="trigger">
                                 <button
                                     type="button"
-                                    class="inline-flex items-center px-1 border-b-2 h-24 text-sm font-medium leading-5
-                                           {{ $itemsDropdownActive
-                                               ? 'border-purple-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-purple-900'
-                                               : 'border-transparent text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-amber-400 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-700 dark:focus:text-gray-200 focus:border-gray-300 dark:focus:border-gray-600' }}
-                                           transition duration-150 ease-in-out"
+                                    class="{{ $desktopDropdownTriggerClasses($itemsDropdownActive) }}"
                                 >
                                     <span>Items</span>
 
@@ -157,8 +156,7 @@
                                         <button
                                             type="submit"
                                             class="block w-full text-left px-4 py-2 text-sm
-                                                   text-gray-700 hover:text-gray-900 hover:bg-gray-100
-                                                   dark:text-gray-200 dark:hover:text-white dark:hover:bg-gray-800
+                                                   text-muted hover:text-text hover:bg-bg-elevated
                                                    transition duration-150 ease-in-out"
                                         >
                                             Return to Admin Account
@@ -176,7 +174,7 @@
                 @guest
                     <a
                         href="{{ route('login') }}"
-                        class="text-sm font-semibold text-gray-800 hover:text-purple-700 dark:text-gray-100 dark:hover:text-amber-400"
+                        class="text-sm font-semibold text-text hover:text-accent transition-colors duration-150"
                     >
                         Login
                     </a>
@@ -199,8 +197,8 @@
                         href="{{ route('dashboard') }}"
                         class="hidden sm:inline-flex items-center text-sm font-semibold px-3 py-1.5 rounded border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2
                                {{ request()->routeIs('dashboard')
-                                   ? 'border-purple-800 text-purple-900 dark:border-violet-400 dark:text-violet-300'
-                                   : 'border-gray-300 text-gray-600 hover:border-purple-700 hover:text-purple-700 dark:border-gray-600 dark:text-gray-300 dark:hover:border-violet-400 dark:hover:text-violet-300' }}"
+                                   ? 'border-accent text-accent bg-accent/10'
+                                   : 'border-border text-muted hover:border-accent/50 hover:text-accent' }}"
                     >
                         Dashboard
                     </a>
@@ -208,7 +206,7 @@
                     <!-- Notifications -->
                     <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center">
                         <svg
-                            class="w-6 h-6 text-gray-700 hover:text-purple-700 dark:text-gray-200 dark:hover:text-amber-400"
+                            class="w-6 h-6 text-muted hover:text-accent transition-colors duration-150"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -235,11 +233,7 @@
                         <x-slot name="trigger">
                             <button
                                 type="button"
-                                class="inline-flex items-center px-1 border-b-2 h-24 text-sm font-medium leading-5
-                                       {{ $userDropdownActive
-                                           ? 'border-purple-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-purple-900'
-                                           : 'border-transparent text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-amber-400 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-700 dark:focus:text-gray-200 focus:border-gray-300 dark:focus:border-gray-600' }}
-                                       transition duration-150 ease-in-out"
+                                class="{{ $desktopDropdownTriggerClasses($userDropdownActive) }}"
                             >
                                 <span>{{ Auth::user()->name }}</span>
 
@@ -279,8 +273,7 @@
                                     <button
                                         type="submit"
                                         class="block w-full text-left px-4 py-2 text-sm
-                                               text-gray-700 hover:text-gray-900 hover:bg-gray-100
-                                               dark:text-gray-200 dark:hover:text-white dark:hover:bg-gray-800
+                                               text-muted hover:text-text hover:bg-bg-elevated
                                                transition duration-150 ease-in-out"
                                     >
                                         Return to Admin Account
@@ -307,10 +300,9 @@
                         @click="open = !open"
                         type="button"
                         class="inline-flex items-center justify-center p-2 rounded-md
-                               text-gray-500 hover:text-gray-700 hover:bg-gray-100
-                               focus:outline-none focus:bg-gray-100 focus:text-gray-700
-                               transition duration-150 ease-in-out
-                               dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                               text-muted hover:text-text hover:bg-bg
+                               focus:outline-none focus:bg-bg focus:text-text
+                               transition duration-150 ease-in-out"
                         aria-label="Toggle navigation"
                     >
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -337,7 +329,7 @@
         </div>
 
         <!-- Mobile menu -->
-        <div x-show="open" x-cloak class="sm:hidden border-t border-gray-200 dark:border-gray-700">
+        <div x-show="open" x-cloak class="sm:hidden border-t border-border bg-surface/95 backdrop-blur">
             <div class="py-3 space-y-1">
                 @guest
                     <x-responsive-nav-link :href="route('srdItems.index')" :active="request()->routeIs('srdItems.*')">
@@ -401,7 +393,7 @@
                         {{ __('Rules') }}
                     </x-responsive-nav-link>
 
-                    <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted">
                         Encounters
                     </div>
 
@@ -413,7 +405,7 @@
                         {{ __('Saved Encounters') }}
                     </x-responsive-nav-link>
 
-                    <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted">
                         Items
                     </div>
 
@@ -444,7 +436,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                                class="w-full text-left block px-4 py-2 text-sm text-muted hover:text-text hover:bg-bg"
                             >
                                 Return to Admin Account
                             </button>
@@ -461,11 +453,11 @@
                         </x-responsive-nav-link>
                     </form>
 
-                    <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 px-4">
-                        <div class="font-medium text-base text-gray-800 dark:text-gray-100">
+                    <div class="border-t border-border mt-3 pt-3 px-4">
+                        <div class="font-medium text-base text-text">
                             {{ Auth::user()->name }}
                         </div>
-                        <div class="font-medium text-sm text-gray-500 dark:text-gray-400">
+                        <div class="font-medium text-sm text-muted">
                             {{ Auth::user()->email }}
                         </div>
                     </div>

@@ -16,7 +16,7 @@
         </div>
 
         <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+            <h1 class="hero-title text-4xl sm:text-5xl text-white leading-none">
                 About Campaign Compendium
             </h1>
             <p class="mt-4 text-base sm:text-lg text-violet-200 max-w-xl mx-auto">
@@ -32,7 +32,7 @@
     {{-- What is Campaign Compendium                                   --}}
     {{-- ============================================================ --}}
     <section aria-labelledby="about-heading" class="py-12 max-w-3xl mx-auto">
-        <h2 id="about-heading" class="text-2xl font-bold text-text mb-4">What is Campaign Compendium?</h2>
+        <h2 id="about-heading" class="section-title text-3xl text-text mb-4">What is Campaign Compendium?</h2>
         <p class="text-text leading-relaxed mb-4">
             Campaign Compendium is a web-based management tool for tabletop roleplaying games. It includes the full D&D 5e Systems Reference Document — spells, monsters, items, weapons, armor, and rules — available to anyone, no account required.
         </p>
@@ -51,7 +51,7 @@
     <section aria-labelledby="available-heading" class="py-12">
 
         <div class="text-center mb-10">
-            <h2 id="available-heading" class="text-2xl font-bold text-text">What's Available Now</h2>
+            <h2 id="available-heading" class="section-title text-3xl text-text">What's Available Now</h2>
             <p class="mt-2 text-muted max-w-xl mx-auto text-sm">
                 Everything below is live and free to use today.
             </p>
@@ -190,7 +190,7 @@
     <section aria-labelledby="roadmap-heading" class="py-12">
 
         <div class="text-center mb-10">
-            <h2 id="roadmap-heading" class="text-2xl font-bold text-text">What's Coming</h2>
+            <h2 id="roadmap-heading" class="section-title text-3xl text-text">What's Coming</h2>
             <p class="mt-2 text-muted max-w-xl mx-auto text-sm">
                 Campaign Compendium is actively in development. Here's where it's headed.
             </p>
@@ -269,7 +269,7 @@
     {{-- ============================================================ --}}
     <section aria-labelledby="cta-heading" class="py-12 text-center">
 
-        <h2 id="cta-heading" class="text-xl font-bold text-text mb-2">Open Source &amp; In Progress</h2>
+        <h2 id="cta-heading" class="section-title text-3xl text-text mb-2">Open Source &amp; In Progress</h2>
         <p class="text-muted text-sm max-w-lg mx-auto mb-8">
             Campaign Compendium is an open source project, actively developed on GitHub. Curious about the tech stack, want to follow along, or have a suggestion? The repo is public.
         </p>

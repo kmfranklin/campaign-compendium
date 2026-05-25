@@ -61,7 +61,7 @@
       <div class="flex-1">
         <div class="flex items-start">
           <div>
-            <h1 class="text-3xl font-bold text-text">{{ $item->name }}</h1>
+            <h1 class="page-title text-4xl text-text">{{ $item->name }}</h1>
 
             @php
               $itemTags = [];
@@ -252,14 +252,14 @@
       <div class="md:flex-1">
         @if($item->description)
           <div class="p-6 bg-surface border-b border-border">
-            <h2 class="text-lg font-semibold text-text mb-4">Description</h2>
+            <h2 class="section-title text-2xl text-text mb-4">Description</h2>
             <p class="text-text whitespace-pre-line">{{ $item->description }}</p>
           </div>
         @endif
 
         @if(!empty($displayWeapon))
           <div class="p-6 bg-bg border-b border-border">
-            <h2 class="text-lg font-semibold text-text mb-4">Weapon Details</h2>
+            <h2 class="section-title text-2xl text-text mb-4">Weapon Details</h2>
             <div class="grid grid-cols-2 gap-4 text-sm">
               @if(!empty($displayWeapon['base_damage_dice']))
                 <div>
@@ -321,7 +321,7 @@
           @endphp
 
           <div class="p-6 bg-surface border-b border-border">
-            <h2 class="text-lg font-semibold text-text mb-4">Armor Details</h2>
+            <h2 class="section-title text-2xl text-text mb-4">Armor Details</h2>
 
             <div class="grid grid-cols-2 gap-4 text-sm">
               @if(!is_null($armor->base_ac) && !empty($armor->base_ac))

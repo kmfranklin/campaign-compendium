@@ -45,7 +45,7 @@
                     <div class="flex-1">
                         <div class="flex items-start">
                             <div>
-                                <h1 class="text-3xl font-bold text-text">{{ $quest->title }}</h1>
+                                <h1 class="page-title text-4xl text-text">{{ $quest->title }}</h1>
 
                                 {{-- Status badge --}}
                                 <div class="mt-2">
@@ -104,7 +104,7 @@
                     @if($quest->notes)
                         <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg
                                     dark:bg-amber-900/10 dark:border-amber-800">
-                            <h2 class="text-sm font-semibold text-amber-800 dark:text-amber-400 mb-1 flex items-center gap-1.5">
+                        <h2 class="eyebrow-label text-sm text-amber-800 dark:text-amber-400 mb-1 flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                      viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

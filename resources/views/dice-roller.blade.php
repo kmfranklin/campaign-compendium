@@ -10,7 +10,7 @@
                  style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
         </div>
         <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">Dice Roller</h1>
+            <h1 class="hero-title text-4xl sm:text-5xl text-white leading-none">Dice Roller</h1>
             <p class="mt-4 text-base sm:text-lg text-violet-200 max-w-xl mx-auto">
                 Pick a die, set your quantity and modifier, and roll.
             </p>
@@ -79,7 +79,7 @@
     {{-- Die type selector                                --}}
     {{-- ================================================ --}}
     <section aria-labelledby="die-selector-heading">
-        <h2 id="die-selector-heading" class="text-sm font-semibold uppercase tracking-wide text-muted mb-3">
+        <h2 id="die-selector-heading" class="eyebrow-label mb-3">
             Choose a Die
         </h2>
 
@@ -110,7 +110,7 @@
 
             {{-- Quantity stepper --}}
             <div class="flex flex-col gap-2">
-                <span class="text-sm font-semibold uppercase tracking-wide text-muted" id="quantity-label">
+                <span class="eyebrow-label text-sm" id="quantity-label">
                     Number of Dice
                 </span>
                 <div class="flex items-center rounded-lg border border-border overflow-hidden"
@@ -142,7 +142,7 @@
 
             {{-- Modifier input --}}
             <div class="flex flex-col gap-2">
-                <label for="modifier" class="text-sm font-semibold uppercase tracking-wide text-muted">
+                <label for="modifier" class="eyebrow-label text-sm">
                     Modifier
                 </label>
                 <input
@@ -187,7 +187,7 @@
         aria-atomic="true"
         class="mt-10"
     >
-        <h2 id="results-heading" class="text-sm font-semibold uppercase tracking-wide text-muted mb-3">
+        <h2 id="results-heading" class="eyebrow-label mb-3">
             Result
         </h2>
 
@@ -249,7 +249,7 @@
 
             {{-- Total --}}
             <div class="border-t border-border pt-4 flex items-baseline gap-3">
-                <span class="text-sm font-semibold uppercase tracking-wide text-muted">Total</span>
+                <span class="eyebrow-label text-sm">Total</span>
                 <span
                     class="text-5xl font-extrabold text-accent tabular-nums"
                     x-text="total"
@@ -269,7 +269,7 @@
         x-cloak
     >
         <div class="flex items-center justify-between mb-3">
-            <h2 id="history-heading" class="text-sm font-semibold uppercase tracking-wide text-muted">
+            <h2 id="history-heading" class="eyebrow-label">
                 Roll History
             </h2>
             <button

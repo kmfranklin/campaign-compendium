@@ -45,7 +45,7 @@
                 {{-- Header --}}
                 <div class="flex items-start mb-6">
                     <div class="flex-1">
-                        <h1 class="text-3xl font-bold text-text">{{ $sessionLog->title }}</h1>
+                        <h1 class="page-title text-4xl text-text">{{ $sessionLog->title }}</h1>
                         <p class="text-muted mt-1">
                             {{ $sessionLog->session_date->format('F j, Y') }}
                         </p>
@@ -82,7 +82,7 @@
                 {{-- Audio player --}}
                 @if ($sessionLog->media && $sessionLog->media->isAudio())
                     <div class="mb-6 p-4 border border-border rounded-lg bg-bg">
-                        <h2 class="text-sm font-semibold text-text mb-2 flex items-center gap-1.5">
+                        <h2 class="eyebrow-label text-sm mb-2 flex items-center gap-1.5 text-text">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,7 +107,7 @@
                 {{-- Summary --}}
                 @if ($sessionLog->summary)
                     <div class="mb-6">
-                        <h2 class="text-lg font-semibold text-text mb-2">Summary</h2>
+                        <h2 class="section-title text-2xl text-text mb-2">Summary</h2>
                         <p class="text-text whitespace-pre-line">{{ $sessionLog->summary }}</p>
                     </div>
                 @endif
