@@ -39,11 +39,13 @@ This is also a learning project, built to explore Laravel while creating somethi
 - Create, edit, and delete campaigns
 - Invite members via a notification-based invite flow; accept or decline invites
 - Campaign roles (DM, Player) on the membership pivot
-- Campaign detail view with tabbed sections for overview, quests, and NPCs
+- Campaign detail view with tabbed sections for overview, sessions, quests, and NPCs
 
 ### ✅ Quests
 
 - Full CRUD for quests, nested under campaigns
+- Quest status tracking with active, planned, completed, failed, and abandoned states
+- DM notes field on quests
 - Attach and detach NPCs from quests
 - Quest detail view with associated NPC list
 
@@ -52,12 +54,28 @@ This is also a learning project, built to explore Laravel while creating somethi
 - Full CRUD for custom NPCs
 - Associate NPCs with campaigns and quests
 
+### ✅ Session Logs
+
+- Create, edit, and delete session logs nested under campaigns
+- Attach campaign quests and NPCs directly from the create/edit session flow
+- Track which NPCs appeared and which quests advanced during a session
+- Optional private audio recording upload and playback for each session log
+
 ### ✅ Items & Equipment (SRD)
 
 - Full SRD item dataset seeded: items, weapons, armor, categories, rarities, damage types
 - Browse the SRD compendium (public, no login required)
 - Clone any SRD item to create a custom version with editable stats
 - Soft-delete support for custom items
+
+### ✅ Public SRD Reference & Tools
+
+- Polished public homepage and about page
+- Public SRD rules reference with searchable sections and conditions
+- Public SRD spell lookup with filters for class, level, school, and casting time
+- Public SRD monster bestiary with CR, type, and size filters plus full statblocks
+- Public dice roller
+- Public encounter generator with XP math, suggestion presets, candidate browsing, and saved encounters for authenticated users
 
 ### ✅ Notifications
 
@@ -78,13 +96,13 @@ The roadmap is organized into rough phases. Items within a phase are not necessa
 
 The goal of this phase is to give non-registered users a reason to visit and explore the app, and to build awareness of the authenticated features.
 
-- [ ] **Polished homepage** — hero section, feature highlights, clear CTAs for sign-up and SRD exploration
-- [ ] **About page** — project description, tech stack, link to GitHub
-- [ ] **SRD Rules Lookup** — searchable public reference for conditions, actions, abilities, and rules; no login required
-- [ ] **Spell Lookup** — full SRD spell list with filtering by class, level, school, and casting time; public
-- [ ] **Monster/Creature Lookup** — SRD bestiary with CR and type filters and statblock display; public
-- [ ] **Dice Roller** — accessible, animated multi-dice roller (d4–d100); public tool
-- [ ] **Encounter Difficulty Calculator** — input party size/level and monster CR values to get XP thresholds and difficulty rating (inspired by Kobold Fight Club); public tool
+- [x] **Polished homepage** — hero section, feature highlights, clear CTAs for sign-up and SRD exploration
+- [x] **About page** — project description, tech stack, link to GitHub
+- [x] **SRD Rules Lookup** — searchable public reference for conditions, actions, abilities, and rules; no login required
+- [x] **Spell Lookup** — full SRD spell list with filtering by class, level, school, and casting time; public
+- [x] **Monster/Creature Lookup** — SRD bestiary with CR and type filters and statblock display; public
+- [x] **Dice Roller** — accessible, animated multi-dice roller (d4–d100); public tool
+- [x] **Encounter Difficulty Calculator / Generator** — input party size/level and monster CR values to get XP thresholds and difficulty rating, with encounter suggestions and authenticated save support
 - [ ] **Random Generators** — quick public tools: NPC name generator, random weather, random town events
 
 ---
@@ -93,8 +111,8 @@ The goal of this phase is to give non-registered users a reason to visit and exp
 
 Deepening the campaign experience to make this feel like a real campaign management tool.
 
-- [ ] **Quest status tracking** — active, completed, failed, and abandoned states with notes/description fields
-- [ ] **Session Logs** — create session records tied to a campaign; log which NPCs appeared, quests advanced, and freeform DM notes
+- [x] **Quest status tracking** — active, completed, failed, and abandoned states with notes/description fields
+- [x] **Session Logs** — create session records tied to a campaign; log which NPCs appeared, quests advanced, and freeform DM notes
 - [ ] **Campaign Notes / Journal** — freeform rich-text notes attached to a campaign, visible to DM and optionally to players
 - [ ] **Locations** — create named locations (towns, dungeons, regions) within a campaign; attach NPCs, quests, and notes to them
 - [ ] **Factions & Organizations** — define factions within a campaign; associate NPCs and locations; track player reputation
@@ -107,7 +125,7 @@ Deepening the campaign experience to make this feel like a real campaign managem
 
 Encounters as a first-class feature, bridging campaign management and the live table.
 
-- [ ] **Encounter model** — encounters nested under quests; title, description, environment, difficulty rating
+- [x] **Encounter model** — saved encounters generated from the public tool, with user-owned encounter snapshots
 - [ ] **Add monsters to encounters** — attach SRD creatures or custom NPCs with quantity and initiative modifier
 - [ ] **Initiative tracker** — at-the-table tool for managing turn order, HP, and conditions during a live encounter
 - [ ] **Encounter CR calculator** — automatic difficulty rating based on party level and monster CR values
