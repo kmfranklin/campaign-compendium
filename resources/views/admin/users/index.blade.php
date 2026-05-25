@@ -101,33 +101,32 @@
             @endif
         </p>
 
-        <table class="w-full text-left text-sm border-separate border-spacing-y-2"
-               aria-label="User accounts">
-            <thead>
-                <tr class="text-muted text-xs uppercase tracking-wide">
-                    <th class="px-3 py-2" scope="col">ID</th>
-                    <th class="px-3 py-2" scope="col">Name</th>
-                    <th class="px-3 py-2" scope="col">Email</th>
-                    <th class="px-3 py-2" scope="col">Status</th>
-                    <th class="px-3 py-2 text-right" scope="col">
+        <div class="ui-table-panel">
+        <table class="ui-table" aria-label="User accounts">
+            <thead class="ui-table-head">
+                <tr>
+                    <th class="ui-table-header-tight" scope="col">ID</th>
+                    <th class="ui-table-header-tight" scope="col">Name</th>
+                    <th class="ui-table-header-tight" scope="col">Email</th>
+                    <th class="ui-table-header-tight" scope="col">Status</th>
+                    <th class="ui-table-header-tight text-right" scope="col">
                         <span class="sr-only">Actions</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($users as $user)
-                    <tr class="bg-surface shadow-sm rounded-md
-                               {{ $user->isSuspended() ? 'opacity-60' : '' }}">
+                    <tr class="ui-table-row {{ $user->isSuspended() ? 'opacity-60' : '' }}">
 
-                        <td class="px-3 py-3 font-mono text-xs text-muted">
+                        <td class="ui-table-cell-tight font-mono text-xs">
                             {{ $user->id }}
                         </td>
 
-                        <td class="px-3 py-3 text-text font-medium">
+                        <td class="ui-table-cell-tight-strong">
                             {{ $user->name }}
                         </td>
 
-                        <td class="px-3 py-3 text-muted">
+                        <td class="ui-table-cell-tight">
                             {{ $user->email }}
                         </td>
 
@@ -137,7 +136,7 @@
                             the controller currently blocks suspending super admins, so
                             this is belt-and-suspenders defensive display logic).
                         --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             @if ($user->isSuspended())
                                 <span class="ui-badge ui-badge-danger">
                                     Suspended
@@ -154,14 +153,12 @@
                         </td>
 
                         {{-- Actions dropdown --}}
-                        <td class="px-3 py-3 text-right">
+                        <td class="ui-table-cell-tight text-right">
                             <div x-data="{ open: false }" class="relative inline-block text-left">
 
                                 <button @click="open = !open"
                                         type="button"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-full
-                                               hover:bg-gray-100 dark:hover:bg-gray-700
-                                               focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                                        class="ui-table-menu-trigger h-8 w-8"
                                         :aria-expanded="open.toString()"
                                         aria-haspopup="true"
                                         aria-label="Actions for {{ $user->name }}">
@@ -181,15 +178,13 @@
                                      @click.away="open = false"
                                      @keydown.escape.window="open = false"
                                      x-transition
-                                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md
-                                            bg-surface shadow-lg ring-1 ring-black ring-opacity-5
-                                            focus:outline-none"
+                                     class="ui-table-menu"
                                      role="menu"
                                      aria-orientation="vertical">
                                     <div class="py-1 text-sm text-text">
 
                                         <a href="{{ route('admin.users.edit', $user->id) }}"
-                                           class="block px-4 py-2 hover:bg-bg"
+                                           class="ui-table-menu-item"
                                            role="menuitem">
                                             Edit
                                         </a>
@@ -199,8 +194,7 @@
                                                   action="{{ route('admin.users.suspend', $user->id) }}">
                                                 @csrf
                                                 <button type="submit"
-                                                        class="w-full text-left px-4 py-2 text-red-600
-                                                               dark:text-red-400 hover:bg-bg"
+                                                        class="ui-table-menu-item-danger"
                                                         role="menuitem">
                                                     Suspend
                                                 </button>
@@ -212,8 +206,7 @@
                                                   action="{{ route('admin.users.unsuspend', $user->id) }}">
                                                 @csrf
                                                 <button type="submit"
-                                                        class="w-full text-left px-4 py-2 text-green-600
-                                                               dark:text-green-400 hover:bg-bg"
+                                                        class="ui-table-menu-item-success"
                                                         role="menuitem">
                                                     Restore
                                                 </button>
@@ -225,7 +218,7 @@
                                                   method="POST">
                                                 @csrf
                                                 <button type="submit"
-                                                        class="w-full text-left px-4 py-2 hover:bg-bg"
+                                                        class="ui-table-menu-item"
                                                         role="menuitem">
                                                     Sign in as
                                                 </button>
@@ -240,13 +233,14 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-3 py-8 text-center text-sm text-muted">
+                        <td colspan="5" class="ui-table-empty-tight">
                             No users match your search.
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     {{--

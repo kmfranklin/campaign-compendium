@@ -5,18 +5,18 @@
 
     @if($quest->npcs->count())
         {{-- Desktop table --}}
-        <div class="hidden sm:block overflow-x-auto mb-6">
-            <div class="min-w-full bg-surface border border-border shadow-sm sm:rounded-lg">
-                <table class="min-w-full">
-                    <thead class="bg-bg border-b border-border">
+        <div class="hidden sm:block ui-table-shell mb-6">
+            <div class="ui-table-panel min-w-full sm:rounded-lg">
+                <table class="ui-table">
+                    <thead class="ui-table-head">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                            <th class="ui-table-header">
                                 Name
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                            <th class="ui-table-header">
                                 Role
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                            <th class="ui-table-header">
                                 Actions
                             </th>
                         </tr>
@@ -24,19 +24,19 @@
 
                     <tbody>
                         @foreach($quest->npcs as $npc)
-                            <tr class="odd:bg-surface even:bg-bg hover:bg-hover">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
+                            <tr class="ui-table-row">
+                                <td class="ui-table-cell-strong whitespace-nowrap">
                                     <a href="{{ route('compendium.npcs.show', $npc) }}"
-                                       class="text-accent hover:text-accent-hover font-medium">
+                                       class="hover:text-accent transition-colors duration-150">
                                         {{ $npc->name }}
                                     </a>
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted">
+                                <td class="ui-table-cell whitespace-nowrap">
                                     {{ $npc->pivot->role ? Str::headline($npc->pivot->role) : '—' }}
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="ui-table-cell whitespace-nowrap">
                                     @can('update', $campaign)
                                         <form action="{{ route('campaigns.quests.npcs.detach', [$campaign, $quest, $npc]) }}"
                                               method="POST"
@@ -46,7 +46,7 @@
                                             @method('DELETE')
 
                                             <button type="submit"
-                                                    class="text-danger hover:text-red-600 font-medium">
+                                                    class="ui-table-action-danger">
                                                 Detach
                                             </button>
                                         </form>
@@ -71,8 +71,7 @@
                 <div>
                     <label for="npc_id" class="block text-sm font-medium text-text">NPC</label>
                     <select name="npc_id" id="npc_id"
-                            class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                                   focus:border-accent focus:ring-accent sm:text-sm"
+                            class="ui-select mt-1"
                             required>
                         @foreach($availableNpcs as $npc)
                             <option value="{{ $npc->id }}">{{ $npc->name }}</option>
@@ -83,16 +82,14 @@
                 <div class="sm:col-span-2">
                     <label for="role" class="block text-sm font-medium text-text">Role (optional)</label>
                     <input type="text" name="role" id="role"
-                           class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                                  focus:border-accent focus:ring-accent sm:text-sm"
+                           class="ui-field mt-1"
                            placeholder="quest_giver, ally, enemy">
                 </div>
             </div>
 
             <div class="pt-4 flex justify-end">
                 <button type="submit"
-                        class="px-6 py-2 bg-accent text-on-accent font-semibold rounded
-                               hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent">
+                        class="btn btn-primary btn-sm">
                     Attach NPC
                 </button>
             </div>

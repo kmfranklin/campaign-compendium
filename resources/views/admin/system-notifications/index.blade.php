@@ -27,34 +27,33 @@
         container. We handle small-screen layout by hiding columns with
         responsive classes instead, so horizontal scrolling isn't needed.
     --}}
-    <div>
+    <div class="ui-table-shell">
 
         <p class="mb-3 text-xs text-muted" aria-live="polite">
             {{ $notifications->total() }} total {{ Str::plural('notification', $notifications->total()) }}.
         </p>
 
-        <table class="w-full text-left text-sm border-separate border-spacing-y-2"
-               aria-label="System notifications">
-            <thead>
-                <tr class="text-muted text-xs uppercase tracking-wide">
-                    <th class="px-3 py-2" scope="col">Title &amp; Message</th>
-                    <th class="px-3 py-2 w-px whitespace-nowrap" scope="col">Type</th>
-                    <th class="px-3 py-2 w-px whitespace-nowrap" scope="col">Status</th>
-                    <th class="px-3 py-2 w-32 hidden md:table-cell" scope="col">Expires</th>
-                    <th class="px-3 py-2 w-20 hidden lg:table-cell" scope="col">Dismissed</th>
-                    <th class="px-3 py-2 w-px whitespace-nowrap hidden lg:table-cell" scope="col">Created by</th>
-                    <th class="px-3 py-2 w-px whitespace-nowrap" scope="col">
+        <div class="ui-table-panel">
+        <table class="ui-table" aria-label="System notifications">
+            <thead class="ui-table-head">
+                <tr>
+                    <th class="ui-table-header-tight" scope="col">Title &amp; Message</th>
+                    <th class="ui-table-header-tight w-px whitespace-nowrap" scope="col">Type</th>
+                    <th class="ui-table-header-tight w-px whitespace-nowrap" scope="col">Status</th>
+                    <th class="ui-table-header-tight hidden w-32 md:table-cell" scope="col">Expires</th>
+                    <th class="ui-table-header-tight hidden w-20 lg:table-cell" scope="col">Dismissed</th>
+                    <th class="ui-table-header-tight hidden w-px whitespace-nowrap lg:table-cell" scope="col">Created by</th>
+                    <th class="ui-table-header-tight w-px whitespace-nowrap" scope="col">
                         <span class="sr-only">Actions</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($notifications as $notification)
-                    <tr class="bg-surface shadow-sm rounded-md align-top
-                               {{ !$notification->is_active ? 'opacity-60' : '' }}">
+                    <tr class="ui-table-row align-top {{ !$notification->is_active ? 'opacity-60' : '' }}">
 
                         {{-- Title & preview --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             <p class="font-medium text-text text-sm">
                                 {{ $notification->title }}
                             </p>
@@ -64,7 +63,7 @@
                         </td>
 
                         {{-- Type badge --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             @php
                                 $typeBadge = match ($notification->type) {
                                     'info'    => 'ui-badge ui-badge-info',
@@ -80,7 +79,7 @@
                         </td>
 
                         {{-- Active / Inactive / Expired status --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             @if ($notification->isExpired())
                                 <span class="ui-badge ui-badge-muted">
                                     Expired
@@ -97,7 +96,7 @@
                         </td>
 
                         {{-- Expiry date --}}
-                        <td class="px-3 py-3 text-xs text-muted hidden md:table-cell">
+                        <td class="ui-table-cell-tight hidden text-xs md:table-cell">
                             @if ($notification->expires_at)
                                 <span x-data
                                       x-init="
@@ -108,7 +107,7 @@
                                     {{-- populated by Alpine --}}
                                 </span>
                                 @if ($notification->isExpired())
-                                    <span class="text-red-500 dark:text-red-400">(expired)</span>
+                                    <span class="text-danger">(expired)</span>
                                 @endif
                             @else
                                 <span class="italic">Never</span>
@@ -116,13 +115,13 @@
                         </td>
 
                         {{-- Dismissal count --}}
-                        <td class="px-3 py-3 text-xs text-muted hidden lg:table-cell">
+                        <td class="ui-table-cell-tight hidden text-xs lg:table-cell">
                             {{ $notification->dismissals_count }}
                             {{ Str::plural('user', $notification->dismissals_count) }}
                         </td>
 
                         {{-- Created by --}}
-                        <td class="px-3 py-3 hidden lg:table-cell">
+                        <td class="ui-table-cell-tight hidden lg:table-cell">
                             @if ($notification->createdBy)
                                 <span class="text-text text-xs font-medium">
                                     {{ $notification->createdBy->name }}
@@ -133,14 +132,12 @@
                         </td>
 
                         {{-- Actions dropdown --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open"
                                         @keydown.escape.window="open = false"
                                         type="button"
-                                        class="p-1.5 rounded text-muted hover:text-text hover:bg-bg
-                                               focus:outline-none focus:ring-2 focus:ring-accent
-                                               transition-colors duration-150"
+                                        class="ui-table-menu-trigger h-8 w-8"
                                         :aria-expanded="open.toString()"
                                         aria-haspopup="true"
                                         aria-label="Actions for {{ $notification->title }}">
@@ -157,16 +154,13 @@
                                      x-transition:leave="transition ease-in duration-75"
                                      x-transition:leave-start="transform opacity-100 scale-100"
                                      x-transition:leave-end="transform opacity-0 scale-95"
-                                     class="absolute right-0 z-10 mt-1 w-44 origin-top-right rounded-md
-                                            bg-surface border border-border shadow-lg
-                                            focus:outline-none"
+                                     class="ui-table-menu"
                                      role="menu"
                                      aria-orientation="vertical"
                                      x-cloak>
 
                                     <a href="{{ route('admin.notifications.edit', $notification) }}"
-                                       class="block px-4 py-2 text-sm text-text hover:bg-bg
-                                              transition-colors duration-150"
+                                       class="ui-table-menu-item"
                                        role="menuitem">
                                         Edit
                                     </a>
@@ -178,8 +172,7 @@
                                               class="m-0">
                                             @csrf
                                             <button type="submit"
-                                                    class="block w-full text-left px-4 py-2 text-sm text-text
-                                                           hover:bg-bg transition-colors duration-150"
+                                                    class="ui-table-menu-item"
                                                     role="menuitem">
                                                 Deactivate
                                             </button>
@@ -190,8 +183,7 @@
                                               class="m-0">
                                             @csrf
                                             <button type="submit"
-                                                    class="block w-full text-left px-4 py-2 text-sm text-text
-                                                           hover:bg-bg transition-colors duration-150"
+                                                    class="ui-table-menu-item"
                                                     role="menuitem">
                                                 Activate
                                             </button>
@@ -206,9 +198,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                class="block w-full text-left px-4 py-2 text-sm
-                                                       text-red-600 dark:text-red-400
-                                                       hover:bg-bg transition-colors duration-150"
+                                                class="ui-table-menu-item-danger"
                                                 role="menuitem">
                                             Delete
                                         </button>
@@ -221,10 +211,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-3 py-10 text-center text-sm text-muted">
+                        <td colspan="7" class="ui-table-empty-tight py-10">
                             No notifications yet.
                             <a href="{{ route('admin.notifications.create') }}"
-                               class="text-accent hover:underline ml-1">
+                               class="ml-1 text-accent hover:underline">
                                 Create one now →
                             </a>
                         </td>
@@ -232,6 +222,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     @if ($notifications->hasPages())

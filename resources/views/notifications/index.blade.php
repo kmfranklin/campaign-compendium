@@ -9,7 +9,7 @@
         @if (in_array($active, ['unread', 'all']))
             <form method="POST" action="{{ route('notifications.markAllRead') }}">
                 @csrf
-                <button class="text-sm text-muted hover:text-text">
+                <button class="link-action-subtle">
                     Mark all as read
                 </button>
             </form>
@@ -18,43 +18,33 @@
 
     {{-- Desktop List --}}
     <div class="hidden sm:block">
-        <div class="w-full max-w-7xl mx-auto bg-surface border border-border shadow-sm sm:rounded-lg">
+        <div class="ui-table-panel w-full max-w-7xl mx-auto sm:rounded-lg">
 
             {{-- Tabs --}}
-            <div class="border-b border-border mb-6">
-                <nav class="flex gap-6 text-sm">
+            <nav class="ui-tab-nav" aria-label="Notification filters">
+                <a href="?filter=unread"
+                   class="ui-tab-btn {{ $active === 'unread' ? 'ui-tab-btn-active' : '' }}">
+                    Unread
+                </a>
 
-                    <a href="?filter=unread"
-                       class="{{ $active === 'unread'
-                                ? 'text-accent font-semibold'
-                                : 'text-muted hover:text-text' }}">
-                        Unread
-                    </a>
+                <a href="?filter=read"
+                   class="ui-tab-btn {{ $active === 'read' ? 'ui-tab-btn-active' : '' }}">
+                    Read
+                </a>
 
-                    <a href="?filter=read"
-                       class="{{ $active === 'read'
-                                ? 'text-accent font-semibold'
-                                : 'text-muted hover:text-text' }}">
-                        Read
-                    </a>
+                <a href="?filter=all"
+                   class="ui-tab-btn {{ $active === 'all' ? 'ui-tab-btn-active' : '' }}">
+                    All
+                </a>
+            </nav>
 
-                    <a href="?filter=all"
-                       class="{{ $active === 'all'
-                                ? 'text-accent font-semibold'
-                                : 'text-muted hover:text-text' }}">
-                        All
-                    </a>
-
-                </nav>
-            </div>
-
-            <table class="min-w-full table-auto">
-                <thead class="bg-bg border-b border-border">
+            <table class="ui-table">
+                <thead class="ui-table-head">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                        <th class="ui-table-header">
                             Message
                         </th>
-                        <th class="px-6 py-3 text-right text-xs font-semibold text-muted uppercase tracking-wider">
+                        <th class="ui-table-header text-right">
                             Actions
                         </th>
                     </tr>
@@ -65,7 +55,7 @@
                     <x-notification-item :notification="$notification" layout="desktop" />
                 @empty
                     <tr>
-                        <td colspan="2" class="px-6 py-4 text-sm text-center text-muted">
+                        <td colspan="2" class="ui-table-empty">
                             No notifications found.
                         </td>
                     </tr>

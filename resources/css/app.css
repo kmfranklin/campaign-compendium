@@ -461,6 +461,137 @@
         border-color: color-mix(in srgb, var(--color-accent) 46%, var(--color-border));
     }
 
+    .ui-table-shell {
+        @apply overflow-x-auto;
+    }
+
+    .ui-table-panel {
+        @apply ui-panel overflow-hidden;
+    }
+
+    .ui-table {
+        @apply min-w-full table-auto;
+    }
+
+    .ui-table-head {
+        @apply border-b border-border bg-bg;
+    }
+
+    .ui-table-head-row {
+        @apply text-muted;
+    }
+
+    .ui-table-header {
+        @apply px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-muted;
+    }
+
+    .ui-table-header-tight {
+        @apply px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-muted;
+    }
+
+    .ui-table-row {
+        @apply odd:bg-surface even:bg-bg transition-colors duration-150 hover:bg-hover;
+    }
+
+    .ui-table-cell {
+        @apply px-6 py-4 align-top text-sm text-muted;
+    }
+
+    .ui-table-cell-strong {
+        @apply px-6 py-4 align-top text-sm font-medium text-text;
+    }
+
+    .ui-table-cell-tight {
+        @apply px-3 py-3 align-top text-sm text-muted;
+    }
+
+    .ui-table-cell-tight-strong {
+        @apply px-3 py-3 align-top text-sm font-medium text-text;
+    }
+
+    .ui-table-empty {
+        @apply px-6 py-8 text-center text-sm text-muted;
+    }
+
+    .ui-table-empty-tight {
+        @apply px-3 py-8 text-center text-sm text-muted;
+    }
+
+    .ui-table-action-row {
+        @apply flex flex-wrap items-center gap-2 sm:gap-3;
+    }
+
+    .ui-table-action {
+        @apply inline-flex items-center rounded-md px-2.5 py-1 text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent;
+    }
+
+    .ui-table-action-view {
+        @apply ui-table-action;
+        color: var(--color-teal);
+    }
+
+    .ui-table-action-view:hover {
+        background-color: color-mix(in srgb, var(--color-teal) 14%, transparent);
+    }
+
+    .ui-table-action-primary {
+        @apply ui-table-action;
+        color: var(--color-accent);
+    }
+
+    .ui-table-action-primary:hover {
+        background-color: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    }
+
+    .ui-table-action-edit {
+        @apply ui-table-action;
+        color: var(--color-warning);
+    }
+
+    .ui-table-action-edit:hover {
+        background-color: var(--color-warning-soft);
+    }
+
+    .ui-table-action-danger {
+        @apply ui-table-action;
+        color: var(--color-danger);
+    }
+
+    .ui-table-action-danger:hover {
+        background-color: var(--color-danger-soft);
+    }
+
+    .ui-table-action-success {
+        @apply ui-table-action;
+        color: #4ade80;
+    }
+
+    .ui-table-action-success:hover {
+        background-color: rgba(74, 222, 128, 0.14);
+    }
+
+    .ui-table-menu-trigger {
+        @apply inline-flex items-center justify-center rounded-full text-muted transition-colors duration-150 hover:bg-bg hover:text-text focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+    }
+
+    .ui-table-menu {
+        @apply absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-xl border border-border bg-surface shadow-lg focus:outline-none;
+    }
+
+    .ui-table-menu-item {
+        @apply block w-full px-4 py-2 text-left text-sm text-text transition-colors duration-150 hover:bg-bg;
+    }
+
+    .ui-table-menu-item-danger {
+        @apply ui-table-menu-item;
+        color: var(--color-danger);
+    }
+
+    .ui-table-menu-item-success {
+        @apply ui-table-menu-item;
+        color: #4ade80;
+    }
+
     .custom-select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a59bb8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
         background-position: right 0.5rem center;

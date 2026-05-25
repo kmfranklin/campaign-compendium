@@ -1,16 +1,16 @@
 {{-- Desktop Table --}}
 <div class="hidden sm:block">
-    <div class="ui-panel w-full max-w-7xl mx-auto overflow-x-auto sm:rounded-2xl">
-        <table class="min-w-full table-auto">
-            <thead class="bg-bg">
+    <div class="ui-table-panel ui-table-shell w-full max-w-7xl mx-auto sm:rounded-2xl">
+        <table class="ui-table">
+            <thead class="ui-table-head">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                    <th class="ui-table-header">
                         Name
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                    <th class="ui-table-header">
                         Description
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                    <th class="ui-table-header">
                         Actions
                     </th>
                 </tr>
@@ -18,26 +18,27 @@
 
             <tbody>
                 @forelse($campaigns as $campaign)
-                    <tr class="odd:bg-surface even:bg-bg hover:bg-hover">
-                        <td class="px-6 py-4 text-sm font-medium text-text whitespace-normal break-words">
+                    <tr class="ui-table-row">
+                        <td class="ui-table-cell-strong whitespace-normal break-words">
                             {{ $campaign->name }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words">
+                        <td class="ui-table-cell whitespace-normal break-words">
                             {{ $campaign->description ? Str::limit($campaign->description, 120) : '—' }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm whitespace-nowrap">
+                        <td class="ui-table-cell whitespace-nowrap">
+                            <div class="ui-table-action-row">
                             {{-- View is always visible --}}
                             <a href="{{ route('campaigns.show', $campaign) }}"
-                               class="text-accent hover:text-accent-hover font-medium focus:outline-none focus:ring-2 focus:ring-accent">
+                               class="ui-table-action-view">
                                 View
                             </a>
 
                             {{-- Only show Edit if authorized --}}
                             @can('update', $campaign)
                                 <a href="{{ route('campaigns.edit', $campaign) }}"
-                                   class="ml-4 text-yellow-600 hover:text-yellow-700 font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                                   class="ui-table-action-edit">
                                     Edit
                                 </a>
                             @endcan
@@ -48,19 +49,20 @@
                                       class="inline ml-4"
                                       onsubmit="return confirm('Delete this campaign?');">
                                     @csrf
-                                    @method('DELETE')
+                                @method('DELETE')
 
                                     <button type="submit"
-                                            class="text-danger hover:text-red-700 font-medium focus:outline-none focus:ring-2 focus:ring-red-500">
+                                            class="ui-table-action-danger">
                                         Delete
                                     </button>
                                 </form>
                             @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="px-6 py-4 text-sm text-center text-muted">
+                        <td colspan="3" class="ui-table-empty">
                             No campaigns found.
                         </td>
                     </tr>
@@ -88,7 +90,7 @@
                 </div>
 
                 <a href="{{ route('campaigns.show', $campaign) }}"
-                   class="text-accent hover:text-accent-hover font-medium focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-table-action-view">
                     View
                 </a>
             </div>

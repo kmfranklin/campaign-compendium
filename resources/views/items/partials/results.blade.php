@@ -2,22 +2,22 @@
 
   {{-- Desktop Table --}}
   <div class="hidden sm:block">
-    <div class="overflow-x-auto bg-surface border border-border shadow-sm sm:rounded-lg">
-      <table class="min-w-full table-auto">
-        <thead class="bg-bg border-b border-border">
+    <div class="ui-table-panel ui-table-shell sm:rounded-lg">
+      <table class="ui-table">
+        <thead class="ui-table-head">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Name</th>
-            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Category</th>
-            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Rarity</th>
-            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Details</th>
-            <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Actions</th>
+            <th class="ui-table-header">Name</th>
+            <th class="ui-table-header">Category</th>
+            <th class="ui-table-header">Rarity</th>
+            <th class="ui-table-header">Details</th>
+            <th class="ui-table-header">Actions</th>
           </tr>
         </thead>
 
         <tbody>
           @forelse($items as $item)
-            <tr class="odd:bg-surface even:bg-bg hover:bg-hover transition-colors">
-              <td class="px-6 py-4 text-sm font-medium text-text whitespace-normal break-words max-w-xs">
+            <tr class="ui-table-row">
+              <td class="ui-table-cell-strong whitespace-normal break-words max-w-xs">
                 {{ $item->name }}
 
                 @if($item->baseItem)
@@ -30,15 +30,15 @@
                 @endif
               </td>
 
-              <td class="px-6 py-4 text-sm text-muted whitespace-nowrap">
+              <td class="ui-table-cell whitespace-nowrap">
                 {{ $item->category?->name ?? '—' }}
               </td>
 
-              <td class="px-6 py-4 text-sm text-muted whitespace-nowrap">
+              <td class="ui-table-cell whitespace-nowrap">
                 {{ $item->rarity?->name ?? '—' }}
               </td>
 
-              <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-md">
+              <td class="ui-table-cell whitespace-normal break-words max-w-md">
                 @if($item->weapon)
                   {{ $item->weapon->damage_dice }} {{ $item->weapon->damageType?->name }}
                 @elseif($item->armor)
@@ -51,11 +51,12 @@
                 @endif
               </td>
 
-              <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <td class="ui-table-cell whitespace-nowrap">
+                <div class="ui-table-action-row">
 
                 {{-- View --}}
                 <a href="{{ route('items.show', $item) }}"
-                   class="text-accent hover:text-accent-hover font-medium mr-3">
+                   class="ui-table-action-view">
                   View
                 </a>
 
@@ -63,14 +64,14 @@
                   @if($item->is_srd)
                     {{-- Clone --}}
                     <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => request('from') ?? session('items.last_index')]) }}"
-                       class="text-accent hover:text-accent-hover font-medium mr-3">
+                       class="ui-table-action-primary">
                       Clone
                     </a>
                   @else
                     {{-- Edit --}}
                     @can('update', $item)
                       <a href="{{ route('items.edit', $item) }}?from={{ request('from') ?? session('items.last_index') }}"
-                         class="text-yellow-500 hover:text-yellow-600 font-medium mr-3">
+                         class="ui-table-action-edit">
                         Edit
                       </a>
                     @endcan
@@ -82,19 +83,20 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                                class="text-danger hover:text-red-600 font-medium">
+                                class="ui-table-action-danger">
                           Delete
                         </button>
                       </form>
                     @endcan
                   @endif
                 @endauth
+                </div>
 
               </td>
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="px-6 py-4 text-sm text-center text-muted">
+              <td colspan="5" class="ui-table-empty">
                 No items found.
               </td>
             </tr>
@@ -107,7 +109,7 @@
   {{-- Mobile Cards --}}
   <div class="sm:hidden space-y-4">
     @forelse($items as $item)
-      <div class="bg-surface border border-border shadow p-4 rounded-lg">
+      <div class="ui-card p-4">
         <div class="flex justify-between items-center">
           <div>
             <h2 class="text-lg font-medium text-text">{{ $item->name }}</h2>
@@ -130,20 +132,20 @@
 
             {{-- View --}}
             <a href="{{ route('items.show', $item) }}"
-               class="text-accent hover:text-accent-hover font-medium">
+               class="ui-table-action-view">
               View
             </a>
 
             @auth
               @if($item->is_srd)
                 <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => request('from') ?? session('items.last_index')]) }}"
-                   class="text-accent hover:text-accent-hover font-medium">
+                   class="ui-table-action-primary">
                   Clone
                 </a>
               @else
                 @can('update', $item)
                   <a href="{{ route('items.edit', $item) }}?from={{ request('from') ?? session('items.last_index') }}"
-                     class="text-yellow-500 hover:text-yellow-600 font-medium">
+                     class="ui-table-action-edit">
                     Edit
                   </a>
                 @endcan
@@ -154,7 +156,7 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit"
-                            class="text-danger hover:text-red-600 font-medium">
+                            class="ui-table-action-danger">
                       Delete
                     </button>
                   </form>

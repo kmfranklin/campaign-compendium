@@ -13,8 +13,9 @@
 
 {{-- Desktop Layout --}}
 @if ($layout === 'desktop')
-    <tr class="hover:bg-bg">
-        <td class="px-6 py-4 text-sm text-text flex items-start gap-3">
+    <tr class="ui-table-row">
+        <td class="ui-table-cell-strong">
+            <div class="flex items-start gap-3">
 
             {{-- Unread dot --}}
             @if ($unread)
@@ -40,18 +41,19 @@
                     </div>
                 @endif
             </div>
+            </div>
         </td>
 
-        <td class="px-6 py-4 text-sm whitespace-nowrap text-right">
+        <td class="ui-table-cell whitespace-nowrap text-right">
 
             @if ($status === \App\Models\CampaignInvite::STATUS_PENDING)
-                <div class="inline-flex gap-4">
+                <div class="ui-table-action-row justify-end">
 
                     {{-- Accept --}}
                     <form action="{{ route('invites.accept', $invite->id) }}" method="POST">
                         @csrf
                         <button type="submit"
-                                class="text-accent hover:text-accent-hover font-medium">
+                                class="ui-table-action-primary">
                             Accept
                         </button>
                     </form>
@@ -60,7 +62,7 @@
                     <form action="{{ route('invites.decline', $invite->id) }}" method="POST">
                         @csrf
                         <button type="submit"
-                                class="text-muted hover:text-text font-medium">
+                                class="ui-table-action-danger">
                             Decline
                         </button>
                     </form>
@@ -78,7 +80,7 @@
 
 @else
 {{-- Mobile Layout --}}
-    <div class="bg-surface border border-border shadow p-4 rounded-lg relative">
+    <div class="ui-card p-4 relative">
 
         {{-- Unread dot --}}
         @if ($unread)
@@ -108,7 +110,7 @@
                 {{-- Accept --}}
                 <form method="POST" action="{{ route('invites.accept', $invite->id) }}">
                     @csrf
-                    <button class="px-4 py-2 bg-accent text-on-accent rounded hover:bg-accent-hover text-sm font-medium">
+                    <button class="btn btn-primary btn-sm">
                         Accept
                     </button>
                 </form>
@@ -116,7 +118,7 @@
                 {{-- Decline --}}
                 <form method="POST" action="{{ route('invites.decline', $invite->id) }}">
                     @csrf
-                    <button class="px-4 py-2 bg-bg text-text border border-border rounded hover:bg-hover text-sm font-medium">
+                    <button class="btn btn-secondary btn-sm">
                         Decline
                     </button>
                 </form>

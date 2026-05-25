@@ -29,8 +29,8 @@
 
 {{-- Desktop Layout --}}
 @if ($layout === 'desktop')
-    <tr class="hover:bg-bg">
-        <td class="px-6 py-4 text-sm text-text">
+    <tr class="ui-table-row">
+        <td class="ui-table-cell-strong">
             <div class="flex items-start gap-3">
 
                 {{-- Unread dot --}}
@@ -79,12 +79,12 @@
         </td>
 
         {{-- No actions for system notifications --}}
-        <td class="px-6 py-4 text-sm text-right text-muted">—</td>
+        <td class="ui-table-cell text-right text-muted">—</td>
     </tr>
 
 @else
 {{-- Mobile Layout --}}
-    <div class="bg-surface border border-border shadow p-4 rounded-lg relative">
+    <div class="ui-card p-4 relative">
 
         <div class="flex items-start gap-3">
 

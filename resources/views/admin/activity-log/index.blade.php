@@ -135,7 +135,7 @@
     </form>
 
     {{-- Log table --}}
-    <div class="overflow-x-auto">
+    <div class="ui-table-shell">
 
         <p class="mb-3 text-xs text-muted" aria-live="polite">
             @if ($logs->total() === 0)
@@ -147,20 +147,20 @@
             @endif
         </p>
 
-        <table class="w-full text-left text-sm border-separate border-spacing-y-2"
-               aria-label="Admin activity log">
-            <thead>
-                <tr class="text-muted text-xs uppercase tracking-wide">
-                    <th class="px-3 py-2 w-40" scope="col">When</th>
-                    <th class="px-3 py-2 w-px whitespace-nowrap" scope="col">Event</th>
-                    <th class="px-3 py-2 w-36" scope="col">Admin</th>
-                    <th class="px-3 py-2" scope="col">Details</th>
-                    <th class="px-3 py-2 w-28 hidden lg:table-cell" scope="col">IP Address</th>
+        <div class="ui-table-panel">
+        <table class="ui-table" aria-label="Admin activity log">
+            <thead class="ui-table-head">
+                <tr>
+                    <th class="ui-table-header-tight w-40" scope="col">When</th>
+                    <th class="ui-table-header-tight w-px whitespace-nowrap" scope="col">Event</th>
+                    <th class="ui-table-header-tight w-36" scope="col">Admin</th>
+                    <th class="ui-table-header-tight" scope="col">Details</th>
+                    <th class="ui-table-header-tight w-28 hidden lg:table-cell" scope="col">IP Address</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($logs as $log)
-                    <tr class="bg-surface shadow-sm rounded-md align-top">
+                    <tr class="ui-table-row align-top">
 
                         {{--
                             Timestamp — browser-local time via Alpine.
@@ -175,7 +175,7 @@
                             The <time> element's datetime attribute always holds the
                             canonical UTC ISO string for screen readers and other tools.
                         --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             <time datetime="{{ $log->created_at->toIso8601String() }}"
                                   class="text-muted text-xs">
                                 {{ $log->created_at->diffForHumans() }}
@@ -192,7 +192,7 @@
                         </td>
 
                         {{-- Event badge --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             @php
                                 $badgeClasses = match ($log->event) {
                                     \App\Models\ActivityLog::EVENT_USER_UPDATED          =>
@@ -220,7 +220,7 @@
                             migration uses nullOnDelete() on the FK for exactly this
                             reason, so we show a graceful fallback instead of crashing.
                         --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             @if ($log->admin)
                                 <span class="text-text text-sm font-medium">
                                     {{ $log->admin->name }}
@@ -234,7 +234,7 @@
                         </td>
 
                         {{-- Details --}}
-                        <td class="px-3 py-3">
+                        <td class="ui-table-cell-tight">
                             <p class="text-text text-sm">
                                 {{ $log->description }}
                             </p>
@@ -247,14 +247,14 @@
                         </td>
 
                         {{-- IP address — hidden on smaller screens --}}
-                        <td class="px-3 py-3 font-mono text-xs text-muted hidden lg:table-cell">
+                        <td class="ui-table-cell-tight hidden font-mono text-xs lg:table-cell">
                             {{ $log->ip_address ?? '—' }}
                         </td>
 
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-3 py-10 text-center text-sm text-muted">
+                        <td colspan="5" class="ui-table-empty-tight py-10">
                             @if ($filter !== 'all' || $adminSearch !== '' || $dateFrom !== '' || $dateTo !== '')
                                 No entries match your current filters.
                             @else
@@ -267,6 +267,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     @if ($logs->hasPages())

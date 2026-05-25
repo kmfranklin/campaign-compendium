@@ -1,68 +1,70 @@
 {{-- Desktop Table --}}
 <div class="hidden sm:block">
-    <div class="overflow-x-auto bg-surface border border-border shadow-sm sm:rounded-lg">
-        <table class="min-w-full table-auto">
-            <thead class="bg-bg border-b border-border">
+    <div class="ui-table-panel ui-table-shell sm:rounded-lg">
+        <table class="ui-table">
+            <thead class="ui-table-head">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Race/Species</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Class / Archetype</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Alignment</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Role</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider">Actions</th>
+                    <th class="ui-table-header">Name</th>
+                    <th class="ui-table-header">Race / Species</th>
+                    <th class="ui-table-header">Class / Archetype</th>
+                    <th class="ui-table-header">Alignment</th>
+                    <th class="ui-table-header">Role</th>
+                    <th class="ui-table-header">Actions</th>
                 </tr>
             </thead>
 
             <tbody>
                 @forelse($npcs as $npc)
-                    <tr class="odd:bg-surface even:bg-bg hover:bg-hover transition-colors">
-                        <td class="px-6 py-4 text-sm font-medium text-text whitespace-normal break-words max-w-xs">
+                    <tr class="ui-table-row">
+                        <td class="ui-table-cell-strong whitespace-normal break-words max-w-xs">
                             {{ $npc->name }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-xs">
+                        <td class="ui-table-cell whitespace-normal break-words max-w-xs">
                             {{ $npc->race ?? '—' }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-xs">
+                        <td class="ui-table-cell whitespace-normal break-words max-w-xs">
                             {{ $npc['class'] ?? '—' }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm text-muted whitespace-nowrap">
+                        <td class="ui-table-cell whitespace-nowrap">
                             {{ $npc['alignment'] ?? '—' }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm text-muted whitespace-normal break-words max-w-sm">
+                        <td class="ui-table-cell whitespace-normal break-words max-w-sm">
                             {{ $npc['role'] ?? '—' }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm whitespace-nowrap">
+                        <td class="ui-table-cell whitespace-nowrap">
+                            <div class="ui-table-action-row">
                             <a href="{{ route('compendium.npcs.show', $npc) }}"
-                               class="inline-flex items-center rounded-md px-2.5 py-1 text-teal hover:bg-teal-soft hover:text-teal font-medium transition-colors">
+                               class="ui-table-action-view">
                                 View
                             </a>
 
                             <a href="{{ route('compendium.npcs.edit', $npc) }}"
-                               class="ml-2 inline-flex items-center rounded-md px-2.5 py-1 text-warning hover:bg-warning-soft hover:text-warning font-medium transition-colors">
+                               class="ui-table-action-edit">
                                 Edit
                             </a>
 
                             <form action="{{ route('compendium.npcs.destroy', $npc) }}"
                                   method="POST"
-                                  class="inline ml-2"
+                                  class="inline"
                                   onsubmit="return confirm('Delete this NPC?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="inline-flex items-center rounded-md px-2.5 py-1 text-danger hover:bg-danger-soft hover:text-danger font-medium transition-colors">
+                                        class="ui-table-action-danger">
                                     Delete
                                 </button>
                             </form>
+                            </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-sm text-center text-muted">
+                        <td colspan="6" class="ui-table-empty">
                             No NPCs found.
                         </td>
                     </tr>
@@ -75,7 +77,7 @@
 {{-- Mobile Cards --}}
 <div class="sm:hidden space-y-4">
     @forelse($npcs as $npc)
-        <div class="bg-surface border border-border shadow p-4 rounded-lg">
+        <div class="ui-card p-4">
             <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-lg font-medium text-text break-words">{{ $npc->name }}</h2>
@@ -90,7 +92,7 @@
                 </div>
 
                 <a href="{{ route('compendium.npcs.show', $npc) }}"
-                   class="inline-flex items-center rounded-md px-2.5 py-1 text-teal hover:bg-teal-soft hover:text-teal font-medium transition-colors">
+                   class="ui-table-action-view">
                     View
                 </a>
             </div>
