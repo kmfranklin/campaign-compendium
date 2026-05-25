@@ -62,6 +62,8 @@
                              focus:border-accent focus:ring-accent sm:text-sm">{{ old('summary') }}</textarea>
         </div>
 
+        @include('session-logs.partials.relationship-selectors')
+
         {{-- Audio Recording Upload --}}
         <div class="mb-6 p-4 border border-border rounded-lg bg-bg">
             <label for="media" class="block text-sm font-medium text-text">Session Recording</label>

@@ -6,6 +6,7 @@ use App\Models\Campaign;
 use App\Models\Npc;
 use App\Models\Quest;
 use App\Models\SessionLog;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,7 +32,10 @@ class SessionLogController extends Controller
     {
         $this->authorize('update', $campaign);
 
-        return view('session-logs.create', compact('campaign'));
+        $availableNpcs = $this->availableNpcsForCampaign($campaign);
+        $availableQuests = $this->availableQuestsForCampaign($campaign);
+
+        return view('session-logs.create', compact('campaign', 'availableNpcs', 'availableQuests'));
     }
 
     /**
@@ -45,16 +49,26 @@ class SessionLogController extends Controller
             'title'        => ['required', 'string', 'max:255'],
             'session_date' => ['required', 'date'],
             'summary'      => ['nullable', 'string'],
+            'npc_ids'      => ['nullable', 'array'],
+            'npc_ids.*'    => ['integer', 'distinct'],
+            'quest_ids'    => ['nullable', 'array'],
+            'quest_ids.*'  => ['integer', 'distinct'],
             // 200 MB limit; audio files can be large.
             // Ensure upload_max_filesize and post_max_size in php.ini match.
             'media'        => ['nullable', 'file', 'mimes:mp3,wav,ogg,flac,m4a,aac', 'max:204800'],
         ]);
+
+        $selectedNpcs = $this->validateSelectedNpcs($campaign, $validated['npc_ids'] ?? []);
+        $selectedQuests = $this->validateSelectedQuests($campaign, $validated['quest_ids'] ?? []);
 
         $sessionLog = $campaign->sessionLogs()->create([
             'title'        => $validated['title'],
             'session_date' => $validated['session_date'],
             'summary'      => $validated['summary'] ?? null,
         ]);
+
+        $this->syncSessionNpcs($campaign, $sessionLog, $selectedNpcs);
+        $sessionLog->quests()->sync($selectedQuests->modelKeys());
 
         if ($request->hasFile('media')) {
             $this->storeMedia($sessionLog, $request->file('media'));
@@ -77,9 +91,13 @@ class SessionLogController extends Controller
         $attachedNpcIds   = $sessionLog->npcs->pluck('id');
         $attachedQuestIds = $sessionLog->quests->pluck('id');
 
-        // Only show NPCs and quests that belong to this campaign
-        $availableNpcs   = $campaign->npcs()->whereNotIn('id', $attachedNpcIds)->orderBy('name')->get();
-        $availableQuests = $campaign->quests()->whereNotIn('id', $attachedQuestIds)->orderBy('title')->get();
+        // Offer campaign NPCs plus unassigned NPCs for later additions.
+        $availableNpcs = $this->availableNpcsForCampaign($campaign)
+            ->whereNotIn('id', $attachedNpcIds)
+            ->values();
+        $availableQuests = $this->availableQuestsForCampaign($campaign)
+            ->whereNotIn('id', $attachedQuestIds)
+            ->values();
 
         return view('session-logs.show', compact(
             'campaign',
@@ -96,9 +114,12 @@ class SessionLogController extends Controller
     {
         $this->authorize('update', $campaign);
 
-        $sessionLog->load('media');
+        $sessionLog->load(['media', 'npcs', 'quests']);
 
-        return view('session-logs.edit', compact('campaign', 'sessionLog'));
+        $availableNpcs = $this->availableNpcsForCampaign($campaign);
+        $availableQuests = $this->availableQuestsForCampaign($campaign);
+
+        return view('session-logs.edit', compact('campaign', 'sessionLog', 'availableNpcs', 'availableQuests'));
     }
 
     /**
@@ -112,15 +133,25 @@ class SessionLogController extends Controller
             'title'         => ['required', 'string', 'max:255'],
             'session_date'  => ['required', 'date'],
             'summary'       => ['nullable', 'string'],
+            'npc_ids'       => ['nullable', 'array'],
+            'npc_ids.*'     => ['integer', 'distinct'],
+            'quest_ids'     => ['nullable', 'array'],
+            'quest_ids.*'   => ['integer', 'distinct'],
             'media'         => ['nullable', 'file', 'mimes:mp3,wav,ogg,flac,m4a,aac', 'max:204800'],
             'remove_media'  => ['nullable', 'boolean'],
         ]);
+
+        $selectedNpcs = $this->validateSelectedNpcs($campaign, $validated['npc_ids'] ?? []);
+        $selectedQuests = $this->validateSelectedQuests($campaign, $validated['quest_ids'] ?? []);
 
         $sessionLog->update([
             'title'        => $validated['title'],
             'session_date' => $validated['session_date'],
             'summary'      => $validated['summary'] ?? null,
         ]);
+
+        $this->syncSessionNpcs($campaign, $sessionLog, $selectedNpcs);
+        $sessionLog->quests()->sync($selectedQuests->modelKeys());
 
         // Delete existing media if user checked "remove recording"
         if ($request->boolean('remove_media')) {
@@ -160,6 +191,13 @@ class SessionLogController extends Controller
     {
         $this->authorize('update', $campaign);
 
+        $this->ensureNpcSelectableForCampaign($campaign, $npc);
+
+        if ($npc->campaign_id === null) {
+            $npc->campaign()->associate($campaign);
+            $npc->save();
+        }
+
         $sessionLog->npcs()->syncWithoutDetaching([$npc->id]);
 
         return redirect()
@@ -187,6 +225,8 @@ class SessionLogController extends Controller
     public function attachQuest(Request $request, Campaign $campaign, SessionLog $sessionLog, Quest $quest)
     {
         $this->authorize('update', $campaign);
+
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
 
         $sessionLog->quests()->syncWithoutDetaching([$quest->id]);
 
@@ -238,6 +278,129 @@ class SessionLogController extends Controller
         if ($sessionLog->media) {
             Storage::disk('private')->delete($sessionLog->media->path);
             $sessionLog->media->delete();
+        }
+    }
+
+    /**
+     * NPCs selectable on session forms: campaign-owned plus unassigned.
+     */
+    private function availableNpcsForCampaign(Campaign $campaign): Collection
+    {
+        return Npc::query()
+            ->where('user_id', auth()->id())
+            ->where(function ($query) use ($campaign) {
+                $query->where('campaign_id', $campaign->id)
+                    ->orWhereNull('campaign_id');
+            })
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Quests selectable on session forms: only this campaign's quests.
+     */
+    private function availableQuestsForCampaign(Campaign $campaign): Collection
+    {
+        return $campaign->quests()->orderBy('title')->get();
+    }
+
+    /**
+     * Validate selected NPC ids against the current campaign form rules.
+     */
+    private function validateSelectedNpcs(Campaign $campaign, array $npcIds): Collection
+    {
+        if (empty($npcIds)) {
+            return new Collection();
+        }
+
+        $npcs = Npc::query()
+            ->whereIn('id', $npcIds)
+            ->where('user_id', auth()->id())
+            ->get()
+            ->keyBy('id');
+
+        foreach ($npcIds as $npcId) {
+            $npc = $npcs->get($npcId);
+
+            if (! $npc) {
+                abort(422, 'One or more selected NPCs could not be found.');
+            }
+
+            $this->ensureNpcSelectableForCampaign($campaign, $npc);
+        }
+
+        return new Collection(
+            collect($npcIds)
+                ->map(fn (int $id) => $npcs->get($id))
+                ->values()
+                ->all()
+        );
+    }
+
+    /**
+     * Validate selected quests against the current campaign.
+     */
+    private function validateSelectedQuests(Campaign $campaign, array $questIds): Collection
+    {
+        if (empty($questIds)) {
+            return new Collection();
+        }
+
+        $quests = Quest::query()
+            ->whereIn('id', $questIds)
+            ->get()
+            ->keyBy('id');
+
+        foreach ($questIds as $questId) {
+            $quest = $quests->get($questId);
+
+            if (! $quest) {
+                abort(422, 'One or more selected quests could not be found.');
+            }
+
+            $this->ensureQuestBelongsToCampaign($campaign, $quest);
+        }
+
+        return new Collection(
+            collect($questIds)
+                ->map(fn (int $id) => $quests->get($id))
+                ->values()
+                ->all()
+        );
+    }
+
+    /**
+     * Sync selected NPCs and auto-claim any unassigned NPCs into the campaign.
+     */
+    private function syncSessionNpcs(Campaign $campaign, SessionLog $sessionLog, Collection $npcs): void
+    {
+        foreach ($npcs as $npc) {
+            if ($npc->campaign_id === null) {
+                $npc->campaign()->associate($campaign);
+                $npc->save();
+            }
+        }
+
+        $sessionLog->npcs()->sync($npcs->modelKeys());
+    }
+
+    /**
+     * Enforce the "same campaign or unassigned" NPC selection rule.
+     */
+    private function ensureNpcSelectableForCampaign(Campaign $campaign, Npc $npc): void
+    {
+        if ($npc->campaign_id !== null && $npc->campaign_id !== $campaign->id) {
+            abort(403, 'That NPC belongs to a different campaign.');
+        }
+    }
+
+    /**
+     * Quests must always belong to the current campaign.
+     */
+    private function ensureQuestBelongsToCampaign(Campaign $campaign, Quest $quest): void
+    {
+        if ($quest->campaign_id !== $campaign->id) {
+            abort(403, 'That quest belongs to a different campaign.');
         }
     }
 }

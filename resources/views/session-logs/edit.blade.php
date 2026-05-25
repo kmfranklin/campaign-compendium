@@ -59,6 +59,11 @@
                              focus:border-accent focus:ring-accent sm:text-sm">{{ old('summary', $sessionLog->summary) }}</textarea>
         </div>
 
+        @include('session-logs.partials.relationship-selectors', [
+            'selectedNpcIds' => $sessionLog->npcs->modelKeys(),
+            'selectedQuestIds' => $sessionLog->quests->modelKeys(),
+        ])
+
         {{-- Audio Recording --}}
         <div class="mb-6 p-4 border border-border rounded-lg bg-bg">
             <p class="block text-sm font-medium text-text mb-2">Session Recording</p>
