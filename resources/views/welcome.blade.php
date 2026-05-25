@@ -21,11 +21,11 @@
 
                     <div class="mt-8 flex flex-col sm:flex-row sm:justify-center gap-4">
                         <a href="{{ route('register') }}"
-                           class="px-6 py-3 bg-accent text-on-accent rounded-lg shadow hover:bg-accent-hover text-center font-semibold focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-black/60">
+                           class="btn btn-primary btn-lg text-center focus:ring-offset-black/60">
                             Create an Account
                         </a>
                         <a href="#srd-tools"
-                           class="px-6 py-3 bg-white/10 text-white border border-white/30 rounded-lg shadow hover:bg-white/20 text-center font-semibold backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black/60">
+                           class="btn btn-hero-secondary btn-lg text-center focus:ring-offset-black/60">
                             Explore the SRD
                         </a>
                     </div>
@@ -38,11 +38,11 @@
 
                     <div class="mt-8 flex flex-col sm:flex-row sm:justify-center gap-4">
                         <a href="{{ route('campaigns.index') }}"
-                           class="px-6 py-3 bg-accent text-on-accent rounded-lg shadow hover:bg-accent-hover text-center font-semibold focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-black/60">
+                           class="btn btn-primary btn-lg text-center focus:ring-offset-black/60">
                             My Campaigns
                         </a>
                         <a href="{{ route('compendium.npcs.index') }}"
-                           class="px-6 py-3 bg-white/10 text-white border border-white/30 rounded-lg shadow hover:bg-white/20 text-center font-semibold backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black/60">
+                           class="btn btn-hero-secondary btn-lg text-center focus:ring-offset-black/60">
                             My Characters
                         </a>
                     </div>
@@ -240,11 +240,11 @@
 
             <div class="mt-10 text-center">
                 <a href="{{ route('register') }}"
-                   class="inline-flex items-center px-8 py-3 bg-accent text-on-accent font-semibold rounded-lg shadow hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg">
+                   class="btn btn-primary btn-lg px-8">
                     Create a Free Account
                 </a>
                 <p class="mt-3 text-xs text-muted">Already have an account?
-                    <a href="{{ route('login') }}" class="text-accent underline underline-offset-2 hover:text-accent-hover">Sign in</a>
+                    <a href="{{ route('login') }}" class="link-action">Sign in</a>
                 </p>
             </div>
 

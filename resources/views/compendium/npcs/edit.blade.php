@@ -5,7 +5,7 @@
 
     {{-- Back link --}}
     <a href="{{ route('compendium.npcs.index') }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -118,13 +118,12 @@
         {{-- Submit --}}
         <div class="pt-4 border-t border-border flex justify-between">
             <a href="{{ route('compendium.npcs.show', $npc) }}"
-               class="px-4 py-2 bg-bg text-text border border-border rounded hover:bg-hover">
+               class="btn btn-secondary btn-sm">
                 Cancel
             </a>
 
             <button type="submit"
-                    class="px-6 py-2 bg-accent text-on-accent font-semibold rounded shadow
-                           hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent">
+                    class="btn btn-primary btn-sm">
                 Update NPC
             </button>
         </div>

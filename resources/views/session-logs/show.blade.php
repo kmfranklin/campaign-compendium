@@ -4,7 +4,7 @@
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
     <a href="{{ route('campaigns.show', $campaign) }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
@@ -60,7 +60,7 @@
                     <div class="ml-auto flex gap-2">
                         @can('update', $campaign)
                             <a href="{{ route('campaigns.sessions.edit', [$campaign, $sessionLog]) }}"
-                               class="px-4 py-2 bg-warning text-on-warning font-semibold rounded hover:bg-warning-hover">
+                               class="btn btn-warning btn-sm">
                                 Edit
                             </a>
                         @endcan
@@ -71,7 +71,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="px-4 py-2 bg-danger-solid text-on-danger font-semibold rounded hover:bg-danger-hover">
+                                        class="btn btn-danger btn-sm">
                                     Delete
                                 </button>
                             </form>
@@ -99,7 +99,7 @@
                                aria-label="Session recording: {{ $sessionLog->media->filename }}">
                             <source src="{{ $sessionLog->media->url() }}" type="{{ $sessionLog->media->mime_type }}">
                             Your browser does not support the audio element.
-                            <a href="{{ $sessionLog->media->url() }}" class="text-accent underline">Download recording</a>
+                            <a href="{{ $sessionLog->media->url() }}" class="link-action">Download recording</a>
                         </audio>
                     </div>
                 @endif

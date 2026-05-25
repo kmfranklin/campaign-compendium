@@ -174,14 +174,14 @@
                 @guest
                     <a
                         href="{{ route('login') }}"
-                        class="text-sm font-semibold text-text hover:text-accent transition-colors duration-150"
+                        class="link-action-subtle"
                     >
                         Login
                     </a>
 
                     <a
                         href="{{ route('register') }}"
-                        class="text-sm font-semibold text-on-accent bg-accent px-4 py-2 rounded hover:bg-accent-hover transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                        class="btn btn-primary btn-sm"
                     >
                         Sign Up
                     </a>
@@ -195,10 +195,7 @@
                     <!-- Dashboard shortcut — desktop only; mobile uses the hamburger menu -->
                     <a
                         href="{{ route('dashboard') }}"
-                        class="hidden sm:inline-flex items-center text-sm font-semibold px-3 py-1.5 rounded border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2
-                               {{ request()->routeIs('dashboard')
-                                   ? 'border-accent text-accent bg-accent/10'
-                                   : 'border-border text-muted hover:border-accent/50 hover:text-accent' }}"
+                        class="hidden sm:inline-flex {{ request()->routeIs('dashboard') ? 'btn btn-secondary btn-sm text-accent border-accent/40' : 'btn btn-secondary btn-sm text-muted' }}"
                     >
                         Dashboard
                     </a>

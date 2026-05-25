@@ -5,7 +5,7 @@
 
     {{-- Back link --}}
     <a href="{{ route('compendium.npcs.index') }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,7 +55,7 @@
                     {{-- Actions --}}
                     <div class="ml-auto flex gap-2">
                         <a href="{{ route('compendium.npcs.edit', $npc) }}"
-                           class="inline-flex items-center px-4 py-2 h-10 bg-warning hover:bg-warning-hover text-on-warning rounded shadow">
+                           class="btn btn-warning btn-sm">
                             Edit
                         </a>
 
@@ -65,7 +65,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                    class="inline-flex items-center px-4 py-2 bg-danger-solid hover:bg-danger-hover text-on-danger rounded shadow">
+                                    class="btn btn-danger btn-sm">
                                 Delete
                             </button>
                         </form>
@@ -175,7 +175,7 @@
                     @foreach($quests as $quest)
                         <li class="py-2">
                             <a href="{{ route('campaigns.quests.show', [$quest->campaign, $quest]) }}"
-                               class="text-accent hover:text-accent-hover font-medium">
+                               class="link-action">
                                 {{ $quest->title }}
                             </a>
 

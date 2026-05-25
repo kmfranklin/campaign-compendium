@@ -5,7 +5,7 @@
 
     {{-- Back link --}}
     <a href="{{ route('campaigns.index') }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -39,7 +39,7 @@
                     <div class="ml-auto flex gap-2">
                         @can('update', $campaign)
                             <a href="{{ route('campaigns.edit', $campaign) }}"
-                               class="inline-flex items-center px-4 h-10 bg-warning hover:bg-warning-hover text-on-warning rounded shadow">
+                               class="btn btn-warning btn-sm">
                                 Edit
                             </a>
                         @endcan
@@ -50,7 +50,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="inline-flex items-center px-4 py-2 bg-danger-solid hover:bg-danger-hover text-on-danger rounded shadow">
+                                        class="btn btn-danger btn-sm">
                                     Delete
                                 </button>
                             </form>
@@ -108,7 +108,7 @@
                 <div class="flex justify-end mb-4">
                     @can('update', $campaign)
                         <a href="{{ route('campaigns.sessions.create', $campaign) }}"
-                           class="inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
+                           class="btn btn-primary btn-sm">
                             + Log Session
                         </a>
                     @endcan
@@ -120,7 +120,7 @@
             <div x-show="tab === 'quests'" x-cloak>
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('campaigns.quests.create', $campaign) }}"
-                       class="inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
+                       class="btn btn-primary btn-sm">
                         + Add quest
                     </a>
                 </div>

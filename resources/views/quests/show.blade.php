@@ -5,7 +5,7 @@
 
     {{-- Back link --}}
     <a href="{{ route('campaigns.show', $campaign) }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
       <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
            viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,7 +67,7 @@
                             <div class="ml-auto flex gap-2">
                                 @can('update', $campaign)
                                     <a href="{{ route('campaigns.quests.edit', [$campaign, $quest]) }}"
-                                       class="px-4 py-2 bg-warning text-on-warning font-semibold rounded hover:bg-warning-hover">
+                                       class="btn btn-warning btn-sm">
                                         Edit
                                     </a>
                                 @endcan
@@ -79,7 +79,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                class="px-4 py-2 bg-danger-solid text-on-danger font-semibold rounded hover:bg-danger-hover">
+                                                class="btn btn-danger btn-sm">
                                             Delete
                                         </button>
                                     </form>

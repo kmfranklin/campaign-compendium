@@ -4,7 +4,7 @@
 <div class="max-w-5xl mx-auto bg-surface border border-border shadow rounded-lg p-6">
 
     <a href="{{ route('campaigns.show', $campaign) }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
@@ -110,14 +110,12 @@
 
         <div class="pt-4 border-t border-border flex justify-between">
             <a href="{{ route('campaigns.show', $campaign) }}"
-               class="px-4 py-2 bg-bg text-text rounded border border-border hover:bg-hover">
+               class="btn btn-secondary btn-sm">
                 Cancel
             </a>
             <button type="submit"
                     :disabled="uploading"
-                    class="px-6 py-2 bg-accent text-on-accent font-semibold rounded
-                           hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent
-                           disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="btn btn-primary btn-sm">
                 <span x-show="!uploading">Save Session</span>
                 <span x-show="uploading" x-cloak>Saving…</span>
             </button>

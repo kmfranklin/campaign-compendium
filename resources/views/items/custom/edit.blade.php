@@ -15,7 +15,7 @@
 
     {{-- Back link --}}
     <a href="{{ $backRoute }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -38,7 +38,7 @@
                     <input type="hidden" name="from" value="{{ $origin }}">
 
                     <button type="submit"
-                            class="px-4 py-2 bg-danger-solid text-on-danger rounded hover:bg-danger-hover">
+                            class="btn btn-danger btn-sm">
                         Delete
                     </button>
                 </form>
@@ -69,13 +69,12 @@
 
             {{-- Cancel --}}
             <a href="{{ $backRoute }}"
-               class="px-4 py-2 bg-bg text-text rounded hover:bg-hover">
+               class="btn btn-secondary btn-sm">
                 Cancel
             </a>
 
             <button type="submit"
-                    class="px-6 py-2 bg-accent text-on-accent font-semibold rounded hover:bg-accent-hover
-                           focus:outline-none focus:ring-2 focus:ring-accent">
+                    class="btn btn-primary btn-sm">
                 Save Changes
             </button>
         </div>

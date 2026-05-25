@@ -35,8 +35,7 @@
             >
 
             <button type="submit"
-                    class="inline-flex items-center px-4 py-2 bg-accent text-on-accent rounded shadow
-                           hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent">
+                    class="btn btn-primary btn-sm">
                 Send Invite
             </button>
         </form>
@@ -65,7 +64,7 @@
                                 <input type="hidden" name="user_id" value="{{ $member->id }}">
 
                                 <button type="submit"
-                                        class="inline-flex items-center text-danger hover:text-red-600 text-sm font-medium">
+                                        class="link-danger focus:ring-danger">
                                     Remove
                                 </button>
                             </form>
