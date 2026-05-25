@@ -2,9 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        color-scheme: light;
+
+        --color-bg: #f7f3eb;
+        --color-bg-elevated: #efe8da;
+        --color-surface: #fffaf0;
+        --color-surface-2: #f3ead8;
+        --color-border: #d7c9ae;
+        --color-text: #241d2f;
+        --color-text-muted: #6f647f;
+        --color-accent: #6a45b8;
+        --color-accent-hover: #563698;
+        --color-on-accent: #fff8ec;
+        --color-hover: #efe5f9;
+        --color-danger: #c93f38;
+        --color-danger-soft: rgba(201, 63, 56, 0.12);
+        --color-danger-solid: #b42318;
+        --color-danger-hover: #8f1d13;
+        --color-on-danger: #fff7f6;
+        --color-warning: #b98a17;
+        --color-warning-soft: rgba(185, 138, 23, 0.14);
+        --color-warning-hover: #9e7410;
+        --color-on-warning: #fff8ec;
+        --color-gold: #b98a17;
+        --color-gold-soft: #8b6a22;
+        --color-teal: #147a78;
+        --color-teal-soft: #d3f2ee;
+        --color-focus-ring: rgba(106, 69, 184, 0.28);
+    }
+
+    .dark {
+        color-scheme: dark;
+
+        --color-bg: #120f1c;
+        --color-bg-elevated: #171323;
+        --color-surface: #1a1626;
+        --color-surface-2: #231d33;
+        --color-border: #342b49;
+        --color-text: #f3efe7;
+        --color-text-muted: #a59bb8;
+        --color-accent: #d4a93a;
+        --color-accent-hover: #e2bb58;
+        --color-on-accent: #1a1626;
+        --color-hover: #2b2340;
+        --color-danger: #ff8f88;
+        --color-danger-soft: rgba(255, 143, 136, 0.12);
+        --color-danger-solid: #c2413b;
+        --color-danger-hover: #d65a53;
+        --color-on-danger: #fff7f6;
+        --color-warning: #d4a93a;
+        --color-warning-soft: rgba(212, 169, 58, 0.16);
+        --color-warning-hover: #e2bb58;
+        --color-on-warning: #1a1626;
+        --color-gold: #d4a93a;
+        --color-gold-soft: #8b6a22;
+        --color-teal: #2cc5b4;
+        --color-teal-soft: rgba(44, 197, 180, 0.14);
+        --color-focus-ring: rgba(44, 197, 180, 0.22);
+    }
+
+    html {
+        @apply bg-bg text-text;
+    }
+
+    body {
+        background:
+            radial-gradient(circle at top, rgba(106, 69, 184, 0.09), transparent 30%),
+            linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg) 18rem);
+        @apply min-h-screen text-text antialiased;
+    }
+
+    ::selection {
+        background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+        color: var(--color-text);
+    }
+}
+
 @layer components {
     .custom-select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='gray'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a59bb8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
         background-position: right 0.5rem center;
         background-repeat: no-repeat;
         background-size: 1rem;

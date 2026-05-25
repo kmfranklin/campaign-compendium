@@ -146,10 +146,10 @@
         with clearly labelled submit buttons make the available action
         unambiguous — no hidden state the user has to reason about.
     --}}
-    <div class="bg-surface border border-red-300 dark:border-red-800 rounded-lg shadow-sm p-6 space-y-4">
+    <div class="bg-surface border border-danger/40 rounded-lg shadow-sm p-6 space-y-4">
 
         <div>
-            <h2 class="text-sm font-semibold text-red-700 dark:text-red-400">Danger Zone</h2>
+            <h2 class="text-sm font-semibold text-danger">Danger Zone</h2>
             <p class="mt-1 text-sm text-muted">
                 These actions directly affect the user's ability to access their account.
             </p>
@@ -168,7 +168,7 @@
                         a user in EST sees "4:38 PM" rather than "8:38 PM UTC".
                         The server-rendered fallback text is shown only if JS is off.
                     --}}
-                    <p class="mt-0.5 text-xs text-red-600 dark:text-red-400"
+                    <p class="mt-0.5 text-xs text-danger"
                        x-data
                        x-init="
                            $el.textContent = 'Suspended on ' + new Intl.DateTimeFormat(undefined, {
@@ -218,9 +218,9 @@
                     @csrf
                     <button type="submit"
                             class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium
-                                   bg-red-600 text-white shadow-sm
-                                   hover:bg-red-700 focus:outline-none focus:ring-2
-                                   focus:ring-red-500 focus:ring-offset-2
+                                   bg-danger-solid text-on-danger shadow-sm
+                                   hover:bg-danger-hover focus:outline-none focus:ring-2
+                                   focus:ring-danger focus:ring-offset-2
                                    transition-colors duration-150">
                         Suspend Account
                     </button>

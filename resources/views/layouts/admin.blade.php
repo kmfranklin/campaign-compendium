@@ -7,31 +7,6 @@
 
     <title>Admin &mdash; Campaign Compendium</title>
 
-    <style>
-        :root {
-            --color-bg: #f9fafb;
-            --color-surface: #fff;
-            --color-border: #e5e7eb;
-            --color-text: #111827;
-            --color-text-muted: #6b7280;
-            --color-accent: #6d28d9;
-            --color-accent-hover: #5b21b6;
-            --color-on-accent: #fff;
-            --color-hover: #f5f3ff;
-        }
-        .dark {
-            --color-bg: #111827;
-            --color-surface: #1f2937;
-            --color-border: #374151;
-            --color-text: #f3f4f6;
-            --color-text-muted: #9ca3af;
-            --color-accent: #a78bfa;
-            --color-accent-hover: #c4b5fd;
-            --color-on-accent: #1e1b4b;
-            --color-hover: #374151;
-        }
-    </style>
-
     <script>
         const stored = localStorage.getItem('theme');
         if (stored === 'dark' ||
@@ -57,7 +32,7 @@
     @include('partials.system-notification-banners')
 
     @if (session('admin_id'))
-        <div class="bg-yellow-500 text-black text-center py-2 text-sm"
+        <div class="bg-warning text-on-warning text-center py-2 text-sm"
              role="status"
              aria-live="polite">
             You are signed in as another user.

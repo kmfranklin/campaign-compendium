@@ -38,7 +38,7 @@
                     <input type="hidden" name="from" value="{{ $origin }}">
 
                     <button type="submit"
-                            class="px-4 py-2 bg-danger text-on-accent rounded hover:bg-red-600">
+                            class="px-4 py-2 bg-danger-solid text-on-danger rounded hover:bg-danger-hover">
                         Delete
                     </button>
                 </form>

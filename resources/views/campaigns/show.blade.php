@@ -39,7 +39,7 @@
                     <div class="ml-auto flex gap-2">
                         @can('update', $campaign)
                             <a href="{{ route('campaigns.edit', $campaign) }}"
-                               class="inline-flex items-center px-4 h-10 bg-yellow-500 hover:bg-yellow-600 text-on-accent rounded shadow">
+                               class="inline-flex items-center px-4 h-10 bg-warning hover:bg-warning-hover text-on-warning rounded shadow">
                                 Edit
                             </a>
                         @endcan
@@ -50,7 +50,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="inline-flex items-center px-4 py-2 bg-danger hover:bg-red-700 text-on-accent rounded shadow">
+                                        class="inline-flex items-center px-4 py-2 bg-danger-solid hover:bg-danger-hover text-on-danger rounded shadow">
                                     Delete
                                 </button>
                             </form>

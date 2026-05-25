@@ -129,7 +129,7 @@
           <div class="ml-auto flex gap-2">
             @can('update', $item)
               <a href="{{ route('items.edit', $item) }}?from=custom"
-                 class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-on-accent rounded">
+                 class="px-4 py-2 bg-warning hover:bg-warning-hover text-on-warning rounded">
                 Edit
               </a>
             @endcan
@@ -141,7 +141,7 @@
                 @csrf
                 @method('DELETE')
                 <button type="submit"
-                        class="px-4 py-2 bg-danger hover:bg-red-600 text-on-accent rounded">
+                        class="px-4 py-2 bg-danger-solid hover:bg-danger-hover text-on-danger rounded">
                   Delete
                 </button>
               </form>

@@ -6,10 +6,10 @@
 
 <div @class([
     'px-6 py-4',
-    'border-b border-gray-200' => !$last,
+    'border-b border-border' => !$last,
 ])>
     <div class="flex items-center justify-between mb-3">
-        <h2 class="text-lg font-semibold text-gray-800">
+        <h2 class="text-lg font-semibold text-text">
             {{ $title }}
         </h2>
 

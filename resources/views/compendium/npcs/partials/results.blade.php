@@ -38,23 +38,23 @@
 
                         <td class="px-6 py-4 text-sm whitespace-nowrap">
                             <a href="{{ route('compendium.npcs.show', $npc) }}"
-                               class="text-accent hover:text-accent-hover font-medium">
+                               class="inline-flex items-center rounded-md px-2.5 py-1 text-teal hover:bg-teal-soft hover:text-teal font-medium transition-colors">
                                 View
                             </a>
 
                             <a href="{{ route('compendium.npcs.edit', $npc) }}"
-                               class="ml-4 text-yellow-500 hover:text-yellow-600 font-medium">
+                               class="ml-2 inline-flex items-center rounded-md px-2.5 py-1 text-warning hover:bg-warning-soft hover:text-warning font-medium transition-colors">
                                 Edit
                             </a>
 
                             <form action="{{ route('compendium.npcs.destroy', $npc) }}"
                                   method="POST"
-                                  class="inline ml-4"
+                                  class="inline ml-2"
                                   onsubmit="return confirm('Delete this NPC?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="text-danger hover:text-red-600 font-medium">
+                                        class="inline-flex items-center rounded-md px-2.5 py-1 text-danger hover:bg-danger-soft hover:text-danger font-medium transition-colors">
                                     Delete
                                 </button>
                             </form>
@@ -90,7 +90,7 @@
                 </div>
 
                 <a href="{{ route('compendium.npcs.show', $npc) }}"
-                   class="text-accent hover:text-accent-hover font-medium">
+                   class="inline-flex items-center rounded-md px-2.5 py-1 text-teal hover:bg-teal-soft hover:text-teal font-medium transition-colors">
                     View
                 </a>
             </div>

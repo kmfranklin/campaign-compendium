@@ -55,7 +55,7 @@
                     {{-- Actions --}}
                     <div class="ml-auto flex gap-2">
                         <a href="{{ route('compendium.npcs.edit', $npc) }}"
-                           class="inline-flex items-center px-4 py-2 h-10 bg-yellow-500 hover:bg-yellow-600 text-on-accent rounded shadow">
+                           class="inline-flex items-center px-4 py-2 h-10 bg-warning hover:bg-warning-hover text-on-warning rounded shadow">
                             Edit
                         </a>
 
@@ -65,7 +65,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                    class="inline-flex items-center px-4 py-2 bg-danger hover:bg-red-600 text-on-accent rounded shadow">
+                                    class="inline-flex items-center px-4 py-2 bg-danger-solid hover:bg-danger-hover text-on-danger rounded shadow">
                                 Delete
                             </button>
                         </form>

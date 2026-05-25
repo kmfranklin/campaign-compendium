@@ -4,35 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#120f1c">
 
     <title>Campaign Compendium</title>
-    <style>
-        /* Light mode */
-        :root {
-            --color-bg: #f9fafb;
-            --color-surface: #fff;
-            --color-border: #e5e7eb;
-            --color-text: #111827;
-            --color-text-muted: #6b7280;
-            --color-accent: #6d28d9;       /* violet-700 — 7:1 on white ✓ */
-            --color-accent-hover: #5b21b6; /* violet-800 — 9:1 on white ✓ */
-            --color-on-accent: #fff;
-            --color-hover: #f5f3ff;        /* violet-50 — subtle row highlight */
-        }
-
-        /* Dark mode */
-        .dark {
-            --color-bg: #111827;
-            --color-surface: #1f2937;
-            --color-border: #374151;
-            --color-text: #f3f4f6;
-            --color-text-muted: #9ca3af;
-            --color-accent: #a78bfa;       /* violet-400 — 5.4:1 on surface ✓ */
-            --color-accent-hover: #c4b5fd; /* violet-300 — 8:1 on surface ✓  */
-            --color-on-accent: #1e1b4b;    /* deep indigo for text on light accent bg */
-            --color-hover: #374151;        /* gray-700 — subtle row highlight */
-        }
-    </style>
 
     <script>
         const stored = localStorage.getItem('theme');
@@ -53,7 +27,7 @@
     @include('partials.system-notification-banners')
 
     @if (session('admin_id'))
-        <div class="bg-yellow-500 text-black text-center py-2">
+        <div class="bg-warning text-on-warning text-center py-2">
             You are signed in as another user.
             <form action="{{ route('admin.returnToAdmin') }}" method="POST" class="inline">
                 @csrf
