@@ -35,8 +35,7 @@
             <label for="name" class="block text-sm font-medium text-text mb-1">Campaign Name</label>
             <input type="text" name="name" id="name"
                    value="{{ old('name', $campaign->name) }}"
-                   class="mt-1 block w-full rounded-md border-border bg-surface text-text shadow-sm
-                          focus:border-accent focus:ring-accent sm:text-sm"
+                   class="ui-field mt-1"
                    required>
         </div>
 
@@ -44,8 +43,7 @@
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-text mb-1">Description</label>
             <textarea name="description" id="description" rows="4"
-                      class="mt-1 block w-full rounded-md border-border bg-surface text-text shadow-sm
-                             focus:border-accent focus:ring-accent sm:text-sm">{{ old('description', $campaign->description) }}</textarea>
+                      class="ui-textarea mt-1">{{ old('description', $campaign->description) }}</textarea>
         </div>
 
         {{-- Actions --}}

@@ -8,7 +8,7 @@
 
 <div class="mb-4">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-text mb-1">
+        <label for="{{ $name }}" class="form-label">
             {{ $label }}
         </label>
     @endif
@@ -17,7 +17,7 @@
         name="{{ $name }}"
         id="{{ $name }}"
         {{ $attributes->merge([
-            'class' => 'mt-1 block w-full rounded-md border-border bg-surface text-text shadow-sm focus:border-accent focus:ring-accent sm:text-sm'
+            'class' => 'ui-select mt-1'
         ]) }}
     >
         @if($placeholder)

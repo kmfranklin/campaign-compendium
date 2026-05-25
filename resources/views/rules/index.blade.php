@@ -65,8 +65,7 @@
             type="search"
             x-model="search"
             placeholder="Search rules, conditions, spells… e.g. &ldquo;Strength&rdquo; or &ldquo;grappled&rdquo;"
-            class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-border bg-surface text-text shadow-sm
-                   text-base focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            class="ui-search-input text-base"
             autocomplete="off"
             aria-controls="search-results"
             aria-autocomplete="list"
@@ -78,8 +77,7 @@
             x-show="results.length > 0"
             x-cloak
             @click.outside="search = ''"
-            class="absolute left-0 right-0 top-full mt-2 bg-surface border border-border rounded-xl
-                   shadow-xl overflow-hidden z-50"
+            class="ui-panel absolute left-0 right-0 top-full mt-2 overflow-hidden z-50"
             role="listbox"
             aria-label="Search results"
         >
@@ -122,8 +120,7 @@
         <div
             x-show="query.length >= 2 && results.length === 0"
             x-cloak
-            class="absolute left-0 right-0 top-full mt-2 bg-surface border border-border rounded-xl
-                   shadow-xl px-4 py-4 text-sm text-muted text-center z-50"
+            class="ui-panel absolute left-0 right-0 top-full mt-2 px-4 py-4 text-sm text-muted text-center z-50"
             role="status"
             aria-live="polite"
         >

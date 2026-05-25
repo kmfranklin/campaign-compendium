@@ -38,8 +38,7 @@
             <p class="text-xs text-muted mt-0.5 mb-1">e.g. "Session 4: The Sunken Temple"</p>
             <input type="text" name="title" id="title"
                    value="{{ old('title') }}"
-                   class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                          focus:border-accent focus:ring-accent sm:text-sm"
+                   class="ui-field mt-1"
                    required>
         </div>
 
@@ -48,8 +47,7 @@
             <label for="session_date" class="block text-sm font-medium text-text">Session Date</label>
             <input type="date" name="session_date" id="session_date"
                    value="{{ old('session_date', now()->toDateString()) }}"
-                   class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                          focus:border-accent focus:ring-accent sm:text-sm"
+                   class="ui-field mt-1"
                    required>
         </div>
 
@@ -58,8 +56,7 @@
             <label for="summary" class="block text-sm font-medium text-text">Session Summary</label>
             <p class="text-xs text-muted mt-0.5 mb-1">What happened? Loose ends, memorable moments, things to remember next time.</p>
             <textarea name="summary" id="summary" rows="6"
-                      class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                             focus:border-accent focus:ring-accent sm:text-sm">{{ old('summary') }}</textarea>
+                      class="ui-textarea mt-1">{{ old('summary') }}</textarea>
         </div>
 
         @include('session-logs.partials.relationship-selectors')

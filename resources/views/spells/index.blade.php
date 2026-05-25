@@ -36,7 +36,7 @@
         class="space-y-4"
     >
         {{-- Filter bar --}}
-        <div class="bg-surface border border-border rounded-lg p-4 space-y-3">
+        <div class="ui-filter-panel space-y-3">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
 
                 {{-- Name search --}}
@@ -48,7 +48,7 @@
                         x-model="q"
                         @input.debounce.400ms="applyFilters"
                         placeholder="Spell name…"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-field"
                     >
                 </div>
 
@@ -59,7 +59,7 @@
                         id="spell-level"
                         x-model="level"
                         @change="applyFilters"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">All levels</option>
                         <option value="0">Cantrip</option>
@@ -76,7 +76,7 @@
                         id="spell-school"
                         x-model="school"
                         @change="applyFilters"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">All schools</option>
                         @foreach($schools as $s)
@@ -92,7 +92,7 @@
                         id="spell-class"
                         x-model="classFilter"
                         @change="applyFilters"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">All classes</option>
                         @foreach($classes as $slug => $label)
@@ -111,7 +111,7 @@
                         id="spell-casting-time"
                         x-model="castingTime"
                         @change="applyFilters"
-                        class="rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">Any casting time</option>
                         @foreach($castingTimes as $value => $label)
@@ -125,7 +125,7 @@
                     <button
                         type="button"
                         @click="q = ''; level = ''; school = ''; classFilter = ''; castingTime = ''; applyFilters()"
-                        class="text-sm text-accent hover:text-accent-hover underline pb-2"
+                        class="link-action pb-2"
                     >
                         Clear all filters
                     </button>

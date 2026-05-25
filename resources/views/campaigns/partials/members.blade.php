@@ -30,8 +30,7 @@
                 name="email"
                 placeholder="User email"
                 value="{{ old('email') }}"
-                class="w-64 px-3 py-2 rounded border border-border bg-surface text-text
-                       focus:border-accent focus:ring-accent"
+                class="ui-field w-64"
             >
 
             <button type="submit"

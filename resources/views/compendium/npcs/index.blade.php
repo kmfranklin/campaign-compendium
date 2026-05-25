@@ -8,7 +8,7 @@
         <h1 class="text-2xl font-semibold text-text">Character Compendium</h1>
 
         <a href="{{ route('compendium.npcs.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-accent">
+           class="btn btn-primary btn-sm">
             + New NPC
         </a>
     </div>
@@ -45,57 +45,72 @@
     >
 
         {{-- Filters --}}
-        <form class="mb-4 flex gap-4 flex-wrap flex-col sm:flex-row items-stretch sm:items-center">
+        <form class="ui-filter-panel mb-4 space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3">
 
-            {{-- Search --}}
-            <input
-                name="q"
-                x-model="q"
-                type="text"
-                placeholder="Search by name…"
-                @input.debounce.500ms="applyFilters"
-                class="border border-border bg-surface text-text rounded px-3 py-2 flex-1 focus:border-accent focus:ring-accent"
-            />
+                {{-- Search --}}
+                <div class="xl:col-span-2">
+                    <label for="npc-search" class="form-label text-xs text-muted">Search</label>
+                    <input
+                        id="npc-search"
+                        name="q"
+                        x-model="q"
+                        type="search"
+                        placeholder="Search by name…"
+                        @input.debounce.500ms="applyFilters"
+                        class="ui-field"
+                    />
+                </div>
 
-            {{-- Class --}}
-            <select name="class" x-model="classFilter" @change="applyFilters"
-                    class="custom-select bg-surface border-border text-text">
-                <option value="">All Classes</option>
-                @foreach(\App\Models\Npc::CLASSES as $c)
-                    <option value="{{ $c }}">{{ $c }}</option>
-                @endforeach
-            </select>
+                {{-- Class --}}
+                <div>
+                    <label for="npc-class" class="form-label text-xs text-muted">Class</label>
+                    <select id="npc-class" name="class" x-model="classFilter" @change="applyFilters"
+                            class="ui-select">
+                        <option value="">All classes</option>
+                        @foreach(\App\Models\Npc::CLASSES as $c)
+                            <option value="{{ $c }}">{{ $c }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- Alignment --}}
-            <select name="alignment" x-model="alignmentFilter" @change="applyFilters"
-                    class="custom-select bg-surface border-border text-text">
-                <option value="">All Alignments</option>
-                @foreach(\App\Models\Npc::ALIGNMENTS as $a)
-                    <option value="{{ $a }}">{{ $a }}</option>
-                @endforeach
-            </select>
+                {{-- Alignment --}}
+                <div>
+                    <label for="npc-alignment" class="form-label text-xs text-muted">Alignment</label>
+                    <select id="npc-alignment" name="alignment" x-model="alignmentFilter" @change="applyFilters"
+                            class="ui-select">
+                        <option value="">All alignments</option>
+                        @foreach(\App\Models\Npc::ALIGNMENTS as $a)
+                            <option value="{{ $a }}">{{ $a }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- Role --}}
-            <select name="role" x-model="roleFilter" @change="applyFilters"
-                    class="custom-select bg-surface border-border text-text">
-                <option value="">All Roles</option>
-                @foreach(\App\Models\Npc::SOCIAL_ROLES as $r)
-                    <option value="{{ $r }}">{{ $r }}</option>
-                @endforeach
-            </select>
+                {{-- Role --}}
+                <div>
+                    <label for="npc-role" class="form-label text-xs text-muted">Role</label>
+                    <select id="npc-role" name="role" x-model="roleFilter" @change="applyFilters"
+                            class="ui-select">
+                        <option value="">All roles</option>
+                        @foreach(\App\Models\Npc::SOCIAL_ROLES as $r)
+                            <option value="{{ $r }}">{{ $r }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
 
-            {{-- Search button --}}
-            <button type="button"
-                    @click="applyFilters"
-                    class="bg-accent text-on-accent px-4 py-2 rounded hover:bg-accent-hover font-medium shadow">
-                Search
-            </button>
+            <div class="flex flex-wrap items-end gap-3">
+                <button type="button"
+                        @click="applyFilters"
+                        class="btn btn-primary btn-sm">
+                    Search
+                </button>
 
-            {{-- Reset --}}
-            <a href="{{ route('compendium.npcs.index') }}"
-               class="px-4 py-2 bg-bg text-text border border-border rounded hover:bg-hover text-center font-medium">
-                Reset
-            </a>
+                <a href="{{ route('compendium.npcs.index') }}"
+                   class="btn btn-secondary btn-sm text-center">
+                    Reset
+                </a>
+            </div>
         </form>
 
         {{-- Results + Overlay --}}

@@ -7,7 +7,7 @@
 ])
 
 <div class="mb-4">
-    <label for="{{ $name }}" class="block text-sm font-medium text-text mb-1">
+    <label for="{{ $name }}" class="form-label">
         {{ $label }}
     </label>
 
@@ -17,7 +17,7 @@
             id="{{ $name }}"
             rows="{{ $rows }}"
             {{ $attributes->merge([
-                'class' => 'mt-1 block w-full rounded-md border-border bg-surface text-text shadow-sm focus:border-accent focus:ring-accent sm:text-sm'
+                'class' => 'ui-textarea mt-1'
             ]) }}
         >{{ old($name, $value) }}</textarea>
     @else
@@ -27,12 +27,12 @@
             id="{{ $name }}"
             value="{{ old($name, $value) }}"
             {{ $attributes->merge([
-                'class' => 'mt-1 block w-full rounded-md border-border bg-surface text-text shadow-sm focus:border-accent focus:ring-accent sm:text-sm'
+                'class' => 'ui-field mt-1'
             ]) }}
         >
     @endif
 
     @error($name)
-        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
+        <p class="form-error">{{ $message }}</p>
     @enderror
 </div>

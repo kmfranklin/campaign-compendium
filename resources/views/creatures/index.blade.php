@@ -34,7 +34,7 @@
         class="space-y-4"
     >
         {{-- Filter bar --}}
-        <div class="bg-surface border border-border rounded-lg p-4">
+        <div class="ui-filter-panel space-y-3">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
 
                 {{-- Name search --}}
@@ -46,7 +46,7 @@
                         x-model="q"
                         @input.debounce.400ms="applyFilters"
                         placeholder="Monster name…"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-field"
                     >
                 </div>
 
@@ -57,7 +57,7 @@
                         id="monster-type"
                         x-model="type"
                         @change="applyFilters"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">All types</option>
                         @foreach($types as $t)
@@ -73,7 +73,7 @@
                         id="monster-cr"
                         x-model="cr"
                         @change="applyFilters"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">Any CR</option>
                         @foreach($crs as $value => $label)
@@ -89,7 +89,7 @@
                         id="monster-size"
                         x-model="size"
                         @change="applyFilters"
-                        class="w-full rounded-md border border-border bg-bg text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-select"
                     >
                         <option value="">Any size</option>
                         @foreach($sizes as $value => $label)
@@ -101,12 +101,12 @@
             </div>
 
             {{-- Clear filters --}}
-            <div class="mt-3">
+            <div>
                 <template x-if="q || type || cr || size">
                     <button
                         type="button"
                         @click="q = ''; type = ''; cr = ''; size = ''; applyFilters()"
-                        class="text-sm text-accent hover:text-accent-hover underline"
+                        class="link-action"
                     >
                         Clear all filters
                     </button>

@@ -36,8 +36,7 @@
             <label for="title" class="block text-sm font-medium text-text">Session Title</label>
             <input type="text" name="title" id="title"
                    value="{{ old('title', $sessionLog->title) }}"
-                   class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                          focus:border-accent focus:ring-accent sm:text-sm"
+                   class="ui-field mt-1"
                    required>
         </div>
 
@@ -46,8 +45,7 @@
             <label for="session_date" class="block text-sm font-medium text-text">Session Date</label>
             <input type="date" name="session_date" id="session_date"
                    value="{{ old('session_date', $sessionLog->session_date->toDateString()) }}"
-                   class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                          focus:border-accent focus:ring-accent sm:text-sm"
+                   class="ui-field mt-1"
                    required>
         </div>
 
@@ -55,8 +53,7 @@
         <div class="mb-4">
             <label for="summary" class="block text-sm font-medium text-text">Session Summary</label>
             <textarea name="summary" id="summary" rows="6"
-                      class="mt-1 block w-full rounded-md border border-border bg-surface text-text shadow-sm
-                             focus:border-accent focus:ring-accent sm:text-sm">{{ old('summary', $sessionLog->summary) }}</textarea>
+                      class="ui-textarea mt-1">{{ old('summary', $sessionLog->summary) }}</textarea>
         </div>
 
         @include('session-logs.partials.relationship-selectors', [
