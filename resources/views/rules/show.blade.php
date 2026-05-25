@@ -324,7 +324,7 @@
         {{-- whether or not there are also sub-entries.   --}}
         {{-- -------------------------------------------- --}}
         @if ($descHtml && $entries->isNotEmpty())
-            <div class="mb-6 px-5 py-4 rounded-xl border border-border bg-surface/50
+            <div class="ui-panel-soft mb-6 px-5 py-4
                         prose prose-sm max-w-none dark:prose-invert
                         prose-headings:text-text prose-headings:font-semibold
                         prose-a:text-accent prose-strong:text-text
@@ -344,7 +344,7 @@
                 @foreach ($entries as $entry)
                     <article
                         id="entry-{{ $entry->id }}"
-                        class="bg-surface border border-border rounded-xl p-5"
+                        class="ui-card"
                         aria-labelledby="entry-heading-{{ $entry->id }}"
                     >
                         <h2 id="entry-heading-{{ $entry->id }}"
@@ -365,7 +365,7 @@
         {{-- Content-only section: desc IS the content    --}}
         {{-- -------------------------------------------- --}}
         @elseif ($descHtml)
-            <div class="bg-surface border border-border rounded-xl p-6">
+            <div class="ui-panel p-6">
                 <div class="prose prose-sm max-w-none dark:prose-invert
                             prose-headings:text-text prose-headings:font-semibold
                             prose-a:text-accent prose-strong:text-text

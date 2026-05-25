@@ -135,49 +135,6 @@
 <div class="py-4">
 
     {{-- ================================================ --}}
-    {{-- Conditions — featured card                       --}}
-    {{-- ================================================ --}}
-    <section aria-labelledby="conditions-category-heading" class="mb-10">
-        <h2 id="conditions-category-heading" class="sr-only">Featured section</h2>
-
-        <a
-            href="{{ route('rules.conditions') }}"
-            class="group block bg-surface border-2 border-accent rounded-xl p-6 shadow-sm
-                   hover:shadow-md hover:border-accent-hover transition-all duration-150
-                   focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
-        >
-            <div class="flex items-start justify-between gap-4">
-                <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-accent/10 text-accent shrink-0"
-                             aria-hidden="true">
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-text group-hover:text-accent transition-colors duration-150">
-                            Conditions
-                        </h3>
-                        <span class="ml-auto text-xs font-semibold text-on-accent bg-accent px-2 py-0.5 rounded-full">
-                            {{ $conditionCount }}
-                        </span>
-                    </div>
-                    <p class="text-sm text-muted">
-                        Status effects that alter a creature's capabilities — Blinded, Charmed, Grappled, Prone, and more.
-                    </p>
-                </div>
-                <svg class="w-5 h-5 text-muted group-hover:text-accent transition-colors duration-150 shrink-0 mt-1"
-                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                     stroke-width="2" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>
-            </div>
-        </a>
-    </section>
-
-    {{-- ================================================ --}}
     {{-- Ruleset category grid                            --}}
     {{-- ================================================ --}}
     <section aria-labelledby="categories-heading">
@@ -185,30 +142,46 @@
             All Sections
         </h2>
 
+        @php
+            $sections = $ruleSets
+                ->map(fn ($ruleSet) => [
+                    'name' => $ruleSet->name,
+                    'count' => $ruleSet->rules_count,
+                    'description' => $ruleSet->desc_plain,
+                    'url' => route('rules.show', $ruleSet->slug),
+                ])
+                ->push([
+                    'name' => 'Conditions',
+                    'count' => $conditionCount,
+                    'description' => "Status effects that alter a creature's capabilities — Blinded, Charmed, Grappled, Prone, and more.",
+                    'url' => route('rules.conditions'),
+                ])
+                ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)
+                ->values();
+        @endphp
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach ($ruleSets as $ruleSet)
+            @foreach ($sections as $section)
                 <a
-                    href="{{ route('rules.show', $ruleSet->slug) }}"
-                    class="group block bg-surface border border-border rounded-xl p-5 shadow-sm
-                           hover:shadow-md hover:border-accent transition-all duration-150
-                           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
+                    href="{{ $section['url'] }}"
+                    class="ui-card-interactive group block focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
                 >
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1.5">
                                 <h3 class="text-sm font-semibold text-text group-hover:text-accent transition-colors duration-150 truncate">
-                                    {{ $ruleSet->name }}
+                                    {{ $section['name'] }}
                                 </h3>
-                                @if ($ruleSet->rules_count > 0)
+                                @if ($section['count'] > 0)
                                     <span class="shrink-0 text-xs font-medium text-muted bg-hover px-1.5 py-0.5 rounded">
-                                        {{ $ruleSet->rules_count }}
+                                        {{ $section['count'] }}
                                     </span>
                                 @endif
                             </div>
 
-                            @if ($ruleSet->desc_plain)
+                            @if ($section['description'])
                                 <p class="text-xs text-muted leading-relaxed line-clamp-2">
-                                    {{ $ruleSet->desc_plain }}
+                                    {{ $section['description'] }}
                                 </p>
                             @endif
                         </div>

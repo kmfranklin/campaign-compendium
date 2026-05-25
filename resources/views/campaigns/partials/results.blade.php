@@ -1,6 +1,6 @@
 {{-- Desktop Table --}}
 <div class="hidden sm:block">
-    <div class="w-full max-w-7xl mx-auto overflow-x-auto bg-surface border border-border shadow-sm sm:rounded-lg">
+    <div class="ui-panel w-full max-w-7xl mx-auto overflow-x-auto sm:rounded-2xl">
         <table class="min-w-full table-auto">
             <thead class="bg-bg">
                 <tr>
@@ -73,7 +73,7 @@
 {{-- Mobile Cards --}}
 <div class="sm:hidden space-y-4">
     @forelse($campaigns as $campaign)
-        <div class="bg-surface border border-border shadow p-4 rounded-lg">
+        <div class="ui-card p-4">
             <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-lg font-medium text-text break-words">

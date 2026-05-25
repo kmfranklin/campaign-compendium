@@ -130,6 +130,37 @@
         @apply text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-muted;
     }
 
+    .ui-panel {
+        @apply rounded-2xl border border-border backdrop-blur-sm;
+        background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
+        box-shadow: 0 20px 48px -32px rgba(0, 0, 0, 0.62);
+    }
+
+    .ui-panel-soft {
+        @apply rounded-2xl border border-border backdrop-blur-sm;
+        background-color: color-mix(in srgb, var(--color-surface) 55%, transparent);
+        box-shadow: 0 18px 44px -34px rgba(0, 0, 0, 0.58);
+    }
+
+    .ui-card {
+        @apply ui-panel p-5;
+    }
+
+    .ui-card-compact {
+        @apply ui-panel px-4 py-3;
+    }
+
+    .ui-card-interactive {
+        @apply ui-card transition-all duration-200;
+    }
+
+    .ui-card-interactive:hover {
+        background: color-mix(in srgb, var(--color-surface-2) 76%, transparent);
+        border-color: color-mix(in srgb, var(--color-accent) 52%, var(--color-border));
+        box-shadow: 0 24px 52px -32px rgba(0, 0, 0, 0.72);
+        transform: translateY(-1px);
+    }
+
     .custom-select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a59bb8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
         background-position: right 0.5rem center;

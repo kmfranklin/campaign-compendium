@@ -62,7 +62,7 @@
         <section id="srd-tools" aria-labelledby="srd-tools-heading" class="py-12">
 
             <div class="text-center mb-10">
-                <h2 id="srd-tools-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text">Free SRD Reference Tools</h2>
+                <h2 id="srd-tools-heading" class="font-sans text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-text">Free SRD Reference Tools</h2>
                 <p class="mt-2 text-muted max-w-xl mx-auto text-sm">
                     The entire D&amp;D 5e Systems Reference Document — freely available, no account needed.
                 </p>
@@ -72,7 +72,7 @@
 
                 {{-- Spells --}}
                 <a href="{{ route('spells.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             {{-- Sparkles icon --}}
@@ -90,7 +90,7 @@
 
                 {{-- Monsters --}}
                 <a href="{{ route('creatures.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             {{-- Custom beholder icon --}}
@@ -119,7 +119,7 @@
 
                 {{-- Items --}}
                 <a href="{{ route('srdItems.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             {{-- Bag/backpack icon --}}
@@ -137,7 +137,7 @@
 
                 {{-- Dice Roller --}}
                 <a href="{{ route('dice-roller') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             {{-- Cube/dice icon --}}
@@ -155,7 +155,7 @@
 
                 {{-- Encounter Generator --}}
                 <a href="{{ route('encounter-generator.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             {{-- Lightning bolt / action icon --}}
@@ -183,7 +183,7 @@
         <section aria-labelledby="account-features-heading" class="py-12">
 
             <div class="text-center mb-10">
-                <h2 id="account-features-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text">More with a Free Account</h2>
+                <h2 id="account-features-heading" class="font-sans text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-text">More with a Free Account</h2>
                 <p class="mt-2 text-muted max-w-xl mx-auto text-sm">
                     Create an account to unlock campaign management, custom content, and more — all free to get started.
                 </p>
@@ -192,7 +192,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 {{-- Campaigns --}}
-                <div class="bg-surface border border-border rounded-xl p-6 shadow-sm">
+                <div class="ui-card p-6">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -207,7 +207,7 @@
                 </div>
 
                 {{-- Characters / NPCs --}}
-                <div class="bg-surface border border-border rounded-xl p-6 shadow-sm">
+                <div class="ui-card p-6">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -222,7 +222,7 @@
                 </div>
 
                 {{-- Custom Items --}}
-                <div class="bg-surface border border-border rounded-xl p-6 shadow-sm">
+                <div class="ui-card p-6">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -257,13 +257,13 @@
         {{-- ================================================ --}}
         <section aria-labelledby="dashboard-heading" class="py-12">
 
-            <h2 id="dashboard-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text mb-6">Jump Back In</h2>
+            <h2 id="dashboard-heading" class="font-sans text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-text mb-6">Jump Back In</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 {{-- Campaigns --}}
                 <a href="{{ route('campaigns.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -278,7 +278,7 @@
 
                 {{-- Characters --}}
                 <a href="{{ route('compendium.npcs.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -293,7 +293,7 @@
 
                 {{-- Items --}}
                 <a href="{{ route('items.index') }}"
-                   class="group block bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-interactive group block p-6 focus:outline-none focus:ring-2 focus:ring-accent">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent" aria-hidden="true">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -315,39 +315,39 @@
         {{-- SRD Quick Links for authenticated users --}}
         <section aria-labelledby="srd-quick-heading" class="py-10">
 
-            <h2 id="srd-quick-heading" class="font-sans text-3xl font-extrabold tracking-tight text-text mb-6">SRD Reference</h2>
+            <h2 id="srd-quick-heading" class="font-sans text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-text mb-6">SRD Reference</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <a href="{{ route('spells.index') }}"
-                   class="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-compact flex items-center gap-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
                     <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
                     </svg>
                     Spell Reference <span class="ml-auto text-xs text-muted">319 spells</span>
                 </a>
                 <a href="{{ route('creatures.index') }}"
-                   class="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-compact flex items-center gap-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
                     <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm0 8.625a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM8.25 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm5.25 0a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" />
                     </svg>
                     Monster Bestiary <span class="ml-auto text-xs text-muted">328 monsters</span>
                 </a>
                 <a href="{{ route('srdItems.index') }}"
-                   class="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-compact flex items-center gap-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
                     <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z" />
                     </svg>
                     Items &amp; Equipment <span class="ml-auto text-xs text-muted">SRD items</span>
                 </a>
                 <a href="{{ route('dice-roller') }}"
-                   class="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-compact flex items-center gap-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
                     <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                     </svg>
                     Dice Roller <span class="ml-auto text-xs text-muted">d4–d100</span>
                 </a>
                 <a href="{{ route('encounter-generator.index') }}"
-                   class="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                   class="ui-card-compact flex items-center gap-3 text-sm font-medium text-text hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
                     <svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
                     </svg>

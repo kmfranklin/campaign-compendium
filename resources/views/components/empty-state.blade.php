@@ -6,7 +6,7 @@
     'actionLabel' => null,
 ])
 
-<div class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-surface py-10 px-6 text-center">
+<div class="ui-panel-soft flex flex-col items-center justify-center border-2 border-dashed py-10 px-6 text-center">
     <div class="text-4xl mb-3">{{ $icon }}</div>
 
     <h3 class="text-lg font-medium text-text">{{ $title }}</h3>
