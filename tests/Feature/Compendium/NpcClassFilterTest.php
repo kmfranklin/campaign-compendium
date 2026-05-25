@@ -16,8 +16,8 @@ class NpcClassFilterTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        Npc::factory()->create(['class' => 'Wizard']);
-        Npc::factory()->create(['class' => 'Rogue']);
+        Npc::factory()->create(['user_id' => $user->id, 'class' => 'Wizard']);
+        Npc::factory()->create(['user_id' => $user->id, 'class' => 'Rogue']);
 
         // 1) Hit the filtered index
         $response = $this->get('/compendium/npcs?class=Wizard')

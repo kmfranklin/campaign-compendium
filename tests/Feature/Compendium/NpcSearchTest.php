@@ -18,8 +18,8 @@ class NpcSearchTest extends TestCase
         $this->actingAs($user);
 
         // 2) Seed two NPCs
-        Npc::factory()->create(['name' => 'Gandalf']);
-        Npc::factory()->create(['name' => 'Frodo']);
+        Npc::factory()->create(['user_id' => $user->id, 'name' => 'Gandalf']);
+        Npc::factory()->create(['user_id' => $user->id, 'name' => 'Frodo']);
 
         // 3) Hit the route as an authenticated user
         $this->get('/compendium/npcs?q=Gandalf')
