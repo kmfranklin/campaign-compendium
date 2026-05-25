@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Storage;
 class SessionLogController extends Controller
 {
     /**
+     * Abort unless the session log actually belongs to this campaign.
+     */
+    private function ensureSessionBelongsToCampaign(Campaign $campaign, SessionLog $sessionLog): void
+    {
+        abort_unless($sessionLog->campaign_id === $campaign->id, 404);
+    }
+
+    /**
      * Abort unless the current user belongs to this campaign.
      */
     private function ensureCampaignMember(Campaign $campaign): void
@@ -84,6 +92,7 @@ class SessionLogController extends Controller
      */
     public function show(Campaign $campaign, SessionLog $sessionLog)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->ensureCampaignMember($campaign);
 
         $sessionLog->load(['media', 'npcs', 'quests']);
@@ -112,6 +121,7 @@ class SessionLogController extends Controller
      */
     public function edit(Campaign $campaign, SessionLog $sessionLog)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $sessionLog->load(['media', 'npcs', 'quests']);
@@ -127,6 +137,7 @@ class SessionLogController extends Controller
      */
     public function update(Request $request, Campaign $campaign, SessionLog $sessionLog)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $validated = $request->validate([
@@ -174,6 +185,7 @@ class SessionLogController extends Controller
      */
     public function destroy(Campaign $campaign, SessionLog $sessionLog)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $this->deleteMedia($sessionLog);
@@ -189,6 +201,7 @@ class SessionLogController extends Controller
      */
     public function attachNpc(Request $request, Campaign $campaign, SessionLog $sessionLog, Npc $npc)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $this->ensureNpcSelectableForCampaign($campaign, $npc);
@@ -210,6 +223,7 @@ class SessionLogController extends Controller
      */
     public function detachNpc(Campaign $campaign, SessionLog $sessionLog, Npc $npc)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $sessionLog->npcs()->detach($npc->id);
@@ -224,6 +238,7 @@ class SessionLogController extends Controller
      */
     public function attachQuest(Request $request, Campaign $campaign, SessionLog $sessionLog, Quest $quest)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $this->ensureQuestBelongsToCampaign($campaign, $quest);
@@ -240,6 +255,7 @@ class SessionLogController extends Controller
      */
     public function detachQuest(Campaign $campaign, SessionLog $sessionLog, Quest $quest)
     {
+        $this->ensureSessionBelongsToCampaign($campaign, $sessionLog);
         $this->authorize('update', $campaign);
 
         $sessionLog->quests()->detach($quest->id);

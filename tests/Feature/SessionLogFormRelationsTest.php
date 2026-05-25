@@ -134,13 +134,81 @@ class SessionLogFormRelationsTest extends TestCase
         $this->assertSame($campaign->id, $secondNpc->fresh()->campaign_id);
     }
 
-    private function createDmCampaign(User $user): Campaign
+    public function test_session_route_returns_not_found_when_session_belongs_to_another_campaign(): void
     {
-        Role::create(['id' => Role::DM, 'name' => 'DM']);
-        Role::create(['id' => Role::PLAYER, 'name' => 'Player']);
+        $user = User::factory()->create();
+        $campaignA = $this->createDmCampaign($user, 'Campaign A');
+        $campaignB = $this->createDmCampaign($user, 'Campaign B');
+
+        $sessionLog = $campaignB->sessionLogs()->create([
+            'title' => 'Wrong Campaign Session',
+            'session_date' => '2026-05-27',
+            'summary' => 'Should not load under Campaign A.',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('campaigns.sessions.show', [$campaignA, $sessionLog]))
+            ->assertNotFound();
+    }
+
+    public function test_cannot_attach_npc_from_a_different_campaign_to_session(): void
+    {
+        $user = User::factory()->create();
+        $campaignA = $this->createDmCampaign($user, 'Campaign A');
+        $campaignB = $this->createDmCampaign($user, 'Campaign B');
+
+        $sessionLog = $campaignA->sessionLogs()->create([
+            'title' => 'Session A',
+            'session_date' => '2026-05-27',
+            'summary' => null,
+        ]);
+
+        $foreignNpc = Npc::factory()->create([
+            'user_id' => $user->id,
+            'campaign_id' => $campaignB->id,
+            'name' => 'Frank the Fighter',
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('campaigns.sessions.npcs.attach', [$campaignA, $sessionLog, $foreignNpc]))
+            ->assertForbidden();
+
+        $this->assertCount(0, $sessionLog->fresh()->npcs);
+    }
+
+    public function test_cannot_attach_quest_from_a_different_campaign_to_session(): void
+    {
+        $user = User::factory()->create();
+        $campaignA = $this->createDmCampaign($user, 'Campaign A');
+        $campaignB = $this->createDmCampaign($user, 'Campaign B');
+
+        $sessionLog = $campaignA->sessionLogs()->create([
+            'title' => 'Session A',
+            'session_date' => '2026-05-27',
+            'summary' => null,
+        ]);
+
+        $foreignQuest = Quest::create([
+            'campaign_id' => $campaignB->id,
+            'title' => 'Into the Other Mists',
+            'description' => null,
+            'status' => QuestStatus::Planned,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('campaigns.sessions.quests.attach', [$campaignA, $sessionLog, $foreignQuest]))
+            ->assertForbidden();
+
+        $this->assertCount(0, $sessionLog->fresh()->quests);
+    }
+
+    private function createDmCampaign(User $user, string $name = 'Campaign A'): Campaign
+    {
+        Role::firstOrCreate(['id' => Role::DM], ['name' => 'DM']);
+        Role::firstOrCreate(['id' => Role::PLAYER], ['name' => 'Player']);
 
         $campaign = Campaign::create([
-            'name' => 'Campaign A',
+            'name' => $name,
             'description' => 'Test campaign',
             'dm_id' => $user->id,
         ]);
