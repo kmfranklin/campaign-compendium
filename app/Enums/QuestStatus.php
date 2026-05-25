@@ -33,11 +33,11 @@ enum QuestStatus: string
     public function badgeClasses(): string
     {
         return match($this) {
-            self::Planned   => 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
-            self::Active    => 'bg-accent/10 text-accent',
-            self::Completed => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-            self::Failed    => 'bg-danger/10 text-danger',
-            self::Abandoned => 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+            self::Planned   => 'ui-badge ui-badge-muted',
+            self::Active    => 'ui-badge ui-badge-accent',
+            self::Completed => 'ui-badge ui-badge-success',
+            self::Failed    => 'ui-badge ui-badge-danger',
+            self::Abandoned => 'ui-badge ui-badge-warning',
         };
     }
 }

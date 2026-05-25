@@ -4,7 +4,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
     <a href="{{ route('spells.index') }}"
-       class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium underline underline-offset-2">
+       class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -23,8 +23,11 @@
                         @if($spell->school)
                             {{ strtolower($spell->level_label) === 'cantrip' ? $spell->school->name . ' cantrip' : $spell->school->name . ' spell' }}
                         @endif
+                        @if($spell->concentration)
+                            <span class="ui-chip-info not-italic ml-1">Concentration</span>
+                        @endif
                         @if($spell->ritual)
-                            <span class="not-italic text-xs bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded ml-1">Ritual</span>
+                            <span class="ui-chip-accent not-italic ml-1">Ritual</span>
                         @endif
                     </p>
                 </div>
@@ -54,7 +57,7 @@
                     <dt class="font-semibold text-text w-32 shrink-0">Duration</dt>
                     <dd class="text-muted">
                         @if($spell->concentration)
-                            <span class="text-blue-400">Concentration</span>,
+                            <span class="text-teal">Concentration</span>,
                         @endif
                         {{ $spell->duration ?? '—' }}
                     </dd>
@@ -119,7 +122,7 @@
                     <p class="text-sm font-semibold text-text mb-2">Available to</p>
                     <div class="flex flex-wrap gap-2">
                         @foreach($spell->class_names as $className)
-                            <span class="text-xs font-medium border border-accent text-accent px-2.5 py-1 rounded-full">{{ $className }}</span>
+                            <span class="ui-badge ui-badge-accent">{{ $className }}</span>
                         @endforeach
                     </div>
                 </div>

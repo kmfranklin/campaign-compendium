@@ -22,10 +22,10 @@
                             {{ $spell->name }}
                             <div class="flex gap-1 mt-1">
                                 @if($spell->concentration)
-                                    <span class="text-xs bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">Concentration</span>
+                                    <span class="ui-chip-info">Concentration</span>
                                 @endif
                                 @if($spell->ritual)
-                                    <span class="text-xs bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded">Ritual</span>
+                                    <span class="ui-chip-accent">Ritual</span>
                                 @endif
                             </div>
                         </td>
@@ -59,10 +59,10 @@
                         </p>
                         <div class="flex gap-1 mt-1">
                             @if($spell->concentration)
-                                <span class="text-xs bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">Concentration</span>
+                                <span class="ui-chip-info">Concentration</span>
                             @endif
                             @if($spell->ritual)
-                                <span class="text-xs bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded">Ritual</span>
+                                <span class="ui-chip-accent">Ritual</span>
                             @endif
                         </div>
                     </div>

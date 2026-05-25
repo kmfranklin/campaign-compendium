@@ -6,23 +6,23 @@
     $message = $data['message'] ?? '';
     $type    = $data['type']    ?? 'info';
 
-    // Colour tokens keyed by notification type — mirrors the banner palette.
+    // Notification tones align with the shared restyle token system.
     $styles = match ($type) {
         'warning' => [
-            'icon'  => 'text-amber-500 dark:text-amber-400',
-            'title' => 'text-amber-700 dark:text-amber-300',
+            'icon'  => 'text-warning',
+            'title' => 'text-warning',
         ],
         'success' => [
-            'icon'  => 'text-green-500 dark:text-green-400',
-            'title' => 'text-green-700 dark:text-green-300',
+            'icon'  => 'text-green-400',
+            'title' => 'text-green-400',
         ],
         'danger'  => [
-            'icon'  => 'text-red-500 dark:text-red-400',
-            'title' => 'text-red-700 dark:text-red-300',
+            'icon'  => 'text-danger',
+            'title' => 'text-danger',
         ],
         default   => [   // info
-            'icon'  => 'text-blue-500 dark:text-blue-400',
-            'title' => 'text-blue-700 dark:text-blue-300',
+            'icon'  => 'text-teal',
+            'title' => 'text-teal',
         ],
     };
 @endphp

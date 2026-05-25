@@ -21,8 +21,7 @@
 
         {{-- User Management --}}
         <a href="{{ route('admin.users.index') }}"
-           class="group flex flex-col p-6 bg-surface border border-border rounded-lg shadow-sm
-                  hover:border-accent hover:shadow transition-all duration-150">
+           class="ui-card-interactive group flex flex-col p-6">
             <div class="flex items-center gap-3 mb-3">
                 <div class="flex items-center justify-center w-9 h-9 rounded-md bg-accent/10 text-accent"
                      aria-hidden="true">
@@ -43,8 +42,7 @@
         {{-- System Notifications --}}
         @if (Route::has('admin.notifications.index'))
             <a href="{{ route('admin.notifications.index') }}"
-               class="group flex flex-col p-6 bg-surface border border-border rounded-lg shadow-sm
-                      hover:border-accent hover:shadow transition-all duration-150">
+               class="ui-card-interactive group flex flex-col p-6">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="flex items-center justify-center w-9 h-9 rounded-md bg-accent/10 text-accent"
                          aria-hidden="true">
@@ -62,7 +60,7 @@
                 </p>
             </a>
         @else
-            <div class="flex flex-col p-6 bg-surface border border-border rounded-lg shadow-sm opacity-50 cursor-not-allowed"
+            <div class="ui-card flex flex-col p-6 opacity-50 cursor-not-allowed"
                  aria-disabled="true"
                  title="Coming soon">
                 <div class="flex items-center gap-3 mb-3">
@@ -77,9 +75,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <h2 class="text-base font-semibold text-text">System Notifications</h2>
-                        <span class="text-xs font-medium px-1.5 py-0.5 rounded
-                                     bg-gray-200 dark:bg-gray-700
-                                     text-gray-500 dark:text-gray-400">
+                        <span class="ui-badge ui-badge-muted">
                             Coming soon
                         </span>
                     </div>
@@ -93,8 +89,7 @@
         {{-- Activity Log --}}
         @if (Route::has('admin.activity.index'))
             <a href="{{ route('admin.activity.index') }}"
-               class="group flex flex-col p-6 bg-surface border border-border rounded-lg shadow-sm
-                      hover:border-accent hover:shadow transition-all duration-150">
+               class="ui-card-interactive group flex flex-col p-6">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="flex items-center justify-center w-9 h-9 rounded-md bg-accent/10 text-accent"
                          aria-hidden="true">
@@ -112,7 +107,7 @@
                 </p>
             </a>
         @else
-            <div class="flex flex-col p-6 bg-surface border border-border rounded-lg shadow-sm opacity-50 cursor-not-allowed"
+            <div class="ui-card flex flex-col p-6 opacity-50 cursor-not-allowed"
                  aria-disabled="true"
                  title="Coming soon">
                 <div class="flex items-center gap-3 mb-3">
@@ -127,9 +122,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <h2 class="text-base font-semibold text-text">Activity Log</h2>
-                        <span class="text-xs font-medium px-1.5 py-0.5 rounded
-                                     bg-gray-200 dark:bg-gray-700
-                                     text-gray-500 dark:text-gray-400">
+                        <span class="ui-badge ui-badge-muted">
                             Coming soon
                         </span>
                     </div>

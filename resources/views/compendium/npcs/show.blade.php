@@ -36,16 +36,16 @@
 
                         {{-- Tags --}}
                         <div class="mt-3 flex flex-wrap gap-2">
-                            <span class="bg-accent/10 text-accent text-xs font-medium px-2 py-1 rounded">NPC</span>
+                            <span class="ui-chip-accent">NPC</span>
 
                             @if($npc->race)
-                                <span class="bg-green-500/10 text-green-400 text-xs font-medium px-2 py-1 rounded">
+                                <span class="ui-chip-success">
                                     {{ $npc->race }}
                                 </span>
                             @endif
 
                             @if($npc->class)
-                                <span class="bg-yellow-500/10 text-yellow-400 text-xs font-medium px-2 py-1 rounded">
+                                <span class="ui-chip-warning">
                                     {{ $npc->class }}
                                 </span>
                             @endif

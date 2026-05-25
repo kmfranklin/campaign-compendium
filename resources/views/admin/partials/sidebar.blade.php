@@ -25,15 +25,15 @@
         readers, and aria-label switches between "Collapse sidebar" and "Expand sidebar".
         The chevron icon rotates 180° between the two states using a CSS transform.
 
-        Contrast fix: text-accent (#6d28d9) has only ~2.1:1 contrast on dark surface
-        (#1f2937). dark:text-purple-300 (#c4b5fd) gives 8.2:1 — WCAG AAA.
+        The header badge now uses the same accent token as the main app so the
+        admin area doesn't carry a separate legacy purple treatment.
     --}}
     <div class="flex items-center border-b border-border shrink-0"
          :class="expanded ? 'px-4 py-4 justify-between' : 'px-0 py-4 justify-center'">
 
         {{-- Badge: icon always visible; label text fades when collapsed --}}
         <div class="flex items-center gap-2 min-w-0">
-            <svg class="w-4 h-4 flex-shrink-0 text-accent dark:text-purple-300"
+            <svg class="w-4 h-4 flex-shrink-0 text-accent"
                  fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -45,7 +45,7 @@
                   x-transition:leave="transition-opacity duration-100"
                   x-transition:leave-start="opacity-100"
                   x-transition:leave-end="opacity-0"
-                  class="text-xs font-bold uppercase tracking-widest text-accent dark:text-purple-300 whitespace-nowrap">
+                  class="text-xs font-bold uppercase tracking-widest text-accent whitespace-nowrap">
                 Admin Panel
             </span>
         </div>

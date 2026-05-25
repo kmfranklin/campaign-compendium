@@ -47,7 +47,7 @@
   @endphp
 
   <a href="{{ $backUrl }}"
-     class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium">
+     class="link-action mb-4">
     <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
          viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -68,22 +68,19 @@
               if (optional($item->category)->name) {
                   $itemTags[] = [
                       'label' => optional($item->category)->name,
-                      'bg'    => 'bg-bg',
-                      'text'  => 'text-text',
+                      'class' => 'ui-chip-muted',
                   ];
               }
               if (optional($item->rarity)->name) {
                   $itemTags[] = [
                       'label' => optional($item->rarity)->name,
-                      'bg'    => 'bg-yellow-500/10',
-                      'text'  => 'text-yellow-400',
+                      'class' => 'ui-chip-warning',
                   ];
               }
               if (! $item->is_srd) {
                   $itemTags[] = [
                       'label' => 'Custom',
-                      'bg'    => 'bg-green-500/10',
-                      'text'  => 'text-green-400',
+                      'class' => 'ui-chip-success',
                   ];
               }
 
@@ -91,35 +88,32 @@
               if ($item->is_magic_item) {
                   $inlineProps[] = [
                       'label' => 'Magic Item',
-                      'bg'    => 'bg-accent/10',
-                      'text'  => 'text-accent',
+                      'class' => 'ui-chip-accent',
                   ];
               }
               if ($item->requires_attunement) {
                   $inlineProps[] = [
                       'label' => 'Requires Attunement',
-                      'bg'    => 'bg-danger/10',
-                      'text'  => 'text-danger',
+                      'class' => 'ui-chip-danger',
                   ];
               }
               if (optional($item->armor)->adds_dex_mod) {
                   $inlineProps[] = [
                       'label' => 'Adds Dex Mod',
-                      'bg'    => 'bg-bg',
-                      'text'  => 'text-muted',
+                      'class' => 'ui-chip-muted',
                   ];
               }
             @endphp
 
             <div class="mt-3 flex flex-wrap gap-2 items-center">
               @foreach($itemTags as $tag)
-                <span class="{{ $tag['bg'] }} {{ $tag['text'] }} text-xs font-medium px-2 py-1 rounded">
+                <span class="{{ $tag['class'] }}">
                   {{ $tag['label'] }}
                 </span>
               @endforeach
 
               @foreach($inlineProps as $p)
-                <span class="{{ $p['bg'] }} {{ $p['text'] }} text-xs px-2 py-0.5 rounded">
+                <span class="{{ $p['class'] }}">
                   {{ $p['label'] }}
                 </span>
               @endforeach
@@ -129,7 +123,7 @@
           <div class="ml-auto flex gap-2">
             @can('update', $item)
               <a href="{{ route('items.edit', $item) }}?from=custom"
-                 class="px-4 py-2 bg-warning hover:bg-warning-hover text-on-warning rounded">
+                 class="btn btn-warning btn-sm">
                 Edit
               </a>
             @endcan
@@ -141,14 +135,14 @@
                 @csrf
                 @method('DELETE')
                 <button type="submit"
-                        class="px-4 py-2 bg-danger-solid hover:bg-danger-hover text-on-danger rounded">
+                        class="btn btn-danger btn-sm">
                   Delete
                 </button>
               </form>
             @endcan
 
             <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => 'custom']) }}"
-               class="px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent rounded">
+               class="btn btn-primary btn-sm">
               Clone
             </a>
           </div>

@@ -29,7 +29,7 @@
 
                         {{-- tags --}}
                         <div class="mt-3 flex flex-wrap gap-2">
-                            <span class="bg-accent/10 text-accent text-xs font-medium px-2 py-1 rounded">
+                            <span class="ui-chip-accent">
                                 Campaign
                             </span>
                         </div>
@@ -62,28 +62,28 @@
         {{-- /HEADER --}}
 
         {{-- Tabs --}}
-        <nav class="flex border-b border-border text-sm font-medium text-muted bg-bg">
+        <nav class="ui-tab-nav">
             <button @click="tab = 'overview'"
-                    :class="{ 'border-accent text-accent': tab === 'overview' }"
-                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none">
+                    :class="tab === 'overview' ? 'ui-tab-btn-active' : ''"
+                    class="ui-tab-btn">
                 Overview
             </button>
 
             <button @click="tab = 'sessions'"
-                    :class="{ 'border-accent text-accent': tab === 'sessions' }"
-                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none">
+                    :class="tab === 'sessions' ? 'ui-tab-btn-active' : ''"
+                    class="ui-tab-btn">
                 Sessions
             </button>
 
             <button @click="tab = 'quests'"
-                    :class="{ 'border-accent text-accent': tab === 'quests' }"
-                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none">
+                    :class="tab === 'quests' ? 'ui-tab-btn-active' : ''"
+                    class="ui-tab-btn">
                 Quests
             </button>
 
             <button @click="tab = 'npcs'"
-                    :class="{ 'border-accent text-accent': tab === 'npcs' }"
-                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none">
+                    :class="tab === 'npcs' ? 'ui-tab-btn-active' : ''"
+                    class="ui-tab-btn">
                 NPCs
             </button>
         </nav>

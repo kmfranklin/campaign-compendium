@@ -47,9 +47,7 @@
                 <li class="flex items-center justify-between bg-bg px-3 py-2 rounded border border-border">
                     <div>
                         <span class="text-text font-medium">{{ $member->name }}</span>
-                        <span class="text-xs text-muted ml-2">
-                            {{ $roleLabels[$member->pivot->role_id] ?? 'Unknown' }}
-                        </span>
+                        <span class="ml-2 align-middle ui-badge ui-badge-muted">{{ $roleLabels[$member->pivot->role_id] ?? 'Unknown' }}</span>
                     </div>
 
                     {{-- Remove button (DM + Co‑DM only, but never for the DM) --}}
@@ -98,7 +96,7 @@
                             @endif
                         </div>
 
-                        <span class="text-xs text-muted">Pending</span>
+                        <span class="ui-badge ui-badge-warning">Pending</span>
                     </li>
                 @endforeach
             </ul>

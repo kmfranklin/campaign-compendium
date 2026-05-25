@@ -21,8 +21,7 @@
                                 </a>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full
-                                             {{ $quest->status->badgeClasses() }}">
+                                <span class="{{ $quest->status->badgeClasses() }}">
                                     {{ $quest->status->label() }}
                                 </span>
                             </td>

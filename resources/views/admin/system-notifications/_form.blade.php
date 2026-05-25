@@ -89,19 +89,16 @@
                     @foreach ($templates as $template)
                         @php
                             $pillColor = match ($template['type']) {
-                                'info'    => 'border-blue-200  dark:border-blue-800  text-blue-700  dark:text-blue-300  hover:bg-blue-50  dark:hover:bg-blue-950/40',
-                                'warning' => 'border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40',
-                                'success' => 'border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-950/40',
-                                'danger'  => 'border-red-200   dark:border-red-800   text-red-700   dark:text-red-300   hover:bg-red-50   dark:hover:bg-red-950/40',
-                                default   => 'border-border text-muted hover:bg-bg',
+                                'info'    => 'ui-filter-pill-info',
+                                'warning' => 'ui-filter-pill-warning',
+                                'success' => 'ui-filter-pill-success',
+                                'danger'  => 'ui-filter-pill-danger',
+                                default   => 'ui-filter-pill-inactive',
                             };
                         @endphp
                         <button type="button"
                                 @click="applyTemplate({{ json_encode($template) }})"
-                                class="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5
-                                       text-sm font-medium transition-colors duration-150
-                                       focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
-                                       {{ $pillColor }}">
+                                class="ui-filter-pill transition-colors duration-150 {{ $pillColor }}">
                             {{ $template['label'] }}
                         </button>
                     @endforeach
@@ -201,11 +198,9 @@
                         @click="selectedType = 'info'"
                         :aria-pressed="(selectedType === 'info').toString()"
                         :class="selectedType === 'info'
-                            ? 'border-blue-400 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     <span class="w-2.5 h-2.5 rounded-full bg-blue-400 flex-shrink-0" aria-hidden="true"></span>
                     Info
                 </button>
@@ -215,11 +210,9 @@
                         @click="selectedType = 'warning'"
                         :aria-pressed="(selectedType === 'warning').toString()"
                         :class="selectedType === 'warning'
-                            ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     <span class="w-2.5 h-2.5 rounded-full bg-amber-400 flex-shrink-0" aria-hidden="true"></span>
                     Warning
                 </button>
@@ -229,11 +222,9 @@
                         @click="selectedType = 'success'"
                         :aria-pressed="(selectedType === 'success').toString()"
                         :class="selectedType === 'success'
-                            ? 'border-green-400 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     <span class="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0" aria-hidden="true"></span>
                     Success
                 </button>
@@ -243,11 +234,9 @@
                         @click="selectedType = 'danger'"
                         :aria-pressed="(selectedType === 'danger').toString()"
                         :class="selectedType === 'danger'
-                            ? 'border-red-400 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     <span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0" aria-hidden="true"></span>
                     Danger
                 </button>
@@ -290,11 +279,9 @@
                         @click="selectedDelivery = 'inbox'"
                         :aria-pressed="(selectedDelivery === 'inbox').toString()"
                         :class="selectedDelivery === 'inbox'
-                            ? 'border-accent bg-accent text-on-accent'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     {{-- Bell icon --}}
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -308,11 +295,9 @@
                         @click="selectedDelivery = 'banner'"
                         :aria-pressed="(selectedDelivery === 'banner').toString()"
                         :class="selectedDelivery === 'banner'
-                            ? 'border-accent bg-accent text-on-accent'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     {{-- Megaphone icon --}}
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -326,11 +311,9 @@
                         @click="selectedDelivery = 'both'"
                         :aria-pressed="(selectedDelivery === 'both').toString()"
                         :class="selectedDelivery === 'both'
-                            ? 'border-accent bg-accent text-on-accent'
-                            : 'border-border bg-surface text-muted hover:border-accent hover:text-text'"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md border-2 text-sm font-medium
-                               transition-colors duration-150 focus:outline-none focus:ring-2
-                               focus:ring-accent focus:ring-offset-1">
+                            ? 'ui-choice-chip-active'
+                            : 'ui-choice-chip-inactive'"
+                        class="ui-choice-chip">
                     {{-- Bell + megaphone combined indicator --}}
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

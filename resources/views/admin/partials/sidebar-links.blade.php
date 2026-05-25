@@ -24,15 +24,10 @@
                  transition-colors duration-150 border-l-2 pl-[14px]';
 
     /**
-     * Active: purple left border + faint purple background.
-     * Light: accent (#6d28d9) is dark enough on white (7.4:1 ✓).
-     * Dark: purple-300 (#c4b5fd) on #1f2937 = 8.2:1 ✓ (WCAG AAA).
-     *       bg-purple-950/60 is a very dark translucent purple that gives
-     *       a visible but subtle tinted background without being distracting.
+     * Active links reuse the shared accent treatment so the admin rail stays
+     * aligned with the rest of the app's token system.
      */
-    $linkActive = 'border-accent dark:border-purple-400
-                   bg-accent/10 dark:bg-purple-950/60
-                   text-accent dark:text-purple-300';
+    $linkActive = 'border-accent bg-accent/10 text-accent';
 
     /**
      * Inactive: transparent border keeps spacing, muted text with hover states.
@@ -138,10 +133,7 @@
                       x-transition:leave-end="opacity-0"
                       class="whitespace-nowrap flex items-center gap-2">
                     System Notifications
-                    <span class="text-xs font-medium px-1.5 py-0.5 rounded
-                                 bg-gray-200 dark:bg-gray-700
-                                 text-gray-500 dark:text-gray-400"
-                          aria-label="(coming soon)">
+                    <span class="ui-badge ui-badge-muted" aria-label="(coming soon)">
                         Soon
                     </span>
                 </span>
@@ -189,10 +181,7 @@
                       x-transition:leave-end="opacity-0"
                       class="whitespace-nowrap flex items-center gap-2">
                     Activity Log
-                    <span class="text-xs font-medium px-1.5 py-0.5 rounded
-                                 bg-gray-200 dark:bg-gray-700
-                                 text-gray-500 dark:text-gray-400"
-                          aria-label="(coming soon)">
+                    <span class="ui-badge ui-badge-muted" aria-label="(coming soon)">
                         Soon
                     </span>
                 </span>

@@ -92,7 +92,7 @@
                     Select campaign NPCs or unassigned NPCs. Unassigned NPCs will be added to this campaign when you save.
                 </p>
             </div>
-            <span class="text-xs font-medium text-muted bg-surface px-2 py-1 rounded shrink-0">
+            <span class="ui-badge ui-badge-muted shrink-0">
                 <span x-text="selectedNpcIds.length"></span> selected
             </span>
         </div>
@@ -108,7 +108,7 @@
                 type="search"
                 x-model="npcSearch"
                 placeholder="Search characters by name, class, or status…"
-                class="w-full rounded-md border border-border bg-surface text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                class="ui-field"
             >
         </div>
 
@@ -128,7 +128,7 @@
                     <button
                         type="button"
                         @click="toggleSelection('selectedNpcIds', option.id)"
-                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium hover:bg-accent/15 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-chip-accent text-sm hover:bg-accent/15 focus:outline-none focus:ring-2 focus:ring-accent"
                     >
                         <span x-text="option.name"></span>
                         <span aria-hidden="true">&times;</span>
@@ -226,7 +226,7 @@
                     Link campaign quests that moved forward, were discussed, or mattered during this session.
                 </p>
             </div>
-            <span class="text-xs font-medium text-muted bg-surface px-2 py-1 rounded shrink-0">
+            <span class="ui-badge ui-badge-muted shrink-0">
                 <span x-text="selectedQuestIds.length"></span> selected
             </span>
         </div>
@@ -242,7 +242,7 @@
                 type="search"
                 x-model="questSearch"
                 placeholder="Search quests by title or status…"
-                class="w-full rounded-md border border-border bg-surface text-text text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+                class="ui-field"
             >
         </div>
 
@@ -262,7 +262,7 @@
                     <button
                         type="button"
                         @click="toggleSelection('selectedQuestIds', option.id)"
-                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium hover:bg-accent/15 focus:outline-none focus:ring-2 focus:ring-accent"
+                        class="ui-chip-accent text-sm hover:bg-accent/15 focus:outline-none focus:ring-2 focus:ring-accent"
                     >
                         <span x-text="option.title"></span>
                         <span aria-hidden="true">&times;</span>

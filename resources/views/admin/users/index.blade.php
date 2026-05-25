@@ -68,11 +68,7 @@
                 <button type="submit"
                         name="filter"
                         value="{{ $value }}"
-                        class="rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-150
-                               focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
-                               {{ $filter === $value
-                                    ? 'bg-accent text-on-accent border-accent'
-                                    : 'bg-surface text-muted border-border hover:text-text hover:border-accent' }}"
+                        class="ui-filter-pill {{ $filter === $value ? 'ui-filter-pill-active' : 'ui-filter-pill-inactive' }}"
                         aria-pressed="{{ $filter === $value ? 'true' : 'false' }}">
                     {{ $label }}
                 </button>
@@ -80,8 +76,7 @@
 
             @if ($search !== '' || $filter !== 'all')
                 <a href="{{ route('admin.users.index') }}"
-                   class="rounded-full px-3 py-1 text-xs font-medium text-muted
-                          hover:text-text transition-colors duration-150"
+                   class="link-action-subtle"
                    aria-label="Clear all filters">
                     Clear
                 </a>
@@ -144,24 +139,15 @@
                         --}}
                         <td class="px-3 py-3">
                             @if ($user->isSuspended())
-                                <span class="inline-flex items-center rounded-full
-                                             bg-red-100 dark:bg-red-900/40
-                                             px-2.5 py-0.5 text-xs font-medium
-                                             text-red-700 dark:text-red-300">
+                                <span class="ui-badge ui-badge-danger">
                                     Suspended
                                 </span>
                             @elseif ($user->isSuperAdmin())
-                                <span class="inline-flex items-center rounded-full
-                                             bg-indigo-100 dark:bg-indigo-900
-                                             px-2.5 py-0.5 text-xs font-medium
-                                             text-indigo-800 dark:text-indigo-300">
+                                <span class="ui-badge ui-badge-accent">
                                     Super Admin
                                 </span>
                             @else
-                                <span class="inline-flex items-center rounded-full
-                                             bg-gray-100 dark:bg-gray-700
-                                             px-2.5 py-0.5 text-xs font-medium
-                                             text-gray-700 dark:text-gray-300">
+                                <span class="ui-badge ui-badge-muted">
                                     User
                                 </span>
                             @endif

@@ -36,22 +36,14 @@
             <legend class="sr-only">Filter by event type</legend>
 
             <button type="submit" name="filter" value="all"
-                    class="rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-150
-                           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
-                           {{ $filter === 'all'
-                                ? 'bg-accent text-on-accent border-accent'
-                                : 'bg-surface text-muted border-border hover:text-text hover:border-accent' }}"
+                    class="ui-filter-pill {{ $filter === 'all' ? 'ui-filter-pill-active' : 'ui-filter-pill-inactive' }}"
                     aria-pressed="{{ $filter === 'all' ? 'true' : 'false' }}">
                 All Events
             </button>
 
             @foreach ($eventTypes as $value => $label)
                 <button type="submit" name="filter" value="{{ $value }}"
-                        class="rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-150
-                               focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1
-                               {{ $filter === $value
-                                    ? 'bg-accent text-on-accent border-accent'
-                                    : 'bg-surface text-muted border-border hover:text-text hover:border-accent' }}"
+                        class="ui-filter-pill {{ $filter === $value ? 'ui-filter-pill-active' : 'ui-filter-pill-inactive' }}"
                         aria-pressed="{{ $filter === $value ? 'true' : 'false' }}">
                     {{ $label }}
                 </button>
@@ -204,21 +196,20 @@
                             @php
                                 $badgeClasses = match ($log->event) {
                                     \App\Models\ActivityLog::EVENT_USER_UPDATED          =>
-                                        'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
+                                        'ui-badge ui-badge-info',
                                     \App\Models\ActivityLog::EVENT_USER_SUSPENDED        =>
-                                        'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
+                                        'ui-badge ui-badge-danger',
                                     \App\Models\ActivityLog::EVENT_USER_UNSUSPENDED      =>
-                                        'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
+                                        'ui-badge ui-badge-success',
                                     \App\Models\ActivityLog::EVENT_IMPERSONATION_STARTED =>
-                                        'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+                                        'ui-badge ui-badge-warning',
                                     \App\Models\ActivityLog::EVENT_IMPERSONATION_ENDED   =>
-                                        'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
+                                        'ui-badge ui-badge-muted',
                                     default =>
-                                        'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
+                                        'ui-badge ui-badge-muted',
                                 };
                             @endphp
-                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5
-                                         text-xs font-medium whitespace-nowrap {{ $badgeClasses }}">
+                            <span class="{{ $badgeClasses }}">
                                 {{ $eventTypes[$log->event] ?? $log->event }}
                             </span>
                         </td>

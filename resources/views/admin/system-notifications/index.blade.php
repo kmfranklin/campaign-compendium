@@ -12,10 +12,7 @@
             </p>
         </div>
         <a href="{{ route('admin.notifications.create') }}"
-           class="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-medium
-                  text-on-accent shadow-sm hover:bg-accent-hover focus:outline-none focus:ring-2
-                  focus:ring-accent focus:ring-offset-2 transition-colors duration-150
-                  whitespace-nowrap shrink-0">
+           class="btn btn-primary btn-sm whitespace-nowrap shrink-0">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -70,15 +67,14 @@
                         <td class="px-3 py-3">
                             @php
                                 $typeBadge = match ($notification->type) {
-                                    'info'    => 'bg-blue-100   dark:bg-blue-900/40   text-blue-700   dark:text-blue-300',
-                                    'warning' => 'bg-amber-100  dark:bg-amber-900/40  text-amber-700  dark:text-amber-300',
-                                    'success' => 'bg-green-100  dark:bg-green-900/40  text-green-700  dark:text-green-300',
-                                    'danger'  => 'bg-red-100    dark:bg-red-900/40    text-red-700    dark:text-red-300',
-                                    default   => 'bg-gray-100   dark:bg-gray-700      text-gray-600   dark:text-gray-300',
+                                    'info'    => 'ui-badge ui-badge-info',
+                                    'warning' => 'ui-badge ui-badge-warning',
+                                    'success' => 'ui-badge ui-badge-success',
+                                    'danger'  => 'ui-badge ui-badge-danger',
+                                    default   => 'ui-badge ui-badge-muted',
                                 };
                             @endphp
-                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5
-                                         text-xs font-medium whitespace-nowrap capitalize {{ $typeBadge }}">
+                            <span class="capitalize {{ $typeBadge }}">
                                 {{ $notification->type }}
                             </span>
                         </td>
@@ -86,21 +82,15 @@
                         {{-- Active / Inactive / Expired status --}}
                         <td class="px-3 py-3">
                             @if ($notification->isExpired())
-                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5
-                                             text-xs font-medium whitespace-nowrap
-                                             bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                                <span class="ui-badge ui-badge-muted">
                                     Expired
                                 </span>
                             @elseif ($notification->is_active)
-                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5
-                                             text-xs font-medium whitespace-nowrap
-                                             bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300">
+                                <span class="ui-badge ui-badge-success">
                                     Active
                                 </span>
                             @else
-                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5
-                                             text-xs font-medium whitespace-nowrap
-                                             bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                                <span class="ui-badge ui-badge-muted">
                                     Inactive
                                 </span>
                             @endif

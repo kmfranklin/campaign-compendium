@@ -68,10 +68,7 @@
                 </div>
             @else
                 {{-- Status pill --}}
-                <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full
-                    {{ $status === 'accepted'
-                        ? 'bg-green-500/10 text-green-400'
-                        : 'bg-red-500/10 text-red-400' }}">
+                <span class="{{ $status === 'accepted' ? 'ui-badge ui-badge-success' : 'ui-badge ui-badge-danger' }}">
                     {{ ucfirst($status) }}
                 </span>
             @endif
@@ -126,10 +123,7 @@
 
             @else
                 {{-- Status pill --}}
-                <span class="px-3 py-1 text-xs font-semibold rounded-full
-                    {{ $status === 'accepted'
-                        ? 'bg-green-500/10 text-green-400'
-                        : 'bg-red-500/10 text-red-400' }}">
+                <span class="{{ $status === 'accepted' ? 'ui-badge ui-badge-success' : 'ui-badge ui-badge-danger' }}">
                     {{ ucfirst($status) }}
                 </span>
             @endif

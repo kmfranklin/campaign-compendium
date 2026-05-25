@@ -18,17 +18,17 @@
          class="bg-surface border border-border shadow-md rounded-lg overflow-hidden">
 
         {{-- Tab headers --}}
-        <nav class="flex border-b border-border text-sm font-medium text-muted" aria-label="Quest sections">
+        <nav class="ui-tab-nav" aria-label="Quest sections">
             <button @click="tab = 'overview'"
-                    :class="{ 'border-accent text-accent': tab === 'overview' }"
-                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none"
+                    :class="tab === 'overview' ? 'ui-tab-btn-active' : ''"
+                    class="ui-tab-btn"
                     :aria-selected="tab === 'overview'" role="tab">
                 Overview
             </button>
 
             <button @click="tab = 'npcs'"
-                    :class="{ 'border-accent text-accent': tab === 'npcs' }"
-                    class="px-4 py-2 border-b-2 border-transparent hover:text-text focus:outline-none"
+                    :class="tab === 'npcs' ? 'ui-tab-btn-active' : ''"
+                    class="ui-tab-btn"
                     :aria-selected="tab === 'npcs'" role="tab">
                 NPCs
             </button>
@@ -49,15 +49,14 @@
 
                                 {{-- Status badge --}}
                                 <div class="mt-2">
-                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full
-                                                 {{ $quest->status->badgeClasses() }}">
+                                    <span class="{{ $quest->status->badgeClasses() }}">
                                         {{ $quest->status->label() }}
                                     </span>
                                 </div>
 
                                 {{-- Type tag --}}
                                 <div class="mt-3 flex flex-wrap gap-2">
-                                    <span class="bg-accent/10 text-accent text-xs font-medium px-2 py-1 rounded">
+                                    <span class="ui-chip-accent">
                                         Quest
                                     </span>
                                 </div>

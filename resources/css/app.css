@@ -314,6 +314,153 @@
         @apply ui-panel p-4 sm:p-5;
     }
 
+    .ui-tab-nav {
+        @apply flex border-b border-border bg-bg;
+    }
+
+    .ui-tab-btn {
+        @apply px-4 py-3 border-b-2 border-transparent text-sm font-medium text-muted transition-colors duration-150 hover:text-text focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset;
+    }
+
+    .ui-tab-btn-active {
+        @apply border-accent text-accent;
+    }
+
+    .ui-badge {
+        @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap;
+    }
+
+    .ui-badge-muted {
+        color: var(--color-text-muted);
+        background-color: color-mix(in srgb, var(--color-surface-2) 85%, transparent);
+    }
+
+    .ui-badge-accent {
+        color: var(--color-accent);
+        background-color: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    }
+
+    .ui-badge-info {
+        color: var(--color-teal);
+        background-color: color-mix(in srgb, var(--color-teal) 14%, transparent);
+    }
+
+    .ui-badge-success {
+        color: #4ade80;
+        background-color: rgba(74, 222, 128, 0.14);
+    }
+
+    .ui-badge-warning {
+        color: var(--color-warning);
+        background-color: var(--color-warning-soft);
+    }
+
+    .ui-badge-danger {
+        color: var(--color-danger);
+        background-color: var(--color-danger-soft);
+    }
+
+    .ui-chip {
+        @apply inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-xs font-medium whitespace-nowrap;
+    }
+
+    .ui-chip-muted {
+        @apply ui-chip border-border text-muted;
+        background-color: color-mix(in srgb, var(--color-surface) 92%, transparent);
+    }
+
+    .ui-chip-accent {
+        @apply ui-chip border-transparent;
+        color: var(--color-accent);
+        background-color: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    }
+
+    .ui-chip-info {
+        @apply ui-chip border-transparent;
+        color: var(--color-teal);
+        background-color: color-mix(in srgb, var(--color-teal) 14%, transparent);
+    }
+
+    .ui-chip-success {
+        @apply ui-chip border-transparent;
+        color: #4ade80;
+        background-color: rgba(74, 222, 128, 0.14);
+    }
+
+    .ui-chip-warning {
+        @apply ui-chip border-transparent;
+        color: var(--color-warning);
+        background-color: var(--color-warning-soft);
+    }
+
+    .ui-chip-danger {
+        @apply ui-chip border-transparent;
+        color: var(--color-danger);
+        background-color: var(--color-danger-soft);
+    }
+
+    .ui-filter-pill {
+        @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1;
+    }
+
+    .ui-filter-pill-active {
+        @apply border-accent text-on-accent;
+        background-color: var(--color-accent);
+    }
+
+    .ui-filter-pill-inactive {
+        @apply border-border text-muted hover:text-text;
+        background-color: color-mix(in srgb, var(--color-surface) 92%, transparent);
+    }
+
+    .ui-filter-pill-inactive:hover,
+    .ui-filter-pill-inactive:focus-visible {
+        border-color: color-mix(in srgb, var(--color-accent) 46%, var(--color-border));
+    }
+
+    .ui-filter-pill-info {
+        @apply border-transparent;
+        color: var(--color-teal);
+        background-color: color-mix(in srgb, var(--color-teal) 14%, transparent);
+    }
+
+    .ui-filter-pill-warning {
+        @apply border-transparent;
+        color: var(--color-warning);
+        background-color: var(--color-warning-soft);
+    }
+
+    .ui-filter-pill-success {
+        @apply border-transparent;
+        color: #4ade80;
+        background-color: rgba(74, 222, 128, 0.14);
+    }
+
+    .ui-filter-pill-danger {
+        @apply border-transparent;
+        color: var(--color-danger);
+        background-color: var(--color-danger-soft);
+    }
+
+    .ui-choice-chip {
+        @apply inline-flex items-center gap-2 rounded-xl border-2 px-4 py-2 text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1;
+    }
+
+    .ui-choice-chip-active {
+        @apply border-accent text-on-accent;
+        background-color: var(--color-accent);
+    }
+
+    .ui-choice-chip-inactive {
+        @apply border-border text-muted hover:text-text;
+        background-color: color-mix(in srgb, var(--color-surface) 92%, transparent);
+    }
+
+    .ui-choice-chip-inactive:hover,
+    .ui-choice-chip-inactive:focus-visible {
+        border-color: color-mix(in srgb, var(--color-accent) 46%, var(--color-border));
+    }
+
     .custom-select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a59bb8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
         background-position: right 0.5rem center;
