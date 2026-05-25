@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\Storage;
 class SessionLogController extends Controller
 {
     /**
+     * Abort unless the current user belongs to this campaign.
+     */
+    private function ensureCampaignMember(Campaign $campaign): void
+    {
+        $userId = auth()->id();
+
+        $isMember = $campaign->dm_id === $userId
+            || $campaign->members()->where('user_id', $userId)->exists();
+
+        abort_unless($isMember, 403);
+    }
+
+    /**
      * Show the form for creating a new session log.
      */
     public function create(Campaign $campaign)
@@ -57,6 +70,8 @@ class SessionLogController extends Controller
      */
     public function show(Campaign $campaign, SessionLog $sessionLog)
     {
+        $this->ensureCampaignMember($campaign);
+
         $sessionLog->load(['media', 'npcs', 'quests']);
 
         $attachedNpcIds   = $sessionLog->npcs->pluck('id');
