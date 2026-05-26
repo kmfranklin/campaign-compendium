@@ -10,11 +10,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}" aria-label="Campaign Compendium home">
-                        <img
-                            src="/images/campaign-compendium-nav-logo.png"
-                            alt="Campaign Compendium logo"
-                            class="block h-20 w-auto"
-                        />
+                        <x-brand-lockup compact class="transition-opacity duration-150 hover:opacity-90" />
                     </a>
                 </div>
 

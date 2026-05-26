@@ -24,11 +24,7 @@
         <div class="w-full max-w-md">
             <div class="flex justify-center">
                 <a href="/" class="inline-flex items-center justify-center">
-                    <img
-                        src="/images/campaign-compendium-nav-logo.png"
-                        alt="Campaign Compendium logo"
-                        class="h-20 w-auto"
-                    />
+                    <x-brand-lockup class="transition-opacity duration-150 hover:opacity-90" />
                 </a>
             </div>
 
