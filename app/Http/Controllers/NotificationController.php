@@ -7,8 +7,14 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {
+        $user = $request->user();
         $filter = $request->query('filter', 'unread');
 
         // System notifications display their full content in the list row —
@@ -16,12 +22,12 @@ class NotificationController extends Controller
         // reading them, so we mark them as read immediately on page load.
         // Campaign invite notifications are left alone; they stay unread
         // until the user accepts or declines (the action is the acknowledgement).
-        auth()->user()->notifications()
+        $user->notifications()
             ->where('type', Notification::TYPE_SYSTEM)
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
-        $query = auth()->user()->notifications()->latest();
+        $query = $user->notifications()->latest();
 
         if ($filter === 'unread') {
             $query->whereNull('read_at');
@@ -39,7 +45,7 @@ class NotificationController extends Controller
 
     public function markAllRead()
     {
-        auth()->user()->notifications()
+        request()->user()->notifications()
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 

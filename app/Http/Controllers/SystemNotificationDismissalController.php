@@ -21,9 +21,14 @@ use Illuminate\Http\Request;
  */
 class SystemNotificationDismissalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function store(Request $request, SystemNotification $notification): JsonResponse|RedirectResponse
     {
-        $userId = auth()->id();
+        $userId = $request->user()->id;
 
         // Record the banner dismissal. firstOrCreate() prevents a 500 if the
         // user double-clicks before the first request completes — the unique
