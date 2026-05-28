@@ -11,7 +11,35 @@
         </a>
     </div>
 
-    {{-- Results Table + Mobile Cards --}}
-    @include('campaigns.partials.results', ['campaigns' => $campaigns])
+    @if ($campaigns->isEmpty())
+        @php
+            $unreadInviteCount = auth()->user()->notifications()
+                ->where('type', \App\Models\Notification::TYPE_INVITE)
+                ->whereNull('read_at')
+                ->count();
+            $emptyStateMessage = $unreadInviteCount > 0
+                ? "Create your own campaign or review your pending invites to join someone else's table."
+                : 'Create your first campaign to start organizing quests, NPCs, and session notes.';
+        @endphp
+
+        <x-empty-state
+            icon="🧭"
+            title="No campaigns yet"
+            :message="$emptyStateMessage"
+            :action="route('campaigns.create')"
+            actionLabel="Create Campaign"
+        />
+
+        @if ($unreadInviteCount > 0)
+            <div class="mt-4 text-center">
+                <a href="{{ route('notifications.index') }}" class="link-action">
+                    Review {{ $unreadInviteCount }} pending {{ \Illuminate\Support\Str::plural('invite', $unreadInviteCount) }}
+                </a>
+            </div>
+        @endif
+    @else
+        {{-- Results Table + Mobile Cards --}}
+        @include('campaigns.partials.results', ['campaigns' => $campaigns])
+    @endif
 </div>
 @endsection
