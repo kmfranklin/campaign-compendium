@@ -38,7 +38,7 @@ class CampaignInviteFlowTest extends TestCase
         $this->assertSame($player->id, $invite->invitee_id);
         $this->assertNotNull($invite->expires_at);
 
-        Mail::assertSent(CampaignInviteMail::class, function (CampaignInviteMail $mail) use ($invite) {
+        Mail::assertQueued(CampaignInviteMail::class, function (CampaignInviteMail $mail) use ($invite) {
             return $mail->invite->is($invite);
         });
 

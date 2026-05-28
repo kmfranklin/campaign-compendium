@@ -37,7 +37,8 @@ This is also a learning project, built to explore Laravel while creating somethi
 ### ✅ Campaigns
 
 - Create, edit, and delete campaigns
-- Invite members via a notification-based invite flow; accept or decline invites
+- Invite members by email with token-based campaign invite links
+- Existing users can accept from their inbox; new users can register from the invite and join automatically
 - Campaign roles (DM, Player) on the membership pivot
 - Campaign detail view with tabbed sections for overview, sessions, quests, and NPCs
 
@@ -189,6 +190,57 @@ composer run dev
 ```
 
 The app will be available at `http://localhost:8000`.
+
+### Local Email Development
+
+By default, the app uses Laravel's `log` mailer in development, so outgoing mail is written to your logs instead of being delivered.
+
+If you want to test the real invite flow locally, Mailpit is the easiest setup:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_FROM_ADDRESS=noreply@campaigncompendium.test
+MAIL_FROM_NAME="Campaign Compendium"
+```
+
+With Mailpit running, invite emails will appear in the Mailpit inbox UI. Invite delivery is queued, so make sure a queue worker is running locally. `composer run dev` already starts one for you.
+
+### Production Email on Forge
+
+For production or staging, use a real transactional mail provider such as Postmark, Mailgun, SES, or SMTP from a trusted provider.
+
+Recommended deployment checklist:
+
+1. Set the mail environment variables in Forge.
+2. Configure a queue worker on the server so queued mail is processed.
+3. Use a real sender domain such as `noreply@campaigncompendium.com`.
+4. Add the provider's DNS records for SPF and DKIM, and ideally DMARC as well.
+
+Example Postmark configuration:
+
+```env
+MAIL_MAILER=postmark
+POSTMARK_TOKEN=your-postmark-server-token
+MAIL_FROM_ADDRESS=noreply@campaigncompendium.com
+MAIL_FROM_NAME="Campaign Compendium"
+```
+
+Example SMTP configuration:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.your-provider.com
+MAIL_PORT=587
+MAIL_USERNAME=your-username
+MAIL_PASSWORD=your-password
+MAIL_SCHEME=tls
+MAIL_FROM_ADDRESS=noreply@campaigncompendium.com
+MAIL_FROM_NAME="Campaign Compendium"
+```
 
 ---
 

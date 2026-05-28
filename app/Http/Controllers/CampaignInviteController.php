@@ -75,7 +75,7 @@ class CampaignInviteController extends Controller
             ]);
         }
 
-        Mail::to($email)->send(new CampaignInviteMail($invite->load(['campaign', 'inviter'])));
+        Mail::to($email)->queue(new CampaignInviteMail($invite->load(['campaign', 'inviter'])));
 
         return back()->with('success', 'Invitation sent by email.');
     }
