@@ -12,10 +12,30 @@ use Illuminate\Validation\Rules\Enum;
 class QuestController extends Controller
 {
     /**
+     * Abort unless the quest actually belongs to this campaign.
+     */
+    private function ensureQuestBelongsToCampaign(Campaign $campaign, Quest $quest): void
+    {
+        abort_unless($quest->campaign_id === $campaign->id, 404);
+    }
+
+    /**
+     * Enforce the "same campaign or unassigned" NPC selection rule.
+     */
+    private function ensureNpcSelectableForCampaign(Campaign $campaign, Npc $npc): void
+    {
+        if ($npc->campaign_id !== null && $npc->campaign_id !== $campaign->id) {
+            abort(403, 'That NPC belongs to a different campaign.');
+        }
+    }
+
+    /**
      * Display a listing of the quests for a campaign.
      */
     public function index(Campaign $campaign)
     {
+        $this->authorize('view', $campaign);
+
         $quests = $campaign->quests()->latest()->get();
 
         return view('quests.index', compact('campaign', 'quests'));
@@ -26,6 +46,8 @@ class QuestController extends Controller
      */
     public function create(Campaign $campaign)
     {
+        $this->authorize('update', $campaign);
+
         $statuses = QuestStatus::cases();
 
         return view('quests.create', compact('campaign', 'statuses'));
@@ -36,6 +58,8 @@ class QuestController extends Controller
      */
     public function store(Request $request, Campaign $campaign)
     {
+        $this->authorize('update', $campaign);
+
         $validated = $request->validate([
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -55,8 +79,15 @@ class QuestController extends Controller
      */
     public function show(Campaign $campaign, Quest $quest)
     {
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
+        $this->authorize('view', $campaign);
+
         $attachedIds = $quest->npcs()->pluck('npcs.id');
         $availableNpcs = Npc::where('user_id', auth()->id())
+            ->where(function ($query) use ($campaign) {
+                $query->where('campaign_id', $campaign->id)
+                    ->orWhereNull('campaign_id');
+            })
             ->whereNotIn('id', $attachedIds)
             ->orderBy('name')
             ->get();
@@ -69,6 +100,9 @@ class QuestController extends Controller
      */
     public function edit(Campaign $campaign, Quest $quest)
     {
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
+        $this->authorize('update', $campaign);
+
         $statuses = QuestStatus::cases();
 
         return view('quests.edit', compact('campaign', 'quest', 'statuses'));
@@ -79,6 +113,9 @@ class QuestController extends Controller
      */
     public function update(Request $request, Campaign $campaign, Quest $quest)
     {
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
+        $this->authorize('update', $campaign);
+
         $validated = $request->validate([
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -98,6 +135,9 @@ class QuestController extends Controller
      */
     public function destroy(Campaign $campaign, Quest $quest)
     {
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
+        $this->authorize('delete', $campaign);
+
         $quest->delete();
 
         return redirect()
@@ -110,6 +150,7 @@ class QuestController extends Controller
      */
     public function attachNpc(Request $request, Campaign $campaign, Quest $quest)
     {
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
         $this->authorize('update', $campaign);
 
         $validated = $request->validate([
@@ -117,8 +158,17 @@ class QuestController extends Controller
             'role'   => ['nullable', 'string', 'max:50'],
         ]);
 
+        $npc = Npc::where('user_id', auth()->id())->findOrFail($validated['npc_id']);
+
+        $this->ensureNpcSelectableForCampaign($campaign, $npc);
+
+        if ($npc->campaign_id === null) {
+            $npc->campaign()->associate($campaign);
+            $npc->save();
+        }
+
         $quest->npcs()->syncWithoutDetaching([
-            $validated['npc_id'] => ['role' => $validated['role'] ?? null],
+            $npc->id => ['role' => $validated['role'] ?? null],
         ]);
 
         return redirect()
@@ -131,6 +181,7 @@ class QuestController extends Controller
      */
     public function detachNpc(Campaign $campaign, Quest $quest, Npc $npc)
     {
+        $this->ensureQuestBelongsToCampaign($campaign, $quest);
         $this->authorize('update', $campaign);
 
         $quest->npcs()->detach($npc->id);
