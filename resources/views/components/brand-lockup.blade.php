@@ -8,8 +8,8 @@
         : 'inline-flex items-center';
 
     $campaignClasses = $compact
-        ? 'text-[1rem] leading-none tracking-[0.01em]'
-        : 'text-[1.02rem] leading-none tracking-[0.08em]';
+        ? 'text-[1.1rem] leading-none tracking-[0.01em]'
+        : 'text-[1.32rem] leading-none tracking-[0.08em]';
 
     $compendiumClasses = $compact
         ? 'text-[1.1rem] leading-none tracking-[0.005em]'

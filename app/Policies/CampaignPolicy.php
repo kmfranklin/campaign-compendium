@@ -15,7 +15,7 @@ class CampaignPolicy
 
     public function view(User $user, Campaign $campaign): bool
     {
-        return true;
+        return $this->isMember($user, $campaign);
     }
 
     public function create(User $user): bool
@@ -62,5 +62,12 @@ class CampaignPolicy
     public function removeMember(User $user, Campaign $campaign): bool
     {
         return $this->manage($user, $campaign);
+    }
+
+    private function isMember(User $user, Campaign $campaign): bool
+    {
+        return $campaign->members()
+            ->where('user_id', $user->id)
+            ->exists();
     }
 }

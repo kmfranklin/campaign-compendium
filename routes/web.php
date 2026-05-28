@@ -56,11 +56,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/custom-items/{item}', [ItemController::class, 'show'])->name('items.custom.show');
 });
 
-// Campaigns, Quests, and Session Logs
-Route::resource('campaigns', CampaignController::class);
-Route::resource('campaigns.quests', QuestController::class);
-
 Route::middleware('auth')->group(function () {
+    // Campaigns and nested campaign content are private to authenticated users.
+    Route::resource('campaigns', CampaignController::class);
+    Route::resource('campaigns.quests', QuestController::class);
+
     // Session logs nested under campaigns.
     // We use ->parameters() to map the {sessionLog} wildcard to SessionLog,
     // avoiding a collision with Laravel's own Session facade.
@@ -119,41 +119,41 @@ Route::get('/spells/{spell}', [SpellController::class, 'show'])->name('spells.sh
 Route::get('/monsters', [CreatureController::class, 'index'])->name('creatures.index');
 Route::get('/monsters/{creature}', [CreatureController::class, 'show'])->name('creatures.show');
 
-// NPC–Quest relationships
-Route::post('campaigns/{campaign}/quests/{quest}/npcs', [QuestController::class, 'attachNpc'])
-    ->name('campaigns.quests.npcs.attach');
-Route::delete('campaigns/{campaign}/quests/{quest}/npcs/{npc}', [QuestController::class, 'detachNpc'])
-    ->name('campaigns.quests.npcs.detach');
+Route::middleware('auth')->group(function () {
+    // NPC–Quest relationships
+    Route::post('campaigns/{campaign}/quests/{quest}/npcs', [QuestController::class, 'attachNpc'])
+        ->name('campaigns.quests.npcs.attach');
+    Route::delete('campaigns/{campaign}/quests/{quest}/npcs/{npc}', [QuestController::class, 'detachNpc'])
+        ->name('campaigns.quests.npcs.detach');
 
-// Campaign member management
-Route::post('campaigns/{campaign}/members', [CampaignController::class, 'addMember'])
-    ->name('campaigns.members.add');
-Route::delete('campaigns/{campaign}/members', [CampaignController::class, 'removeMember'])
-    ->name('campaigns.members.remove');
+    // Campaign member management
+    Route::post('campaigns/{campaign}/members', [CampaignController::class, 'addMember'])
+        ->name('campaigns.members.add');
+    Route::delete('campaigns/{campaign}/members', [CampaignController::class, 'removeMember'])
+        ->name('campaigns.members.remove');
 
-// Notifications system (campaign invites / user notifications)
-Route::get('/notifications', [NotificationController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('notifications.index');
+    // Notifications system (campaign invites / user notifications)
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
 
-Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
-    ->name('notifications.markAllRead');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
+        ->name('notifications.markAllRead');
 
-// System notification dismissal — any authenticated user can dismiss a banner.
-// Supports both AJAX (fetch from Alpine) and plain form POST fallback.
-Route::post('/system-notifications/{notification}/dismiss', [SystemNotificationDismissalController::class, 'store'])
-    ->middleware(['auth'])
-    ->name('system-notifications.dismiss');
+    // System notification dismissal — any authenticated user can dismiss a banner.
+    // Supports both AJAX (fetch from Alpine) and plain form POST fallback.
+    Route::post('/system-notifications/{notification}/dismiss', [SystemNotificationDismissalController::class, 'store'])
+        ->name('system-notifications.dismiss');
 
-// Campaign invites
-Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
-    ->name('campaigns.invites.store');
+    // Campaign invites
+    Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
+        ->name('campaigns.invites.store');
 
-Route::post('invites/{invite}/accept', [CampaignInviteController::class, 'accept'])
-    ->name('invites.accept');
+    Route::post('invites/{invite}/accept', [CampaignInviteController::class, 'accept'])
+        ->name('invites.accept');
 
-Route::post('invites/{invite}/decline', [CampaignInviteController::class, 'decline'])
-    ->name('invites.decline');
+    Route::post('invites/{invite}/decline', [CampaignInviteController::class, 'decline'])
+        ->name('invites.decline');
+});
 
 // Super Admin routes
 Route::middleware(['auth', 'admin'])
