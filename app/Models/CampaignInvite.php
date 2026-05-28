@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class CampaignInvite extends Model
 {
+    public const DEFAULT_EXPIRY_DAYS = 14;
+
     protected $fillable = [
         'campaign_id',
         'inviter_id',
@@ -58,5 +61,68 @@ class CampaignInvite extends Model
     public function scopePending($query)
     {
         return $query->where('status', self::STATUS_PENDING);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_PENDING)
+            ->where(function ($query) {
+                $query->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            });
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expires_at !== null && $this->expires_at->isPast();
+    }
+
+    public function canBeClaimedBy(User $user): bool
+    {
+        return strcasecmp($user->email, $this->email) === 0;
+    }
+
+    public function markExpired(): void
+    {
+        $this->update(['status' => self::STATUS_EXPIRED]);
+    }
+
+    public function acceptFor(User $user): void
+    {
+        if (! $this->campaign->members()->where('user_id', $user->id)->exists()) {
+            $this->campaign->members()->attach($user->id, [
+                'role_id' => Role::PLAYER,
+            ]);
+        }
+
+        $this->update([
+            'invitee_id' => $user->id,
+            'status' => self::STATUS_ACCEPTED,
+            'accepted_at' => now(),
+        ]);
+
+        Notification::where('notifiable_type', self::class)
+            ->where('notifiable_id', $this->id)
+            ->where('user_id', $user->id)
+            ->update(['read_at' => now()]);
+    }
+
+    public function declineFor(User $user): void
+    {
+        $this->update([
+            'invitee_id' => $user->id,
+            'status' => self::STATUS_DECLINED,
+            'declined_at' => now(),
+        ]);
+
+        Notification::where('notifiable_type', self::class)
+            ->where('notifiable_id', $this->id)
+            ->where('user_id', $user->id)
+            ->update(['read_at' => now()]);
     }
 }

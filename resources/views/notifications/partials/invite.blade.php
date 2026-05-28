@@ -50,7 +50,7 @@
                 <div class="ui-table-action-row justify-end">
 
                     {{-- Accept --}}
-                    <form action="{{ route('invites.accept', $invite->id) }}" method="POST">
+                    <form action="{{ route('invites.accept', $invite->token) }}" method="POST">
                         @csrf
                         <button type="submit"
                                 class="ui-table-action-primary">
@@ -59,7 +59,7 @@
                     </form>
 
                     {{-- Decline --}}
-                    <form action="{{ route('invites.decline', $invite->id) }}" method="POST">
+                    <form action="{{ route('invites.decline', $invite->token) }}" method="POST">
                         @csrf
                         <button type="submit"
                                 class="ui-table-action-danger">
@@ -108,7 +108,7 @@
             @if ($status === \App\Models\CampaignInvite::STATUS_PENDING)
 
                 {{-- Accept --}}
-                <form method="POST" action="{{ route('invites.accept', $invite->id) }}">
+                <form method="POST" action="{{ route('invites.accept', $invite->token) }}">
                     @csrf
                     <button class="btn btn-primary btn-sm">
                         Accept
@@ -116,7 +116,7 @@
                 </form>
 
                 {{-- Decline --}}
-                <form method="POST" action="{{ route('invites.decline', $invite->id) }}">
+                <form method="POST" action="{{ route('invites.decline', $invite->token) }}">
                     @csrf
                     <button class="btn btn-secondary btn-sm">
                         Decline

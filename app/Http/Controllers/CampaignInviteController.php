@@ -2,129 +2,167 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CampaignInviteMail;
 use App\Models\Campaign;
 use App\Models\CampaignInvite;
 use App\Models\Notification;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class CampaignInviteController extends Controller
 {
-    public function store(Request $request, Campaign $campaign)
+    public function store(Request $request, Campaign $campaign): RedirectResponse
     {
         $this->authorize('addMember', $campaign);
 
-        $request->validate([
+        $validated = $request->validate([
             'email' => ['required', 'email'],
         ]);
 
-        $email = $request->email;
+        $email = Str::lower($validated['email']);
+        $invitee = User::whereRaw('LOWER(email) = ?', [$email])->first();
 
-        // Check if an invite already exists
+        if ($invitee && $campaign->members()->where('user_id', $invitee->id)->exists()) {
+            return back()->withErrors([
+                'email' => 'That user is already a member of this campaign.',
+            ]);
+        }
+
         $existing = $campaign->invites()
-            ->where('email', $email)
-            ->where('status', CampaignInvite::STATUS_PENDING)
+            ->whereRaw('LOWER(email) = ?', [$email])
+            ->active()
             ->first();
 
         if ($existing) {
             return back()->withErrors([
-                'email' => 'An invite has already been sent to this email.',
+                'email' => 'An active invite has already been sent to this email address.',
             ]);
         }
 
-        // Check if the user already exists
-        $invitee = User::where('email', $email)->first();
+        $campaign->invites()
+            ->whereRaw('LOWER(email) = ?', [$email])
+            ->pending()
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<=', now())
+            ->get()
+            ->each
+            ->markExpired();
 
-        // Create the invite
         $invite = CampaignInvite::create([
             'campaign_id' => $campaign->id,
-            'inviter_id'  => auth()->id(),
-            'invitee_id'  => $invitee?->id,
-            'email'       => $email,
-            'token'       => Str::uuid(),
-            'status'      => CampaignInvite::STATUS_PENDING,
+            'inviter_id' => $request->user()->id,
+            'invitee_id' => $invitee?->id,
+            'email' => $email,
+            'token' => (string) Str::uuid(),
+            'status' => CampaignInvite::STATUS_PENDING,
+            'expires_at' => now()->addDays(CampaignInvite::DEFAULT_EXPIRY_DAYS),
         ]);
 
-        // If the user exists, create a notification
         if ($invitee) {
             Notification::create([
-                'user_id'         => $invitee->id,
-                'type'            => Notification::TYPE_INVITE,
+                'user_id' => $invitee->id,
+                'type' => Notification::TYPE_INVITE,
                 'notifiable_type' => CampaignInvite::class,
-                'notifiable_id'   => $invite->id,
-                'data'            => [
+                'notifiable_id' => $invite->id,
+                'data' => [
                     'campaign_name' => $campaign->name,
-                    'inviter_name'  => auth()->user()->name,
+                    'inviter_name' => $request->user()->name,
                 ],
             ]);
         }
 
-        return back()->with('success', 'Invitation sent.');
+        Mail::to($email)->send(new CampaignInviteMail($invite->load(['campaign', 'inviter'])));
+
+        return back()->with('success', 'Invitation sent by email.');
     }
 
-    public function accept(CampaignInvite $invite)
+    public function show(Request $request, CampaignInvite $invite): View|RedirectResponse
     {
-        $user = auth()->user();
+        $invite->loadMissing(['campaign.dm', 'inviter', 'invitee']);
 
-        // Ensure the logged-in user is the invitee
-        if (! $user || ($user->id !== $invite->invitee_id && $user->email !== $invite->email)) {
+        if ($invite->isPending() && $invite->isExpired()) {
+            $invite->markExpired();
+            $invite->refresh();
+        }
+
+        $user = $request->user();
+
+        if ($user && $invite->canBeClaimedBy($user) && $invite->campaign->members()->where('user_id', $user->id)->exists()) {
+            if ($invite->isPending()) {
+                $invite->acceptFor($user);
+            }
+
+            return redirect()
+                ->route('campaigns.show', $invite->campaign)
+                ->with('success', 'You are already a member of this campaign.');
+        }
+
+        return view('invites.show', [
+            'invite' => $invite,
+            'matchingUser' => $user && $invite->canBeClaimedBy($user),
+        ]);
+    }
+
+    public function accept(Request $request, CampaignInvite $invite): RedirectResponse
+    {
+        $invite->loadMissing('campaign');
+        $user = $request->user();
+
+        if (! $user || ! $invite->canBeClaimedBy($user)) {
             abort(403);
         }
 
-        // Ensure the invite is still pending
-        if ($invite->status !== CampaignInvite::STATUS_PENDING) {
-            return back()->withErrors(['invite' => 'This invite is no longer active.']);
+        if ($invite->isExpired()) {
+            $invite->markExpired();
+
+            return redirect()
+                ->route('invites.show', $invite->token)
+                ->withErrors(['invite' => 'This invite has expired.']);
         }
 
-        // Add the user to the campaign
-        $invite->campaign->members()->attach($user->id, [
-            'role_id' => \App\Models\Role::PLAYER,
-        ]);
+        if ($invite->status !== CampaignInvite::STATUS_PENDING) {
+            return redirect()
+                ->route('invites.show', $invite->token)
+                ->withErrors(['invite' => 'This invite is no longer active.']);
+        }
 
-        // Update invite status
-        $invite->update([
-            'status'      => CampaignInvite::STATUS_ACCEPTED,
-            'accepted_at' => now(),
-        ]);
+        $invite->acceptFor($user);
 
-        // Mark related notification as read
-        Notification::where('notifiable_type', CampaignInvite::class)
-            ->where('notifiable_id', $invite->id)
-            ->where('user_id', $user->id)
-            ->update(['read_at' => now()]);
-
-        return redirect()->route('notifications.index')
+        return redirect()
+            ->route('campaigns.show', $invite->campaign)
             ->with('success', 'You have joined the campaign.');
     }
 
-    public function decline(CampaignInvite $invite)
+    public function decline(Request $request, CampaignInvite $invite): RedirectResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
-        // Ensure the logged-in user is the invitee
-        if (! $user || ($user->id !== $invite->invitee_id && $user->email !== $invite->email)) {
+        if (! $user || ! $invite->canBeClaimedBy($user)) {
             abort(403);
         }
 
-        // Ensure the invite is still pending
-        if ($invite->status !== CampaignInvite::STATUS_PENDING) {
-            return back()->withErrors(['invite' => 'This invite is no longer active.']);
+        if ($invite->isExpired()) {
+            $invite->markExpired();
+
+            return redirect()
+                ->route('invites.show', $invite->token)
+                ->withErrors(['invite' => 'This invite has expired.']);
         }
 
-        // Update invite status
-        $invite->update([
-            'status'      => CampaignInvite::STATUS_DECLINED,
-            'declined_at' => now(),
-        ]);
+        if ($invite->status !== CampaignInvite::STATUS_PENDING) {
+            return redirect()
+                ->route('invites.show', $invite->token)
+                ->withErrors(['invite' => 'This invite is no longer active.']);
+        }
 
-        // Mark related notification as read
-        Notification::where('notifiable_type', CampaignInvite::class)
-            ->where('notifiable_id', $invite->id)
-            ->where('user_id', $user->id)
-            ->update(['read_at' => now()]);
+        $invite->declineFor($user);
 
-        return redirect()->route('notifications.index')
+        return redirect()
+            ->route('invites.show', $invite->token)
             ->with('success', 'You declined the invitation.');
     }
 }

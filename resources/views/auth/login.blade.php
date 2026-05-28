@@ -2,13 +2,22 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    @if (!empty($invite))
+        <div class="mb-6 rounded-lg border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-text">
+            Sign in with <strong>{{ $invite->email }}</strong> to join <strong>{{ $invite->campaign->name }}</strong>.
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
+        @if (!empty($invite))
+            <input type="hidden" name="invite_token" value="{{ $invite->token }}">
+        @endif
 
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $invite->email ?? null)" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 

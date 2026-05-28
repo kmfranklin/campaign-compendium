@@ -119,6 +119,10 @@ Route::get('/spells/{spell}', [SpellController::class, 'show'])->name('spells.sh
 Route::get('/monsters', [CreatureController::class, 'index'])->name('creatures.index');
 Route::get('/monsters/{creature}', [CreatureController::class, 'show'])->name('creatures.show');
 
+// Campaign invite landing page — guests can view an invite before signing in.
+Route::get('invites/{invite:token}', [CampaignInviteController::class, 'show'])
+    ->name('invites.show');
+
 Route::middleware('auth')->group(function () {
     // NPC–Quest relationships
     Route::post('campaigns/{campaign}/quests/{quest}/npcs', [QuestController::class, 'attachNpc'])
@@ -148,10 +152,10 @@ Route::middleware('auth')->group(function () {
     Route::post('campaigns/{campaign}/invites', [CampaignInviteController::class, 'store'])
         ->name('campaigns.invites.store');
 
-    Route::post('invites/{invite}/accept', [CampaignInviteController::class, 'accept'])
+    Route::post('invites/{invite:token}/accept', [CampaignInviteController::class, 'accept'])
         ->name('invites.accept');
 
-    Route::post('invites/{invite}/decline', [CampaignInviteController::class, 'decline'])
+    Route::post('invites/{invite:token}/decline', [CampaignInviteController::class, 'decline'])
         ->name('invites.decline');
 });
 
