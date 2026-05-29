@@ -21,6 +21,10 @@ class ItemRaritiesTableSeeder extends Seeder
             ];
         })->all();
 
-        DB::table('item_rarities')->insert($rarities);
+        DB::table('item_rarities')->upsert(
+            $rarities,
+            ['slug'],
+            ['name', 'updated_at']
+        );
     }
 }

@@ -21,6 +21,10 @@ class ItemCategoriesTableSeeder extends Seeder
             ];
         })->all();
 
-        DB::table('item_categories')->insert($categories);
+        DB::table('item_categories')->upsert(
+            $categories,
+            ['slug'],
+            ['name', 'updated_at']
+        );
     }
 }

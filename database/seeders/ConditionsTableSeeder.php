@@ -22,7 +22,11 @@ class ConditionsTableSeeder extends Seeder
             'updated_at' => now(),
         ], $data);
 
-        DB::table('conditions')->insert($rows);
+        DB::table('conditions')->upsert(
+            $rows,
+            ['slug'],
+            ['name', 'body', 'updated_at']
+        );
 
         $this->command->info('Seeded ' . count($rows) . ' conditions.');
     }

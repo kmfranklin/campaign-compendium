@@ -22,7 +22,11 @@ class RuleSetsTableSeeder extends Seeder
             'updated_at' => now(),
         ], $data);
 
-        DB::table('rule_sets')->insert($rows);
+        DB::table('rule_sets')->upsert(
+            $rows,
+            ['slug'],
+            ['name', 'desc', 'updated_at']
+        );
 
         $this->command->info('Seeded ' . count($rows) . ' rule sets.');
     }

@@ -22,6 +22,10 @@ class CreatureTypesTableSeeder extends Seeder
             'updated_at'  => now(),
         ])->all();
 
-        DB::table('creature_types')->insert($rows);
+        DB::table('creature_types')->upsert(
+            $rows,
+            ['slug'],
+            ['name', 'description', 'updated_at']
+        );
     }
 }

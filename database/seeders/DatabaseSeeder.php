@@ -13,47 +13,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // --- Core reference data from Open5e ---
-        $this->call([
-            // Items
-            ItemCategoriesTableSeeder::class,
-            ItemRaritiesTableSeeder::class,
-            DamageTypesTableSeeder::class,
-            ItemsTableSeeder::class,
-            WeaponsTableSeeder::class,
-            ArmorsTableSeeder::class,
-            // Spells (school reference table must come before spells)
-            SpellSchoolsTableSeeder::class,
-            SpellsTableSeeder::class,
-            // Creatures (type reference table must come before creatures)
-            CreatureTypesTableSeeder::class,
-            CreaturesTableSeeder::class,
-            // Rules & Conditions (rule sets must come before rules — FK dependency)
-            RuleSetsTableSeeder::class,
-            RulesTableSeeder::class,
-            ConditionsTableSeeder::class,
-        ]);
+        $this->call(ReferenceDataSeeder::class);
+
+        if (! app()->environment('local')) {
+            return;
+        }
 
         // --- Dev/test accounts ---
-        $devUser = User::factory()->create([
-            'name' => 'Kevin',
+        $devUser = User::firstOrCreate([
             'email' => 'kevin@example.com',
+        ], [
+            'name' => 'Kevin',
             'password' => bcrypt('password'),
         ]);
 
-        // Give dev account 50 NPCs
-        Npc::factory()->count(50)->create([
-            'user_id' => $devUser->id,
+        $supportUsers = collect([
+            User::firstOrCreate(
+                ['email' => 'ally1@example.com'],
+                ['name' => 'Campaign Ally 1', 'password' => bcrypt('password')]
+            ),
+            User::firstOrCreate(
+                ['email' => 'ally2@example.com'],
+                ['name' => 'Campaign Ally 2', 'password' => bcrypt('password')]
+            ),
         ]);
 
-        // Create 2 more random users
-        $otherUsers = User::factory()->count(2)->create();
+        collect([$devUser, ...$supportUsers])->each(function (User $user) {
+            $missingNpcCount = max(0, 50 - $user->npcs()->count());
 
-        // Give each of them 50 NPCs
-        foreach ($otherUsers as $user) {
-            Npc::factory()->count(50)->create([
-                'user_id' => $user->id,
-            ]);
-        }
+            if ($missingNpcCount > 0) {
+                Npc::factory()->count($missingNpcCount)->create([
+                    'user_id' => $user->id,
+                ]);
+            }
+        });
     }
 }

@@ -11,14 +11,13 @@ class ArmorsTableSeeder extends Seeder
     {
         $path = base_path('database/data/Armor.json');
         $json = json_decode(file_get_contents($path), true);
+        $itemIds = DB::table('items')->pluck('id', 'item_key');
 
-        $armors = collect($json)->map(function ($entry) {
+        $armors = collect($json)->map(function ($entry) use ($itemIds) {
             $fields = $entry['fields'];
 
             return [
-                'item_id' => DB::table('items')
-                    ->where('item_key', $entry['pk'])
-                    ->value('id'),
+                'item_id' => $itemIds[$entry['pk']] ?? null,
 
                 'base_ac' => $fields['ac_base'] ?? 0,
                 'adds_dex_mod' => $fields['ac_add_dexmod'] ?? true,
@@ -33,6 +32,19 @@ class ArmorsTableSeeder extends Seeder
         ->filter(fn ($armor) => $armor['item_id'] !== null)
         ->all();
 
-        DB::table('armors')->insert($armors);
+        foreach (array_chunk($armors, 100) as $chunk) {
+            DB::table('armors')->upsert(
+                $chunk,
+                ['item_id'],
+                [
+                    'base_ac',
+                    'adds_dex_mod',
+                    'dex_mod_cap',
+                    'imposes_stealth_disadvantage',
+                    'strength_requirement',
+                    'updated_at',
+                ]
+            );
+        }
     }
 }

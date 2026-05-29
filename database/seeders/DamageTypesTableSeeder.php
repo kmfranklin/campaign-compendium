@@ -22,6 +22,10 @@ class DamageTypesTableSeeder extends Seeder
             ];
         })->all();
 
-        DB::table('damage_types')->insert($types);
+        DB::table('damage_types')->upsert(
+            $types,
+            ['slug'],
+            ['name', 'description', 'updated_at']
+        );
     }
 }

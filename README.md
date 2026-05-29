@@ -182,7 +182,7 @@ php artisan key:generate
 touch database/database.sqlite
 php artisan migrate
 
-# Seed SRD data
+# Seed SRD data plus local-only dev fixtures
 php artisan db:seed
 
 # Start the development server (runs Laravel, queue worker, Pail, and Vite concurrently)
@@ -190,6 +190,22 @@ composer run dev
 ```
 
 The app will be available at `http://localhost:8000`.
+
+### Reference Data Sync for Staging/Production
+
+Use the dedicated reference-data sync command when you need to backfill or refresh shared SRD data on a non-local environment:
+
+```bash
+php artisan reference-data:sync
+```
+
+This command is safe to rerun. It upserts the shared reference datasets instead of blindly inserting them, so it can backfill missing spells, monsters, rules, or conditions even if other SRD tables are already populated.
+
+Recommended deployment/backfill order:
+
+1. Run `php artisan migrate --force`
+2. Run `php artisan reference-data:sync --no-interaction`
+3. Spot-check the public SRD pages for items, spells, monsters, rules, and conditions
 
 ### Local Email Development
 

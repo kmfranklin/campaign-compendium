@@ -48,11 +48,42 @@ class SpellsTableSeeder extends Seeder
                 'is_srd'               => true,
                 'user_id'              => null,
                 'base_spell_id'        => null,
+                'deleted_at'           => null,
                 'created_at'           => now(),
                 'updated_at'           => now(),
             ];
         })->all();
 
-        DB::table('spells')->insert($rows);
+        foreach (array_chunk($rows, 100) as $chunk) {
+            DB::table('spells')->upsert(
+                $chunk,
+                ['slug'],
+                [
+                    'name',
+                    'level',
+                    'spell_school_id',
+                    'casting_time',
+                    'duration',
+                    'range_text',
+                    'verbal',
+                    'somatic',
+                    'material',
+                    'material_consumed',
+                    'material_specified',
+                    'concentration',
+                    'ritual',
+                    'description',
+                    'higher_level',
+                    'classes',
+                    'damage_types',
+                    'saving_throw_ability',
+                    'is_srd',
+                    'user_id',
+                    'base_spell_id',
+                    'deleted_at',
+                    'updated_at',
+                ]
+            );
+        }
     }
 }

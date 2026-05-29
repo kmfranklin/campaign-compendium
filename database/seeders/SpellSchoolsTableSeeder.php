@@ -22,6 +22,10 @@ class SpellSchoolsTableSeeder extends Seeder
             'updated_at'  => now(),
         ])->all();
 
-        DB::table('spell_schools')->insert($rows);
+        DB::table('spell_schools')->upsert(
+            $rows,
+            ['slug'],
+            ['name', 'description', 'updated_at']
+        );
     }
 }

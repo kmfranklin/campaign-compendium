@@ -46,6 +46,7 @@ class ItemsTableSeeder extends Seeder
 
                     'is_srd' => true,
                     'user_id' => null,
+                    'deleted_at' => null,
 
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -54,6 +55,28 @@ class ItemsTableSeeder extends Seeder
             ->values() // reset numeric keys
             ->all();
 
-        DB::table('items')->insert($items);
+        foreach (array_chunk($items, 100) as $chunk) {
+            DB::table('items')->upsert(
+                $chunk,
+                ['item_key'],
+                [
+                    'name',
+                    'description',
+                    'cost',
+                    'weight',
+                    'is_magic_item',
+                    'requires_attunement',
+                    'attunement_requirements',
+                    'item_category_id',
+                    'item_rarity_id',
+                    'armor_key',
+                    'weapon_key',
+                    'is_srd',
+                    'user_id',
+                    'deleted_at',
+                    'updated_at',
+                ]
+            );
+        }
     }
 }

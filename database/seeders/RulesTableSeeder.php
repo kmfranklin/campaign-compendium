@@ -41,7 +41,11 @@ class RulesTableSeeder extends Seeder
             ];
         }
 
-        DB::table('rules')->insert($rows);
+        DB::table('rules')->upsert(
+            $rows,
+            ['slug'],
+            ['name', 'rule_set_id', 'body', 'updated_at']
+        );
 
         $this->command->info('Seeded ' . count($rows) . ' rules.');
     }

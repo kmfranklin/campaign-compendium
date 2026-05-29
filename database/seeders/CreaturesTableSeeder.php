@@ -137,6 +137,7 @@ class CreaturesTableSeeder extends Seeder
                 'is_srd'                       => true,
                 'user_id'                      => null,
                 'base_creature_id'             => null,
+                'deleted_at'                   => null,
                 'created_at'                   => now(),
                 'updated_at'                   => now(),
             ];
@@ -145,7 +146,55 @@ class CreaturesTableSeeder extends Seeder
         // Insert in chunks to keep memory usage flat — same approach as
         // fanOutToUsers() in the SystemNotification model.
         foreach (array_chunk($rows, 50) as $chunk) {
-            DB::table('creatures')->insert($chunk);
+            DB::table('creatures')->upsert(
+                $chunk,
+                ['slug'],
+                [
+                    'name',
+                    'creature_type_id',
+                    'size',
+                    'alignment',
+                    'armor_class',
+                    'armor_detail',
+                    'hit_points',
+                    'hit_dice',
+                    'challenge_rating',
+                    'ability_score_strength',
+                    'ability_score_dexterity',
+                    'ability_score_constitution',
+                    'ability_score_intelligence',
+                    'ability_score_wisdom',
+                    'ability_score_charisma',
+                    'saving_throws',
+                    'skill_bonuses',
+                    'damage_immunities',
+                    'damage_resistances',
+                    'damage_vulnerabilities',
+                    'condition_immunities',
+                    'nonmagical_attack_immunity',
+                    'nonmagical_attack_resistance',
+                    'speed_walk',
+                    'speed_fly',
+                    'speed_swim',
+                    'speed_climb',
+                    'speed_burrow',
+                    'speed_hover',
+                    'sense_darkvision',
+                    'sense_blindsight',
+                    'sense_tremorsense',
+                    'sense_truesight',
+                    'sense_telepathy',
+                    'passive_perception',
+                    'languages_desc',
+                    'traits',
+                    'actions',
+                    'is_srd',
+                    'user_id',
+                    'base_creature_id',
+                    'deleted_at',
+                    'updated_at',
+                ]
+            );
         }
     }
 }
