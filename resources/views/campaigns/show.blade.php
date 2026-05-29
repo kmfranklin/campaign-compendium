@@ -119,10 +119,12 @@
             {{-- Quests tab --}}
             <div x-show="tab === 'quests'" x-cloak>
                 <div class="flex justify-end mb-4">
-                    <a href="{{ route('campaigns.quests.create', $campaign) }}"
-                       class="btn btn-primary btn-sm">
-                        + Add quest
-                    </a>
+                    @can('update', $campaign)
+                        <a href="{{ route('campaigns.quests.create', $campaign) }}"
+                           class="btn btn-primary btn-sm">
+                            + Add quest
+                        </a>
+                    @endcan
                 </div>
 
                 @include('campaigns.partials.quests')

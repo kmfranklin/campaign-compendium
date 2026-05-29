@@ -55,6 +55,20 @@ class QuestAccessTest extends TestCase
             ->assertSee('Recover the Relic');
     }
 
+    public function test_unverified_member_is_redirected_from_quest_routes(): void
+    {
+        $dm = User::factory()->create();
+        $player = User::factory()->unverified()->create();
+        $campaign = $this->createDmCampaign($dm, 'Campaign A');
+        $quest = $this->createQuest($campaign, 'Recover the Relic');
+
+        $campaign->members()->attach($player->id, ['role_id' => Role::PLAYER]);
+
+        $this->actingAs($player)
+            ->get(route('campaigns.quests.show', [$campaign, $quest]))
+            ->assertRedirect(route('verification.notice'));
+    }
+
     public function test_player_cannot_manage_quests(): void
     {
         $dm = User::factory()->create();

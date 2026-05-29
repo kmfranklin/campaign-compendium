@@ -3,6 +3,8 @@
 namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -18,6 +20,8 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        Event::fake([Registered::class]);
+
         $response = $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -26,6 +30,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
+        Event::assertDispatched(Registered::class);
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 }

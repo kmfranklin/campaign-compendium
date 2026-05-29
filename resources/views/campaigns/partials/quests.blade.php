@@ -40,30 +40,32 @@
                             {{-- Actions --}}
                             <td class="ui-table-cell whitespace-nowrap">
                                 <div class="ui-table-action-row">
+                                    <a href="{{ route('campaigns.quests.show', [$campaign, $quest]) }}"
+                                       class="ui-table-action-view">
+                                        View
+                                    </a>
 
-                                <a href="{{ route('campaigns.quests.show', [$campaign, $quest]) }}"
-                                   class="ui-table-action-view">
-                                    View
-                                </a>
+                                    @can('update', $campaign)
+                                        <a href="{{ route('campaigns.quests.edit', [$campaign, $quest]) }}"
+                                           class="ui-table-action-edit">
+                                            Edit
+                                        </a>
+                                    @endcan
 
-                                <a href="{{ route('campaigns.quests.edit', [$campaign, $quest]) }}"
-                                   class="ui-table-action-edit">
-                                    Edit
-                                </a>
-
-                                <form action="{{ route('campaigns.quests.destroy', [$campaign, $quest]) }}"
-                                      method="POST"
-                                      class="inline"
-                                      onsubmit="return confirm('Delete this quest?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="ui-table-action-danger">
-                                        Delete
-                                    </button>
-                                </form>
+                                    @can('delete', $campaign)
+                                        <form action="{{ route('campaigns.quests.destroy', [$campaign, $quest]) }}"
+                                              method="POST"
+                                              class="inline"
+                                              onsubmit="return confirm('Delete this quest?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="ui-table-action-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </div>
-
                             </td>
                         </tr>
                     @endforeach
@@ -102,10 +104,12 @@
         title="No quests yet"
         message="Start your adventure by creating the first quest."
     >
-        <a href="{{ route('campaigns.quests.create', $campaign) }}"
-           class="mt-3 inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
-            Add quest
-        </a>
+        @can('update', $campaign)
+            <a href="{{ route('campaigns.quests.create', $campaign) }}"
+               class="mt-3 inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
+                Add quest
+            </a>
+        @endcan
     </x-empty-state>
 
 @endif

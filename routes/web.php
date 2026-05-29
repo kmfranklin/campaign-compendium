@@ -30,7 +30,7 @@ Route::view('/dice-roller', 'dice-roller')->name('dice-roller');
 Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
 // Authenticated user routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/custom-items/{item}', [ItemController::class, 'show'])->name('items.custom.show');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Campaigns and nested campaign content are private to authenticated users.
     Route::resource('campaigns', CampaignController::class);
     Route::resource('campaigns.quests', QuestController::class);
@@ -123,7 +123,7 @@ Route::get('/monsters/{creature}', [CreatureController::class, 'show'])->name('c
 Route::get('invites/{invite:token}', [CampaignInviteController::class, 'show'])
     ->name('invites.show');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // NPC–Quest relationships
     Route::post('campaigns/{campaign}/quests/{quest}/npcs', [QuestController::class, 'attachNpc'])
         ->name('campaigns.quests.npcs.attach');
