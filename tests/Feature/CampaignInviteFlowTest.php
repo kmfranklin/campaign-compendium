@@ -119,6 +119,26 @@ class CampaignInviteFlowTest extends TestCase
         ]);
     }
 
+    public function test_invite_login_screen_links_to_register_with_same_invite_token(): void
+    {
+        $dm = User::factory()->create(['name' => 'Dungeon Master']);
+        $campaign = $this->createDmCampaign($dm, 'Misty Vale');
+        $invite = CampaignInvite::create([
+            'campaign_id' => $campaign->id,
+            'inviter_id' => $dm->id,
+            'invitee_id' => null,
+            'email' => 'newplayer@example.com',
+            'token' => 'invite-token-login-link',
+            'status' => CampaignInvite::STATUS_PENDING,
+            'expires_at' => now()->addDays(7),
+        ]);
+
+        $this->get(route('login', ['invite' => $invite->token]))
+            ->assertOk()
+            ->assertSee(route('register', ['invite' => $invite->token]), false)
+            ->assertSee('Create an account');
+    }
+
     public function test_wrong_account_cannot_accept_invite(): void
     {
         $dm = User::factory()->create();

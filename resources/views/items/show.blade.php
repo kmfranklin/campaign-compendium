@@ -4,6 +4,7 @@
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
   @php
     use Illuminate\Support\Facades\Route;
+    use Illuminate\Support\Arr;
 
     $expected = [
       'all'    => 'items.index',
@@ -20,7 +21,7 @@
 
     $fromKey = request()->query('from');
     if ($fromKey && isset($expected[$fromKey]) && Route::has($expected[$fromKey])) {
-        $backUrl = route($expected[$fromKey]);
+        $backUrl = route($expected[$fromKey], Arr::except(request()->query(), ['from']));
     } else {
         $previous = url()->previous();
         $prevPath = parse_url($previous, PHP_URL_PATH) ?: null;

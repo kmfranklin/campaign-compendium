@@ -138,7 +138,7 @@
                 that overrides the parent's `expanded`, so the sidebar-links partial
                 always renders in fully-expanded mode here.
             --}}
-            <nav class="flex-1 px-3 py-4 overflow-y-auto" aria-label="Admin tools">
+            <nav class="scrollbar-themed flex-1 px-3 py-4 overflow-y-auto" aria-label="Admin tools">
                 <div x-data="{ expanded: true }">
                     @include('admin.partials.sidebar-links')
                 </div>

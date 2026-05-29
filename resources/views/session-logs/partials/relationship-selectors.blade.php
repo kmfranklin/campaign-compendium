@@ -138,7 +138,7 @@
         </div>
 
         <div class="rounded-lg border border-border bg-surface">
-            <div class="max-h-80 overflow-y-auto p-3 space-y-4">
+            <div class="scrollbar-themed max-h-80 overflow-y-auto p-3 space-y-4">
                 <template x-if="npcOptions.length === 0">
                     <p class="text-sm text-muted">No eligible NPCs yet. Create one in your compendium to attach it here later.</p>
                 </template>
@@ -272,7 +272,7 @@
         </div>
 
         <div class="rounded-lg border border-border bg-surface">
-            <div class="max-h-56 overflow-y-auto p-3 space-y-2">
+            <div class="scrollbar-themed max-h-56 overflow-y-auto p-3 space-y-2">
                 <template x-if="questOptions.length === 0">
                     <p class="text-sm text-muted">This campaign does not have any quests yet.</p>
                 </template>

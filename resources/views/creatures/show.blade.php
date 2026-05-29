@@ -5,7 +5,11 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
-    <a href="{{ route('creatures.index') }}"
+    @php
+        $backUrl = route('creatures.index', request()->query());
+    @endphp
+
+    <a href="{{ $backUrl }}"
        class="inline-flex items-center text-sm text-accent hover:text-accent-hover mb-4 font-medium underline underline-offset-2">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>

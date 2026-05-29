@@ -90,7 +90,7 @@
     {{-- Sidebar                                          --}}
     {{-- ================================================ --}}
     <aside
-        class="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 sticky top-8 gap-4"
+        class="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 sticky top-8 max-h-[calc(100vh-4rem)] gap-4"
         aria-label="Rules sections"
     >
         {{-- Global search                                              --}}
@@ -176,7 +176,27 @@
         </div>
 
         {{-- Nav --}}
-        <nav>
+        @php
+            $allSidebarSections = collect([
+                (object) [
+                    'name' => 'Conditions',
+                    'slug' => 'conditions',
+                    'url' => route('rules.conditions'),
+                ],
+            ])->merge(
+                $allRuleSets->map(fn ($ruleSet) => (object) [
+                    'name' => $ruleSet->name,
+                    'slug' => $ruleSet->slug,
+                    'url' => route('rules.show', $ruleSet->slug),
+                ])
+            )->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)->values();
+
+            $sidebarSections = $allSidebarSections
+                ->sortBy(fn ($section) => $section->slug === $currentSlug ? 0 : 1)
+                ->values();
+        @endphp
+
+        <nav class="scrollbar-themed min-h-0 overflow-y-auto pr-2 -mr-2 scroll-pb-8">
             <a href="{{ route('rules.index') }}"
                class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted
                       hover:text-text transition-colors duration-100 mb-3 focus:outline-none focus:underline">
@@ -188,43 +208,17 @@
             </a>
 
             <ul class="space-y-0.5 text-sm" role="list">
-                {{-- Conditions section link --}}
-                <li>
-                    <a href="{{ route('rules.conditions') }}"
-                       class="block px-3 py-1.5 rounded-md transition-colors duration-100 focus:outline-none focus:ring-2 focus:ring-accent
-                              {{ $currentSlug === 'conditions'
-                                  ? 'bg-accent/10 text-accent font-semibold'
-                                  : 'text-muted hover:text-text hover:bg-hover' }}">
-                        Conditions
-                    </a>
-
-                    {{-- Sub-entries for Conditions when it's the current section --}}
-                    @if ($currentSlug === 'conditions')
-                        <ul class="mt-0.5 ml-3 border-l border-border pl-3 space-y-0.5" role="list">
-                            @foreach ($entries as $entry)
-                                <li>
-                                    <a
-                                        href="#entry-{{ $entry->id }}"
-                                        class="block py-1 text-xs text-muted hover:text-accent transition-colors duration-100 focus:outline-none focus:text-accent truncate"
-                                    >{{ $entry->name }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </li>
-
-                @foreach ($allRuleSets as $rs)
+                @foreach ($sidebarSections as $section)
                     <li>
-                        <a href="{{ route('rules.show', $rs->slug) }}"
+                        <a href="{{ $section->url }}"
                            class="block px-3 py-1.5 rounded-md transition-colors duration-100 focus:outline-none focus:ring-2 focus:ring-accent
-                                  {{ $currentSlug === $rs->slug
+                                  {{ $currentSlug === $section->slug
                                       ? 'bg-accent/10 text-accent font-semibold'
                                       : 'text-muted hover:text-text hover:bg-hover' }}">
-                            {{ $rs->name }}
+                            {{ $section->name }}
                         </a>
 
-                        {{-- Sub-entries for the current ruleset section --}}
-                        @if ($currentSlug === $rs->slug && $entries->isNotEmpty())
+                        @if ($currentSlug === $section->slug && $entries->isNotEmpty())
                             <ul class="mt-0.5 ml-3 border-l border-border pl-3 space-y-0.5" role="list">
                                 @foreach ($entries as $entry)
                                     <li>

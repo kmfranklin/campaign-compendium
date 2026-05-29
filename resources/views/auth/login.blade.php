@@ -53,4 +53,12 @@
             </x-primary-button>
         </div>
     </form>
+
+    <div class="mt-6 border-t border-border pt-4 text-center text-sm text-muted">
+        New to Campaign Compendium?
+        <a class="font-medium text-accent hover:text-accent-hover underline underline-offset-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
+           href="{{ !empty($invite) ? route('register', ['invite' => $invite->token]) : route('register') }}">
+            Create an account
+        </a>
+    </div>
 </x-guest-layout>

@@ -93,7 +93,7 @@
         Navigation links. The shared partial reads `expanded` from this Alpine scope
         to toggle label text visibility and icon centering.
     --}}
-    <nav class="flex-1 py-4 overflow-hidden"
+    <nav class="scrollbar-themed flex-1 min-h-0 py-4 overflow-y-auto"
          :class="expanded ? 'px-3' : 'px-2'"
          aria-label="Admin tools">
         @include('admin.partials.sidebar-links')

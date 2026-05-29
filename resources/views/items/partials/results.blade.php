@@ -1,6 +1,10 @@
 <div id="item-results" class="space-y-6" role="region" aria-live="polite" aria-atomic="true">
   @php
     $itemsIndexFrom = request('from') ?? session('items.last_index');
+    $itemShowQuery = array_filter([
+      'from' => $itemsIndexFrom,
+      ...request()->query(),
+    ], fn ($value) => $value !== null && $value !== '');
   @endphp
 
   {{-- Desktop Table --}}
@@ -26,7 +30,7 @@
                 @if($item->baseItem)
                   <div class="text-xs text-muted">
                     Variant of
-                    <a href="{{ route('items.show', $item->baseItem) }}" class="underline text-accent hover:text-accent-hover">
+                    <a href="{{ route('items.show', [$item->baseItem, ...$itemShowQuery]) }}" class="underline text-accent hover:text-accent-hover">
                       {{ $item->baseItem->name }}
                     </a>
                   </div>
@@ -58,7 +62,7 @@
                 <div class="ui-table-action-row">
 
                 {{-- View --}}
-                <a href="{{ route('items.show', $item) }}"
+                <a href="{{ route('items.show', [$item, ...$itemShowQuery]) }}"
                    class="ui-table-action-view">
                   View
                 </a>
@@ -131,7 +135,7 @@
             @if($item->baseItem)
               <p class="text-xs text-muted">
                 Variant of
-                <a href="{{ route('items.show', $item->baseItem) }}" class="underline text-accent hover:text-accent-hover">
+                <a href="{{ route('items.show', [$item->baseItem, ...$itemShowQuery]) }}" class="underline text-accent hover:text-accent-hover">
                   {{ $item->baseItem->name }}
                 </a>
               </p>
@@ -141,7 +145,7 @@
           <div class="flex items-center gap-3">
 
             {{-- View --}}
-            <a href="{{ route('items.show', $item) }}"
+            <a href="{{ route('items.show', [$item, ...$itemShowQuery]) }}"
                class="ui-table-action-view">
               View
             </a>

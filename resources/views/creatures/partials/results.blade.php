@@ -26,7 +26,7 @@
                         <td class="ui-table-cell whitespace-nowrap">{{ $creature->armor_class ?? '—' }}</td>
                         <td class="ui-table-cell whitespace-nowrap">{{ $creature->hit_points ?? '—' }}</td>
                         <td class="ui-table-cell whitespace-nowrap">
-                            <a href="{{ route('creatures.show', $creature) }}"
+                            <a href="{{ route('creatures.show', [$creature, ...request()->query()]) }}"
                                class="ui-table-action-view">View</a>
                         </td>
                     </tr>
@@ -53,7 +53,7 @@
                             &middot; {{ $creature->hit_points ?? '—' }} HP
                         </p>
                     </div>
-                    <a href="{{ route('creatures.show', $creature) }}"
+                    <a href="{{ route('creatures.show', [$creature, ...request()->query()]) }}"
                        class="ui-table-action-view shrink-0">View</a>
                 </div>
             </div>

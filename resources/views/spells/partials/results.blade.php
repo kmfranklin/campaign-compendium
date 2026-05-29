@@ -34,7 +34,7 @@
                         <td class="ui-table-cell whitespace-nowrap">{{ $spell->casting_time_label }}</td>
                         <td class="ui-table-cell">{{ implode(', ', $spell->class_names) }}</td>
                         <td class="ui-table-cell whitespace-nowrap">
-                            <a href="{{ route('spells.show', $spell) }}"
+                            <a href="{{ route('spells.show', [$spell, ...request()->query()]) }}"
                                class="ui-table-action-view">View</a>
                         </td>
                     </tr>
@@ -66,7 +66,7 @@
                             @endif
                         </div>
                     </div>
-                    <a href="{{ route('spells.show', $spell) }}"
+                    <a href="{{ route('spells.show', [$spell, ...request()->query()]) }}"
                        class="ui-table-action-view shrink-0">View</a>
                 </div>
             </div>

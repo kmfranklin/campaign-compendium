@@ -38,7 +38,7 @@ class ItemController extends Controller
             ->appends($request->except('page'));
 
         session(['items.last_index' => 'all']);
-        session(['items.last)index_url' => request()->fullUrl()]);
+        session(['items.last_index_url' => request()->fullUrl()]);
         return $this->renderItems($request, $items, 'items.index');
     }
 

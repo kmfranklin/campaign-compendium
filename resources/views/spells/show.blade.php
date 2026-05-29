@@ -3,7 +3,11 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
-    <a href="{{ route('spells.index') }}"
+    @php
+        $backUrl = route('spells.index', request()->query());
+    @endphp
+
+    <a href="{{ $backUrl }}"
        class="link-action mb-4">
         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
@@ -74,9 +78,9 @@
                     <dd class="text-muted">
                         @php
                             $components = array_filter([
-                                $spell->verbal   ? 'V' : null,
-                                $spell->somatic  ? 'S' : null,
-                                $spell->material ? 'M' : null,
+                                $spell->verbal   ? 'Verbal' : null,
+                                $spell->somatic  ? 'Somatic' : null,
+                                $spell->material ? 'Material' : null,
                             ]);
                         @endphp
                         {{ implode(', ', $components) ?: '—' }}
