@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use App\Enums\QuestStatus;
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Quest extends Model
 {
     use HasFactory;
+    use HasSlug;
 
     protected $fillable = [
         'campaign_id',
+        'slug',
         'title',
         'description',
         'notes',
@@ -83,5 +86,10 @@ class Quest extends Model
     public function scopeAbandoned($query)
     {
         return $query->where('status', QuestStatus::Abandoned);
+    }
+
+    protected function slugSource(): string
+    {
+        return $this->title;
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ItemsTableSeeder extends Seeder
 {
@@ -16,15 +17,33 @@ class ItemsTableSeeder extends Seeder
             base_path('database/data/Armor.json'),
         ];
 
+        $usedSlugs = [];
+
         $items = collect($files)
             ->flatMap(fn($path) => json_decode(file_get_contents($path), true))
             // use pk as the unique key
             ->keyBy('pk')
-            ->map(function ($entry) {
+            ->map(function ($entry) use (&$usedSlugs) {
                 $fields = $entry['fields'];
+                $baseSlug = Str::slug($fields['name'] ?? '');
+
+                if ($baseSlug === '') {
+                    $baseSlug = Str::slug($entry['pk']);
+                }
+
+                $slug = $baseSlug;
+                $suffix = 2;
+
+                while (in_array($slug, $usedSlugs, true)) {
+                    $slug = "{$baseSlug}-{$suffix}";
+                    $suffix++;
+                }
+
+                $usedSlugs[] = $slug;
 
                 return [
                     'item_key' => $entry['pk'],
+                    'slug' => $slug,
                     'name' => $fields['name'] ?? null,
                     'description' => $fields['desc'] ?? null,
                     'cost' => $fields['cost'] ?? null,
@@ -60,6 +79,7 @@ class ItemsTableSeeder extends Seeder
                 $chunk,
                 ['item_key'],
                 [
+                    'slug',
                     'name',
                     'description',
                     'cost',

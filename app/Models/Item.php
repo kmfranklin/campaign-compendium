@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,10 +10,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Item extends Model
 {
     use HasFactory;
+    use HasSlug;
     use SoftDeletes;
 
     protected $fillable = [
         'item_key',
+        'slug',
         'name',
         'description',
         'cost',
@@ -69,5 +72,10 @@ class Item extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function slugSource(): string
+    {
+        return $this->name;
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Role;
 
 class Campaign extends Model
 {
-    protected $fillable = ['name', 'description', 'dm_id'];
+    use HasSlug;
+
+    protected $fillable = ['name', 'slug', 'description', 'dm_id'];
 
     // Owner DM (explicit FK)
     public function dm()
@@ -61,5 +64,10 @@ class Campaign extends Model
     public function pendingInvites()
     {
         return $this->invites()->where('status', CampaignInvite::STATUS_PENDING);
+    }
+
+    protected function slugSource(): string
+    {
+        return $this->name;
     }
 }

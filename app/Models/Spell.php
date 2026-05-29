@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Spell extends Model
 {
+    use HasSlug;
     use SoftDeletes;
 
     protected $fillable = [
@@ -127,5 +129,10 @@ class Spell extends Model
             ->sort()
             ->values()
             ->all();
+    }
+
+    protected function slugSource(): string
+    {
+        return $this->name;
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CreaturesTableSeeder extends Seeder
 {
@@ -29,9 +30,25 @@ class CreaturesTableSeeder extends Seeder
             true
         ))->groupBy(fn ($entry) => $entry['fields']['parent']);
 
-        $rows = collect($creatures)->map(function ($entry) use ($typeIds, $actions, $traits) {
+        $usedSlugs = [];
+
+        $rows = collect($creatures)->map(function ($entry) use ($typeIds, $actions, $traits, &$usedSlugs) {
             $f   = $entry['fields'];
-            $slug = $entry['pk'];
+            $baseSlug = Str::slug($f['name'] ?? '');
+
+            if ($baseSlug === '') {
+                $baseSlug = Str::slug($entry['pk']);
+            }
+
+            $slug = $baseSlug;
+            $suffix = 2;
+
+            while (in_array($slug, $usedSlugs, true)) {
+                $slug = "{$baseSlug}-{$suffix}";
+                $suffix++;
+            }
+
+            $usedSlugs[] = $slug;
 
             // Build saving throws JSON — only include abilities with a non-null bonus.
             $savingThrows = array_filter([

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Creature extends Model
 {
+    use HasSlug;
     use SoftDeletes;
 
     protected $fillable = [
@@ -199,5 +201,10 @@ class Creature extends Model
     {
         $mod = self::modifier($score);
         return ($mod >= 0 ? '+' : '') . $mod;
+    }
+
+    protected function slugSource(): string
+    {
+        return $this->name;
     }
 }

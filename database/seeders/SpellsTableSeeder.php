@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SpellsTableSeeder extends Seeder
 {
@@ -20,11 +21,28 @@ class SpellsTableSeeder extends Seeder
         $schoolIds = DB::table('spell_schools')
             ->pluck('id', 'slug'); // ['abjuration' => 1, 'conjuration' => 2, ...]
 
-        $rows = collect($spells)->map(function ($entry) use ($schoolIds) {
+        $usedSlugs = [];
+
+        $rows = collect($spells)->map(function ($entry) use ($schoolIds, &$usedSlugs) {
             $f = $entry['fields'];
+            $baseSlug = Str::slug($f['name'] ?? '');
+
+            if ($baseSlug === '') {
+                $baseSlug = Str::slug($entry['pk']);
+            }
+
+            $slug = $baseSlug;
+            $suffix = 2;
+
+            while (in_array($slug, $usedSlugs, true)) {
+                $slug = "{$baseSlug}-{$suffix}";
+                $suffix++;
+            }
+
+            $usedSlugs[] = $slug;
 
             return [
-                'slug'                 => $entry['pk'],
+                'slug'                 => $slug,
                 'name'                 => $f['name'],
                 'level'                => $f['level'],
                 'spell_school_id'      => $schoolIds[$f['school']] ?? null,
