@@ -26,7 +26,7 @@ class ItemPolicy
             return true;
         }
 
-        return $user && ($item->user_id === $user->id || $user->hasRole('admin'));
+        return $user && ($item->user_id === $user->id || $user->isSuperAdmin());
     }
 
     /**
@@ -47,7 +47,7 @@ class ItemPolicy
             return false;
         }
 
-        return $item->user_id === $user->id || $user->hasRole('admin');
+        return $item->user_id === $user->id || $user->isSuperAdmin();
     }
 
     /**
@@ -60,6 +60,6 @@ class ItemPolicy
             return false;
         }
 
-        return $item->user_id === $user->id || $user->hasRole('admin');
+        return $item->user_id === $user->id || $user->isSuperAdmin();
     }
 }

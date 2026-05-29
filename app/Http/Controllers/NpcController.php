@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Npc;
+use App\Models\Campaign;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class NpcController extends Controller
 {
@@ -39,14 +41,21 @@ class NpcController extends Controller
             : view('compendium.npcs.index', compact('npcs'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('compendium.npcs.create');
+        $campaign = null;
+
+        if ($request->filled('campaign')) {
+            $campaign = $request->user()->ownedCampaigns()->findOrFail($request->integer('campaign'));
+        }
+
+        return view('compendium.npcs.create', compact('campaign'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate($this->rules());
+        $data['campaign_id'] = $this->validatedOwnedCampaignId($request, $data);
         $this->handlePortraitUpload($request, $data);
 
         // Assign ownership automatically
@@ -75,6 +84,11 @@ class NpcController extends Controller
         $npc = $request->user()->npcs()->findOrFail($npcId);
 
         $data = $request->validate($this->rules(true));
+
+        if (array_key_exists('campaign_id', $data)) {
+            $data['campaign_id'] = $this->validatedOwnedCampaignId($request, $data);
+        }
+
         $this->handlePortraitUpload($request, $data, $npc);
 
         $npc->update($data);
@@ -102,7 +116,7 @@ class NpcController extends Controller
     private function rules(bool $isUpdate = false): array
     {
         return [
-            'campaign_id'       => 'nullable|integer',
+            'campaign_id'       => ['nullable', 'integer', Rule::exists('campaigns', 'id')],
             'name'              => 'required|string|max:255',
             'alias'             => 'nullable|string|max:255',
             'race'              => ['nullable', Rule::in(Npc::raceOptions())],
@@ -147,5 +161,24 @@ class NpcController extends Controller
             $path = $request->file('portrait')->store('npc-portraits', 'public');
             $data['portrait_path'] = '/storage/' . $path;
         }
+    }
+
+    private function validatedOwnedCampaignId(Request $request, array $data): ?int
+    {
+        $campaignId = $data['campaign_id'] ?? null;
+
+        if ($campaignId === null || $campaignId === '') {
+            return null;
+        }
+
+        $ownedCampaign = $request->user()->ownedCampaigns()->find($campaignId);
+
+        if (! $ownedCampaign instanceof Campaign) {
+            throw ValidationException::withMessages([
+                'campaign_id' => 'You can only attach NPCs to campaigns you own.',
+            ]);
+        }
+
+        return $ownedCampaign->id;
     }
 }

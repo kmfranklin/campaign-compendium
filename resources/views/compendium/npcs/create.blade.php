@@ -16,6 +16,12 @@
 
     <h1 class="text-2xl font-bold text-text mb-6">Create NPC</h1>
 
+    @if(isset($campaign) && $campaign)
+        <div class="mb-6 rounded-lg border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-text">
+            This NPC will be attached to <strong>{{ $campaign->name }}</strong>.
+        </div>
+    @endif
+
     @if ($errors->any())
         <div class="mb-6 p-4 bg-surface border border-danger text-danger rounded">
             <ul class="list-disc list-inside">
@@ -31,6 +37,10 @@
           enctype="multipart/form-data"
           class="space-y-10">
         @csrf
+
+        @if(isset($campaign) && $campaign)
+            <input type="hidden" name="campaign_id" value="{{ $campaign->id }}">
+        @endif
 
         {{-- Core Identity --}}
         <section>

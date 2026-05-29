@@ -25,6 +25,13 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $query = Item::with(['weapon.damageType', 'armor', 'category', 'rarity']);
+        $query->where(function ($builder) use ($request) {
+            $builder->where('is_srd', true);
+
+            if ($request->user()) {
+                $builder->orWhere('user_id', $request->user()->id);
+            }
+        });
         $query = $query->orderByRaw('LOWER(`name`) ASC');
         $items = $this->applyFilters($request, $query)
             ->paginate(15)

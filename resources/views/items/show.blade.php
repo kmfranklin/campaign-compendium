@@ -46,6 +46,17 @@
     }
   @endphp
 
+  @php
+    $cloneFrom = $fromKey && isset($expected[$fromKey]) ? $fromKey : (session('items.last_index') ?? 'all');
+    $canClone = false;
+
+    if ($item->is_srd) {
+        $canClone = auth()->check();
+    } elseif (auth()->check()) {
+        $canClone = (int) $item->user_id === (int) auth()->id();
+    }
+  @endphp
+
   <a href="{{ $backUrl }}"
      class="link-action mb-4">
     <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -141,10 +152,17 @@
               </form>
             @endcan
 
-            <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => 'custom']) }}"
-               class="btn btn-primary btn-sm">
-              Clone
-            </a>
+            @if($canClone)
+              <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => $cloneFrom]) }}"
+                 class="btn btn-primary btn-sm">
+                Clone
+              </a>
+            @elseif($item->is_srd && auth()->guest())
+              <a href="{{ route('login') }}"
+                 class="btn btn-primary btn-sm">
+                Sign in to clone
+              </a>
+            @endif
           </div>
         </div>
       </div>

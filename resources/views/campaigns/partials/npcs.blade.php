@@ -25,13 +25,14 @@
     />
 @else
 
-    {{-- Add NPC button --}}
-    <div class="flex justify-end mb-4">
-        <a href="{{ route('compendium.npcs.create') }}"
-           class="inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
-            + Add NPC
-        </a>
-    </div>
+    @can('update', $campaign)
+        <div class="flex justify-end mb-4">
+            <a href="{{ route('compendium.npcs.create', ['campaign' => $campaign->id]) }}"
+               class="inline-flex items-center px-3 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm rounded shadow">
+                + Add NPC
+            </a>
+        </div>
+    @endcan
 
     {{-- Supporting text --}}
     <p class="text-sm text-muted mb-4">

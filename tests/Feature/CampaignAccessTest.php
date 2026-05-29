@@ -99,6 +99,7 @@ class CampaignAccessTest extends TestCase
 
         $response->assertOk();
         $response->assertDontSee('+ Add quest', false);
+        $response->assertDontSee('+ Add NPC', false);
         $response->assertDontSee('Edit', false);
         $response->assertDontSee('Delete', false);
     }

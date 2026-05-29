@@ -7,10 +7,17 @@
     <div class="sm:flex sm:items-center sm:justify-between py-6">
         <h1 class="text-2xl font-semibold text-text">SRD Items</h1>
 
-        <a href="{{ route('items.custom.create', ['from' => 'srd']) }}"
-           class="inline-flex items-center px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-accent">
-            + New Item
-        </a>
+        @auth
+            <a href="{{ route('items.custom.create', ['from' => 'srd']) }}"
+               class="inline-flex items-center px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-accent">
+                + New Item
+            </a>
+        @else
+            <a href="{{ route('login') }}"
+               class="inline-flex items-center px-4 py-2 border border-accent text-accent hover:bg-accent hover:text-on-accent text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-accent">
+                Sign in to clone items
+            </a>
+        @endauth
     </div>
 
     {{-- Alpine state --}}

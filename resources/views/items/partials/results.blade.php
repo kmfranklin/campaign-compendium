@@ -1,4 +1,7 @@
 <div id="item-results" class="space-y-6" role="region" aria-live="polite" aria-atomic="true">
+  @php
+    $itemsIndexFrom = request('from') ?? session('items.last_index');
+  @endphp
 
   {{-- Desktop Table --}}
   <div class="hidden sm:block">
@@ -63,7 +66,7 @@
                 @auth
                   @if($item->is_srd)
                     {{-- Clone --}}
-                    <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => request('from') ?? session('items.last_index')]) }}"
+                    <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => $itemsIndexFrom]) }}"
                        class="ui-table-action-primary">
                       Clone
                     </a>
@@ -88,6 +91,13 @@
                         </button>
                       </form>
                     @endcan
+                  @endif
+                @else
+                  @if($item->is_srd)
+                    <a href="{{ route('login') }}"
+                       class="ui-table-action-primary">
+                      Sign in to clone
+                    </a>
                   @endif
                 @endauth
                 </div>
@@ -138,7 +148,7 @@
 
             @auth
               @if($item->is_srd)
-                <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => request('from') ?? session('items.last_index')]) }}"
+                <a href="{{ route('items.custom.create', ['base_item_id' => $item->id, 'from' => $itemsIndexFrom]) }}"
                    class="ui-table-action-primary">
                   Clone
                 </a>
@@ -161,6 +171,13 @@
                     </button>
                   </form>
                 @endcan
+              @endif
+            @else
+              @if($item->is_srd)
+                <a href="{{ route('login') }}"
+                   class="ui-table-action-primary">
+                  Sign in to clone
+                </a>
               @endif
             @endauth
 
