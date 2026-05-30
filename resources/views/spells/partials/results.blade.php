@@ -1,4 +1,4 @@
-<div id="spell-results" class="space-y-6" role="region" aria-live="polite" aria-atomic="true">
+<div class="space-y-6" role="region" aria-live="polite" aria-atomic="true">
 
     {{-- Desktop table --}}
     <div class="hidden sm:block ui-table-panel ui-table-shell rounded-lg">

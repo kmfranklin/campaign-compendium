@@ -1,4 +1,4 @@
-<div id="item-results" class="space-y-6" role="region" aria-live="polite" aria-atomic="true">
+<div class="space-y-6" role="region" aria-live="polite" aria-atomic="true">
   @php
     $itemsIndexFrom = request('from') ?? session('items.last_index');
     $itemShowQuery = array_filter([

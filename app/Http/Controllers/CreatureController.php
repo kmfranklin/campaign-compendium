@@ -48,7 +48,10 @@ class CreatureController extends Controller
         $sizes = $this->sizeOptions();
 
         if ($request->ajax()) {
-            return view('creatures.partials.results', compact('creatures'))->render();
+            return response()
+                ->view('creatures.partials.results', compact('creatures'))
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                ->header('Vary', 'X-Requested-With');
         }
 
         return view('creatures.index', compact('creatures', 'types', 'crs', 'sizes'));

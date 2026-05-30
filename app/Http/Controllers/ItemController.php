@@ -333,7 +333,10 @@ class ItemController extends Controller
     private function renderItems(Request $request, $items, $view)
     {
         if ($request->ajax()) {
-            return view('items.partials.results', compact('items'))->render();
+            return response()
+                ->view('items.partials.results', compact('items'))
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                ->header('Vary', 'X-Requested-With');
         }
 
         return view($view, compact('items'));

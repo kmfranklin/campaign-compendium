@@ -56,7 +56,10 @@ class SpellController extends Controller
         $classes      = $this->classOptions();
 
         if ($request->ajax()) {
-            return view('spells.partials.results', compact('spells'))->render();
+            return response()
+                ->view('spells.partials.results', compact('spells'))
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                ->header('Vary', 'X-Requested-With');
         }
 
         return view('spells.index', compact('spells', 'schools', 'castingTimes', 'classes'));
