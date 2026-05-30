@@ -93,35 +93,6 @@
                     actionLabel="Create Campaign"
                 />
             </section>
-        @else
-            <section>
-                <div>
-                    <h2 class="text-xl font-semibold text-text">Quick Actions</h2>
-                    <p class="mt-1 text-sm text-muted">Shortcuts for the things you’re most likely to do next.</p>
-                </div>
-
-                <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <a href="{{ route('campaigns.index') }}" class="ui-card-interactive group block p-5 focus:outline-none focus:ring-2 focus:ring-accent">
-                        <h3 class="text-base font-semibold text-text group-hover:text-accent transition-colors">Open My Campaigns</h3>
-                        <p class="mt-2 text-sm text-muted">Jump into your active campaigns, quests, sessions, and members.</p>
-                    </a>
-
-                    <a href="{{ route('campaigns.create') }}" class="ui-card-interactive group block p-5 focus:outline-none focus:ring-2 focus:ring-accent">
-                        <h3 class="text-base font-semibold text-text group-hover:text-accent transition-colors">Create Another Campaign</h3>
-                        <p class="mt-2 text-sm text-muted">Spin up a one-shot, side campaign, or a fresh long-term adventure.</p>
-                    </a>
-
-                    <a href="{{ route('compendium.npcs.index') }}" class="ui-card-interactive group block p-5 focus:outline-none focus:ring-2 focus:ring-accent">
-                        <h3 class="text-base font-semibold text-text group-hover:text-accent transition-colors">Manage Characters</h3>
-                        <p class="mt-2 text-sm text-muted">Keep your recurring NPCs, rivals, and party contacts organized.</p>
-                    </a>
-
-                    <a href="{{ route('encounter-generator.index') }}" class="ui-card-interactive group block p-5 focus:outline-none focus:ring-2 focus:ring-accent">
-                        <h3 class="text-base font-semibold text-text group-hover:text-accent transition-colors">Build an Encounter</h3>
-                        <p class="mt-2 text-sm text-muted">Use the public encounter generator and save what works for your table.</p>
-                    </a>
-                </div>
-            </section>
         @endif
 
         <section>

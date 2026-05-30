@@ -9,7 +9,8 @@
             <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}" aria-label="Campaign Compendium home">
+                    <a href="{{ auth()->check() ? route('dashboard') : route('home') }}"
+                       aria-label="{{ auth()->check() ? 'Campaign Compendium dashboard' : 'Campaign Compendium home' }}">
                         <x-brand-lockup compact class="transition-opacity duration-150 hover:opacity-90" />
                     </a>
                 </div>
