@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CampaignInviteMail;
 use App\Models\Campaign;
+use App\Models\CampaignInvite;
+use App\Models\Notification;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCampaignRequest;
 use App\Http\Requests\UpdateCampaignRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
 class CampaignController extends Controller
 {
     /**
@@ -58,18 +65,31 @@ class CampaignController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $validated = $request->validated();
+
+        Role::firstOrCreate(['id' => Role::DM], ['name' => 'DM']);
+        Role::firstOrCreate(['id' => Role::PLAYER], ['name' => 'Player']);
 
         $campaign = Campaign::create([
-            'name'        => $request->input('name'),
-            'description' => $request->input('description'),
+            'name'        => $validated['name'],
+            'description' => $validated['description'] ?? null,
             'dm_id'       => $user->id,
         ]);
 
         $campaign->members()->attach($user->id, ['role_id' => Role::DM]);
+        $queuedInviteCount = $this->queueInvitesForNewCampaign(
+            $campaign,
+            $user,
+            $validated['invite_emails'] ?? []
+        );
+
+        $successMessage = $queuedInviteCount > 0
+            ? "Campaign created successfully. {$queuedInviteCount} invitation" . ($queuedInviteCount === 1 ? ' was' : 's were') . ' queued.'
+            : 'Campaign created successfully.';
 
         return redirect()
             ->route('campaigns.show', $campaign)
-            ->with('success', 'Campaign created successfully.');
+            ->with('success', $successMessage);
     }
 
     /**
@@ -186,4 +206,52 @@ public function removeMember(Request $request, Campaign $campaign)
 
     return back()->with('success', 'Member removed successfully.');
 }
+
+    private function queueInvitesForNewCampaign(Campaign $campaign, User $inviter, array $emails): int
+    {
+        $queued = 0;
+
+        foreach (collect($emails)
+            ->map(fn ($email) => Str::lower(trim((string) $email)))
+            ->filter()
+            ->unique() as $email) {
+            if (strcasecmp($inviter->email, $email) === 0) {
+                continue;
+            }
+
+            $invitee = User::whereRaw('LOWER(email) = ?', [$email])->first();
+
+            if ($invitee && $campaign->members()->where('user_id', $invitee->id)->exists()) {
+                continue;
+            }
+
+            $invite = CampaignInvite::create([
+                'campaign_id' => $campaign->id,
+                'inviter_id' => $inviter->id,
+                'invitee_id' => $invitee?->id,
+                'email' => $email,
+                'token' => (string) Str::uuid(),
+                'status' => CampaignInvite::STATUS_PENDING,
+                'expires_at' => now()->addDays(CampaignInvite::DEFAULT_EXPIRY_DAYS),
+            ]);
+
+            if ($invitee) {
+                Notification::create([
+                    'user_id' => $invitee->id,
+                    'type' => Notification::TYPE_INVITE,
+                    'notifiable_type' => CampaignInvite::class,
+                    'notifiable_id' => $invite->id,
+                    'data' => [
+                        'campaign_name' => $campaign->name,
+                        'inviter_name' => $inviter->name,
+                    ],
+                ]);
+            }
+
+            Mail::to($email)->queue(new CampaignInviteMail($invite->load(['campaign', 'inviter'])));
+            $queued++;
+        }
+
+        return $queued;
+    }
 }

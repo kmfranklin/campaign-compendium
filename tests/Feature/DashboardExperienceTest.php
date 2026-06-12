@@ -23,7 +23,7 @@ class DashboardExperienceTest extends TestCase
             ->assertOk()
             ->assertSee('Create your first campaign')
             ->assertSee('Create Campaign')
-            ->assertSee('Browse Spells');
+            ->assertSee('Spellbook Archive');
     }
 
     public function test_dashboard_surfaces_pending_invites_summary(): void
