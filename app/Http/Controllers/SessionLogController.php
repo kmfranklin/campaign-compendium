@@ -61,9 +61,9 @@ class SessionLogController extends Controller
             'npc_ids.*'    => ['integer', 'distinct'],
             'quest_ids'    => ['nullable', 'array'],
             'quest_ids.*'  => ['integer', 'distinct'],
-            // 200 MB limit; audio files can be large.
-            // Ensure upload_max_filesize and post_max_size in php.ini match.
-            'media'        => ['nullable', 'file', 'mimes:mp3,wav,ogg,flac,m4a,aac', 'max:204800'],
+            'media'        => $this->sessionMediaUploadsEnabled()
+                ? ['nullable', 'file', 'mimes:mp3,wav,ogg,flac,m4a,aac', 'max:204800']
+                : ['prohibited'],
         ]);
 
         $selectedNpcs = $this->validateSelectedNpcs($campaign, $validated['npc_ids'] ?? []);
@@ -78,7 +78,7 @@ class SessionLogController extends Controller
         $this->syncSessionNpcs($campaign, $sessionLog, $selectedNpcs);
         $sessionLog->quests()->sync($selectedQuests->modelKeys());
 
-        if ($request->hasFile('media')) {
+        if ($this->sessionMediaUploadsEnabled() && $request->hasFile('media')) {
             $this->storeMedia($sessionLog, $request->file('media'));
         }
 
@@ -148,8 +148,12 @@ class SessionLogController extends Controller
             'npc_ids.*'     => ['integer', 'distinct'],
             'quest_ids'     => ['nullable', 'array'],
             'quest_ids.*'   => ['integer', 'distinct'],
-            'media'         => ['nullable', 'file', 'mimes:mp3,wav,ogg,flac,m4a,aac', 'max:204800'],
-            'remove_media'  => ['nullable', 'boolean'],
+            'media'         => $this->sessionMediaUploadsEnabled()
+                ? ['nullable', 'file', 'mimes:mp3,wav,ogg,flac,m4a,aac', 'max:204800']
+                : ['prohibited'],
+            'remove_media'  => $this->sessionMediaUploadsEnabled()
+                ? ['nullable', 'boolean']
+                : ['prohibited'],
         ]);
 
         $selectedNpcs = $this->validateSelectedNpcs($campaign, $validated['npc_ids'] ?? []);
@@ -165,12 +169,12 @@ class SessionLogController extends Controller
         $sessionLog->quests()->sync($selectedQuests->modelKeys());
 
         // Delete existing media if user checked "remove recording"
-        if ($request->boolean('remove_media')) {
+        if ($this->sessionMediaUploadsEnabled() && $request->boolean('remove_media')) {
             $this->deleteMedia($sessionLog);
         }
 
         // Replace existing media if a new file was uploaded
-        if ($request->hasFile('media')) {
+        if ($this->sessionMediaUploadsEnabled() && $request->hasFile('media')) {
             $this->deleteMedia($sessionLog);
             $this->storeMedia($sessionLog, $request->file('media'));
         }
@@ -295,6 +299,14 @@ class SessionLogController extends Controller
             Storage::disk('private')->delete($sessionLog->media->path);
             $sessionLog->media->delete();
         }
+    }
+
+    /**
+     * Gate user-facing uploads while preserving the media architecture.
+     */
+    private function sessionMediaUploadsEnabled(): bool
+    {
+        return (bool) config('features.session_media_uploads');
     }
 
     /**

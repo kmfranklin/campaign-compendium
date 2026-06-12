@@ -26,8 +26,8 @@
 
     <form action="{{ route('campaigns.sessions.update', [$campaign, $sessionLog]) }}" method="POST"
           enctype="multipart/form-data"
-          x-data="{ uploading: false, fileName: '', fileSize: '' }"
-          @submit="uploading = true">
+          x-data="{ submitting: false }"
+          @submit="submitting = true">
         @csrf
         @method('PUT')
 
@@ -61,82 +61,16 @@
             'selectedQuestIds' => $sessionLog->quests->modelKeys(),
         ])
 
-        {{-- Audio Recording --}}
-        <div class="mb-6 p-4 border border-border rounded-lg bg-bg">
-            <p class="block text-sm font-medium text-text mb-2">Session Recording</p>
-
-            @if ($sessionLog->media)
-                <div class="mb-3 flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent shrink-0" fill="none"
-                         viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-                    </svg>
-                    <span class="text-sm text-text">
-                        {{ $sessionLog->media->filename }}
-                        <span class="text-muted">({{ $sessionLog->media->formattedSize() }})</span>
-                    </span>
-                </div>
-
-                <label class="inline-flex items-center gap-2 text-sm text-danger cursor-pointer mb-3">
-                    <input type="checkbox" name="remove_media" value="1"
-                           class="rounded border-border text-danger focus:ring-danger">
-                    Remove this recording
-                </label>
-                <p class="text-xs text-muted mb-2">Or upload a new file to replace it:</p>
-            @else
-                <p class="text-xs text-muted mb-2">
-                    Optional. Accepted formats: MP3, WAV, OGG, FLAC, M4A, AAC. Max 200 MB.
-                </p>
-            @endif
-
-            <input type="file" name="media" id="media"
-                   accept="audio/mpeg,audio/wav,audio/ogg,audio/flac,audio/mp4,audio/aac,.mp3,.wav,.ogg,.flac,.m4a,.aac"
-                   class="block w-full text-sm text-text
-                          file:mr-4 file:py-2 file:px-4 file:rounded file:border-0
-                          file:text-sm file:font-medium file:bg-accent file:text-on-accent
-                          hover:file:bg-accent-hover"
-                   @change="
-                       const f = $event.target.files[0];
-                       if (f) {
-                           fileName = f.name;
-                           fileSize = (f.size / (1024 * 1024)).toFixed(1) + ' MB';
-                       } else {
-                           fileName = ''; fileSize = '';
-                       }
-                   ">
-
-            {{-- Show selected file name + size once chosen --}}
-            <p x-show="fileName" x-cloak class="mt-2 text-xs text-muted">
-                Selected: <span class="text-text font-medium" x-text="fileName"></span>
-                (<span x-text="fileSize"></span>) — this may take a moment to upload.
-            </p>
-
-            @error('media')
-                <p class="mt-1 text-xs text-danger">{{ $message }}</p>
-            @enderror
-        </div>
-
-        {{-- Upload progress notice --}}
-        <div x-show="uploading" x-cloak
-             class="mb-4 flex items-center gap-3 p-3 bg-accent/10 border border-accent/30 rounded-lg text-sm text-accent">
-            <svg class="animate-spin h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-            Uploading recording — please don't close this tab…
-        </div>
-
         <div class="pt-4 border-t border-border flex justify-between">
             <a href="{{ route('campaigns.sessions.show', [$campaign, $sessionLog]) }}"
                class="btn btn-secondary btn-sm">
                 Cancel
             </a>
             <button type="submit"
-                    :disabled="uploading"
+                    :disabled="submitting"
                     class="btn btn-primary btn-sm">
-                <span x-show="!uploading">Update Session</span>
-                <span x-show="uploading" x-cloak>Saving…</span>
+                <span x-show="!submitting">Update Session</span>
+                <span x-show="submitting" x-cloak>Saving...</span>
             </button>
         </div>
     </form>
